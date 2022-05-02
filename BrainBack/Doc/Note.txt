@@ -1,0 +1,70 @@
+* Time Layer 는 길어지는 시간주기별로 가질것
+* Time Layer로의 Value 복사시 무조건 하는것이 아니고 어떤 알고리즘에 의해 복사??
+	- 이럴 필요가 있나? 어차피 해당 Time Layer 의 특정 뉴런이 영향이 없다면 Synapse 의 값이 0에 가까워 지고 자연스럽게 영향이 없어질텐데.
+
+
+
+
+
+
+
+
+// Normal
+auto Value = Weight * exp(-Factor * (In_ - Offset)*(In_ - Offset));
+for (auto& i : _Outs)
+	i->Load(Value);
+
+
+// Sensor
+auto Value = exp(-_Factor * (In_ - _Offset)*(In_ - _Offset));
+for (auto& i : _Outs)
+	i->Load(Value);
+
+
+// Map 사용 인근 2개 노드 연상
+void CNeuronIn::Load(double In_)
+{
+	auto it = _Sensors.lower_bound(In_);
+	if (it != _Sensors.end())
+	{
+		it->second->Load(In_);
+
+		if (it->first == In_)
+			return;
+
+		if (it != _Sensors.begin())
+		{
+			--it;
+			it->second->Load(In_);
+		}
+	}
+	else
+	{
+		auto rb = _Sensors.rbegin();
+		if (rb != _Sensors.rend())
+			rb->second->Load(In_);
+	}
+}
+
+
+
+// Vector 방식 Sensor 구조
+				auto v = _DataPtr[i] * double(_Neurons.size() - 1);
+				auto a = size_t(v);
+				auto b = a + 1;
+
+				for (auto& i : _Neurons[a].Neurons)
+				{
+					i.Value += (b - v);
+					itFront->emplace(&i);
+				}
+
+				auto bv = (v - a);
+				if (bv > 0.0)
+				{
+					for (auto& i : _Neurons[a + 1].Neurons)
+					{
+						i.Value += bv;
+						itFront->emplace(&i);
+					}
+				}

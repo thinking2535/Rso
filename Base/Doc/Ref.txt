@@ -1,0 +1,306 @@
+// 가변템플릿 각각의 인수를 맵의 Key로 활용
+tuple<map<TTypes, int>...> _Datas;
+
+
+
+
+// 현재 CMem ////////////////////////
+클래스 템플릿 파라미터로(ConsDesCall) 객체의 생성자, 소멸자 호출 설정
+클래스 생성자에서 Resize 가능, 이 때는 ConsDesCall 옵션에 따라 생성자 호출 또는 생략
+reserve 함수를 통해 메모리 예약 ( 생성자 호출 하지 않음 )
+
+ConsDesCall==false 모드에서는
+최초 한번은 생성자 호출, 마지막에 소멸자 호출 되도록 하여야 하기 때문에
+emplace 에서는 무조건 최초 생성 파라미터를 넣고
+emplace 이후 외부에서는 Init() 함수를 호출하여 light 초기화
+erase, clear 전에는 Clear() 호출
+
+operator new 를 써야 하는 이유는 new 를 쓸 경우
+ConsDes = true 모드에서 light delete 를 한 이후에 소멸자가 호출되나 delete 를 할 경우에도 소멸자가 또 호출되기 때문
+/////////////////////////////////////
+
+
+// Parameter Pack 을 사용한 파라미터를 가진 생성자 자동호출 로직이 들어간 메모리 관리자
+
+#include <tuple>
+#include <new>
+#include <vector>
+
+
+namespace rso
+{
+ namespace base
+ {
+ using namespace std;
+
+ template< typename TData, typename... TArgs >
+ class CMem
+ {
+ private:
+ struct _SNode
+ {
+ size_t Index{ 0 };
+ bool Newed{ false };
+ TData Data;
+ _SNode* pNext{ nullptr };
+ _SNode* pPrev{ nullptr };
+
+ template<typename... TArgs>
+ _SNode(const TArgs&... Args_) :
+ Data(Args_...)
+ {
+ }
+ };
+
+ using _TParamPack = tuple<TArgs...>;
+
+ template<bool Done, int Total, int... N>
+ struct _SConstuctor
+ {
+ static _SNode* Call(_TParamPack&& ParamPack_)
+ {
+ return _SConstuctor<Total == 1 + sizeof...(N), Total, N..., sizeof...(N)>::Call(forward<_TParamPack>(ParamPack_));
+ }
+ };
+
+ template<int Total, int... N>
+ struct _SConstuctor<true, Total, N...>
+ {
+ static _SNode* Call(_TParamPack&& ParamPack_)
+ {
+ return new(nothrow)_SNode(get<N>(forward<_TParamPack>(ParamPack_))...);
+ }
+ };
+
+ typedef vector<_SNode*> _TNodes;
+
+ _TParamPack _ParamPack;
+ _TNodes _Nodes;
+ size_t _MaxSize{};
+ _SNode* _pDeletedHead{};
+ _SNode* _pDeletedTail{};
+ _SNode* _pNewedHead{};
+ _SNode* _pNewedTail{};
+ size_t _Size{};
+
+ void _erase(_SNode* pNode_);
+
+ public:
+ struct SIterator
+ {
+ _SNode* _pNode;
+
+ SIterator() : _pNode() {}
+ SIterator(_SNode* pNode_) : _pNode(pNode_)
+ {
+ }
+ TData& operator*()
+ {
+ return _pNode->Data;
+ }
+ SIterator operator++()
+ {
+ _pNode = _pNode->pNext;
+
+ return *this;
+ }
+ SIterator operator++(int)
+ {
+ auto Ret = *this;
+
+ ++(*this);
+
+ return Ret;
+ }
+ bool IsValid(void) const
+ {
+ return (_pNode != 0);
+ }
+ bool operator != (const SIterator& Iterator_)
+ {
+ return (_pNode != Iterator_._pNode);
+ }
+ };
+
+ CMem() = delete;
+ CMem(const CMem& Var_) = delete;
+ CMem(CMem&& Var_) = delete;
+ CMem(size_t MaxSize_, const TArgs&... Args_) :
+ _MaxSize(MaxSize_),
+ _ParamPack(Args_...)
+ {
+ }
+ ~CMem()
+ {
+ for (auto& pNode : _Nodes)
+ {
+ if (pNode)
+ {
+ delete pNode;
+ pNode = 0;
+ }
+ }
+ }
+
+ CMem operator = (const CMem& Var_) = delete;
+ CMem operator = (CMem&& Var_) = delete;
+
+ TData* operator[](size_t Index_) const;
+ SIterator begin(void) const; // for just iterate
+ SIterator end(void) const; // for just iterate
+ size_t Size(void) const { return _Size; }
+ size_t MaxSize(void) const { return _MaxSize; }
+ SIterator emplace(void);
+ void erase(const SIterator& Iterator_) { _erase(Iterator_._pNode); }
+ void erase(size_t Index_);
+ void Clear(void); // no thread safe
+ };
+
+ template< typename TData, typename... TArgs >
+ TData* CMem<TData, TArgs...>::operator[](size_t Index_) const
+ {
+ if (Index_ < 0 ||
+ Index_ >= _Nodes.size() ||
+ !_Nodes[Index_]->Newed)
+ return nullptr;
+
+ return &_Nodes[Index_]->Data;
+ }
+
+ template< typename TData, typename... TArgs >
+ typename CMem<TData, TArgs...>::SIterator CMem<TData, TArgs...>::begin(void) const
+ {
+ return SIterator(_pNewedHead);
+ }
+
+ template< typename TData, typename... TArgs >
+ typename CMem<TData, TArgs...>::SIterator CMem<TData, TArgs...>::end(void) const
+ {
+ return SIterator();
+ }
+
+ template< typename TData, typename... TArgs >
+ void CMem<TData, TArgs...>::_erase(_SNode* pNode_)
+ {
+ if (!pNode_->Newed)
+ return;
+
+
+ // DetachFromNewed ////////////////////
+ if (pNode_->pPrev)
+ pNode_->pPrev->pNext = pNode_->pNext;
+ else
+ _pNewedHead = pNode_->pNext;
+
+ if (pNode_->pNext)
+ pNode_->pNext->pPrev = pNode_->pPrev;
+ else
+ _pNewedTail = pNode_->pPrev;
+
+
+ // AttachToDeleted ////////////////////
+ pNode_->pNext = 0;
+ pNode_->Newed = false;
+
+ if (_pDeletedTail == 0)
+ {
+ _pDeletedHead = _pDeletedTail = pNode_;
+ }
+ else
+ {
+ _pDeletedTail->pNext = pNode_;
+ _pDeletedTail = pNode_;
+ }
+
+
+ --_Size;
+ }
+
+ template< typename TData, typename... TArgs >
+ typename CMem<TData, TArgs...>::SIterator CMem<TData, TArgs...>::emplace(void)
+ {
+ _SNode* pNode = nullptr;
+
+
+ // DetachFromDeleted ////////////////////////////////////
+ if (_pDeletedHead)
+ {
+ pNode = _pDeletedHead;
+
+ _pDeletedHead = _pDeletedHead->pNext;
+
+ if (!_pDeletedHead)
+ _pDeletedTail = 0;
+ }
+ else
+ {
+ if (_MaxSize > 0 && _Nodes.size() >= _MaxSize) // 최대 할당 개수까지 할당된 상태이면
+ return SIterator();
+
+ try
+ {
+ _Nodes.emplace_back((_SNode*)0);
+ }
+ catch (...)
+ {
+ return SIterator();
+ }
+
+ pNode = _SConstuctor<0 == tuple_size<_TParamPack>::value, tuple_size<_TParamPack>::value>::Call(forward<_TParamPack>(_ParamPack));
+ if (!pNode)
+ {
+ _Nodes.pop_back();
+ return SIterator();
+ }
+ _Nodes.back() = pNode;
+
+ pNode->Index = _Nodes.size() - 1;
+ }
+
+
+ // AttachToNewed //////////////////////////////////////
+ pNode->pNext = 0;
+ pNode->Newed = true;
+
+ if (_pNewedTail == 0)
+ {
+ pNode->pPrev = 0;
+ _pNewedHead = _pNewedTail = pNode;
+ }
+ else
+ {
+ pNode->pPrev = _pNewedTail;
+ _pNewedTail->pNext = pNode;
+ _pNewedTail = pNode;
+ }
+
+
+ ++_Size;
+
+ return SIterator(pNode);
+ }
+
+ template< typename TData, typename... TArgs >
+ void CMem<TData, TArgs...>::erase(size_t Index_)
+ {
+ if (Index_ < 0 ||
+ Index_ >= _Nodes.size())
+ return;
+
+ _erase(_Nodes[Index_]);
+ }
+
+ template< typename TData, typename... TArgs >
+ void CMem<TData, TArgs...>::Clear(void)
+ {
+ for (auto it = begin();
+ it.IsValid();)
+ {
+ auto itDel = it;
+ ++it;
+
+ erase(itDel);
+ }
+ }
+ }
+}

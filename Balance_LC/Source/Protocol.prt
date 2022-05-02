@@ -1,0 +1,47 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace balance_lc
+	{
+		using namespace net
+
+		enum class EProto
+		{
+			SaServerOn
+			SaClientCnt
+			AcServerToConnect
+			ScAllocated
+
+			AsUserProto
+			SaUserProto
+			ScUserProto
+			CsUserProto
+
+			Max
+			Null
+		}
+
+		struct SSaServerOn
+		{
+			SNamePort ClientBindNamePortPub
+			int32 ClientCnt
+		}
+		struct SSaClientCnt
+		{
+			int32 ClientCnt
+		}
+		struct SAcServerToConnect
+		{
+			SNamePort ClientBindNamePortPub
+		}
+		struct SScAllocated
+		{
+		}
+
+		struct SServer : SSaServerOn
+		{
+			list<time_point> EndTimes
+		}
+	}
+}

@@ -1,0 +1,87 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace balance
+	{
+		using namespace net
+
+		enum class EProto
+		{
+			UdParentOn
+			DuChildOn
+			UdNewChild
+			DuNewChild
+			DuNewChildFail
+			UdNewParent
+			UdCapacity
+			DuCapacity
+			CsConnect
+			ScNewParent
+			ScAllocated
+			UdBroadCast
+			UdUserProto
+			DuUserProto
+			ScUserProto
+			CsUserProto
+			Max
+			Null
+		}
+
+		struct SHeader
+		{
+			EProto Proto
+		}
+		struct SCapacity
+		{
+			TPeerCnt ClientCnt
+			TPeerCnt ServerCnt
+		}
+		struct SServer
+		{
+			SNamePort ClientBindNamePortPub
+			SCapacity Capacity
+		}
+		struct SUdParentOn : SServer
+		{
+			TPeerCnt ChildCntMax
+			TPeerCnt ErrorCnt
+		}
+		struct SDuChildOn : SServer
+		{
+			TSessionCode SessionCode
+			SNamePort ChildBindNamePort
+		}
+		struct SUdNewChild
+		{
+			SNamePort ClientBindNamePortPub
+			TSessionCode SessionCode
+			SKey NewChildKey
+		}
+		struct SDuNewChild
+		{
+			SKey NewChildKey
+			TSessionCode SessionCode
+		}
+		struct SDuNewChildFail
+		{
+			SKey NewChildKey
+		}
+		struct SUdNewParent
+		{
+			SNamePort ChildBindNamePort
+			TSessionCode SessionCode
+		}
+		struct SCsConnect
+		{
+			SNamePort PrevClientBindNamePortPub
+		}
+		struct SScNewParent
+		{
+			SNamePort ClientBindNamePortPub
+		}
+		struct SScAllocated
+		{
+		}
+	}
+}

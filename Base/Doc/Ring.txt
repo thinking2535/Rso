@@ -1,0 +1,172 @@
+#pragma once
+
+
+#include <Rso/Core/Core.h>
+#include<vector>
+#include<new>
+
+namespace rso
+{
+	namespace base
+	{
+		using namespace core;
+		using namespace std;
+
+		template<typename TData>
+		class CRing
+		{
+			using _TDatas = vector<TData>;
+			static const size_t c_Index_Null{ ~0 };
+
+			_TDatas _Nodes;
+			size_t	_Front{ c_Index_Null };
+			size_t	_Back{ c_Index_Null };
+
+		public:
+			template<typename... TArgsEmplace>
+			CRing(size_t Size_, TArgsEmplace&&... Args_)
+			{
+				try
+				{
+					if (Size_ <= 0)
+						THROW();
+
+					_Nodes.resize(Size_, forward<TArgsEmplace>(Args_)...);
+				}
+				catch (...)
+				{
+					THROW();
+				}
+			}
+
+			size_t size(void) const
+			{
+				if (_Front == c_Index_Null)
+					return 0;
+
+				if (_Front <= _Back)
+					return (_Back - _Front + 1);
+				else
+					return (_Back + 1 + (_Nodes.size() - _Front));
+			}
+
+			bool empty(void) const
+			{
+				return (_Front == c_Index_Null);
+			}
+			bool full(void) const
+			{
+				return (((_Back + 1) % _Nodes.size()) == _Front);
+			}
+
+			template<typename... TArgsEmplace>
+			void emplace_front(TArgsEmplace&&... Args_)
+			{
+				if (empty())
+				{
+					_Back = _Nodes.size() - 1;
+					_Front = _Nodes.size() - 1;
+				}
+				else
+				{
+					if (full())
+					{
+						if (_Back == 0)
+							_Back = _Nodes.size() - 1;
+						else
+							--_Back;
+					}
+
+					if (_Front == 0)
+						_Front = _Nodes.size() - 1;
+					else
+						--_Front;
+				}
+
+
+				new(&_Nodes[_Front])TData(forward<TArgsEmplace>(Args_)...);
+			}
+
+			template<typename... TArgsEmplace>
+			void emplace_back(TArgsEmplace&&... Args_)
+			{
+				if (empty())
+				{
+					_Front = 0;
+					_Back = 0;
+				}
+				else
+				{
+					if (full())
+					{
+						if (_Front == _Nodes.size() - 1)
+							_Front = 0;
+						else
+							++_Front;
+					}
+
+					if (_Back == _Nodes.size() - 1)
+						_Back = 0;
+					else
+						++_Back;
+				}
+
+				new(&_Nodes[_Back])TData(forward<TArgsEmplace>(Args_)...);
+			}
+
+			void pop_front(void)
+			{
+				if (empty())
+					return;
+
+				if (_Front == _Back)
+				{
+					_Front = c_Index_Null;
+					_Back = c_Index_Null;
+				}
+				else
+				{
+					if (_Front == _Nodes.size() - 1)
+						_Front = 0;
+					else
+						++_Front;
+				}
+			}
+			void pop_back(void)
+			{
+				if (empty())
+					return;
+
+				if (_Front == _Back)
+				{
+					_Front = c_Index_Null;
+					_Back = c_Index_Null;
+				}
+				else
+				{
+					if (_Back == 0)
+						_Back = _Nodes.size() - 1;
+					else
+						--_Back;
+				}
+			}
+
+			TData&		front(void)
+			{
+				return _Nodes[_Front];
+			}
+			TData&		back(void)
+			{
+				return _Nodes[_Back];
+			}
+
+			TData&		operator[](size_t Index_)
+			{
+				if (_Front + Index_ > _Nodes.size() - 1)
+					return _Nodes[_Front + Index_ - _Nodes.size()];
+				else
+					return _Nodes[_Front + Index_];
+			}
+		};
+	}
+}

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="Doc\Manual.txt">
+      <Filter>Doc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{d296a25e-6303-4112-bf91-0a36c7be2516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{b2c850db-3872-47a7-9c03-cd3b355fa60b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Index.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Memory.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Thread.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Period.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Limiter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LFQueue.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Indexer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Queue.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\List.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GeoMap.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Space.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timers.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vector.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Ring.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MapCount.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LFQueueB.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ListB.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\QueueB.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Option.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bidirection.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RingEx.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CycleMap.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CycleSet.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CycleCList.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ListVoid.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OptionStream.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Doc\MultiKeyMap.h">
+      <Filter>Doc</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MultiIndex.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Doc\MultiIndex.h">
+      <Filter>Doc</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MultiIndexMap.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MultiIndexSet.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Base.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\CustomAllocator.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Todo.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Ref.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

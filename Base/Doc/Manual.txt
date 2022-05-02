@@ -1,0 +1,84 @@
+< CTimer >
+// 시작, 끝 만 알리는 Timer 가 없으므로 작업할것. Server2 의 rso temp 수정할것.
+
+
+
+ Event Cue GetEvent
+spot 1 null
+ null
+ spot null 
+ null
+ null
+
+
+spot period null
+ null
+ null begin 
+ spot
+ spot
+ spot ing 
+ spot
+ spot
+ spot ing 
+ spot
+ spot
+ null end 
+ null
+ null
+
+rng 1 null
+ null
+ on null
+ on
+ on
+ off null
+ null
+ null
+
+
+rng period null
+ null
+ null
+ on begin
+ on
+ on
+ off ing
+ off
+ off
+ on ing
+
+ on
+--------------------------------------------------
+ off ing
+ off
+ null end // end 직전 off 상태라면 null
+----------------------------------------------------
+ off end // end 직전 on 상태라면 off
+
+ null
+ null
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+castTm spd fireTm 
+0 0 0 call Fire, Call Hit
+0 0 + call fire, HitTimer(now,now+ftm,rpt(1))
+0 + 0 call Fire, HitTimer(now+Spd)
+0 + + call Fire, HitTimer(now+Spd,sow+spd+ftm,rpt(1))
++ 0 0 FireTimer(now+casttm), call Hit
++ 0 + FireTimer(now+casttm), HitTimer(now,now+ftm,rpt(1))
++ + 0 FireTimer(now+casttm), HitTimer(now+spd)
++ + + FireTimer(now+casttm), HitTimer(now+spd,now+spd+ftm,rpt(1))
+

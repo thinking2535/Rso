@@ -1,0 +1,9 @@
+* 상위 노드는 하위의 총 Connection 을 가져올 수 있도록 (동접체크는 최 상단 노드를 사용하여 확인)
+* Balance 종류
+	index, lc, session(최초 lc)
+	Hub - Auth : lc
+	Auth - Master : index
+	Master - Server : session  (이거 만들고 Server )
+* rr, lc 에 상관없이, 자신을 할당 대상에 포함시킬지 말지에 상관없이 처리되도록 할것
+* 자신을 포함시키면 자신이 할당 률이 높아지? 므로 정확히 계산되도록 할것.
+	- 자신을 포함시킬 경우 rr 의 경우 트리 구조에 따라 할당량이 달라지므로 lr 로만 가능한데
