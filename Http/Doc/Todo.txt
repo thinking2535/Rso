@@ -1,0 +1,7 @@
+* 유저별로 공간을 따로둘것, ( MSSQL, BulkCopy 참고 )
+
+* 스레드가 2 이상일때, Objectcnt*스레드개수 만큼 공간이 생기나, ObjectCnt%ThreadCnt 의 세션에서 실행되기 때문에
+   공간이 낭비된다. 예를 들면 ObjCnt==2, ThreadCnt==2 일때  ThreadCnt==0, ObjIDX==1 의 공간은 쓰이지 않는다.
+
+* Http 도 락 안써도 될듯 ( 각 객체의 상태를 bool 로 처리 )
+  Http 모듈 역시 유저 별로 Que 공간 만들어서 1명이 1 이상 차지하지 않도록 할것.

@@ -1,0 +1,160 @@
+// ssdfffe.cpp : 콘솔 응용 프로그램에 대한 진입점을 정의합니다.
+//
+
+#include "stdafx.h"
+#include <windows.h> 
+#include <iostream>
+
+using namespace std;
+
+
+LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	PKBDLLHOOKSTRUCT k = (PKBDLLHOOKSTRUCT)(lParam);
+	POINT p;
+	if(wParam == WM_RBUTTONDOWN)
+	{
+		// right button clicked
+		GetCursorPos(&p);
+	}
+
+	printf( "		%d %d\n", wParam, lParam);
+	return 0;
+}
+
+LRESULT CALLBACK KeyHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	printf( "%d %d %d\n", nCode, wParam, lParam);
+	return 0;
+}
+
+int main()
+{
+	HANDLE hIn;
+	HANDLE hOut;
+	DWORD fdwSaveOldMode;
+	COORD KeyWhere;
+	bool Continue = TRUE;
+	int Events = 0;
+	INPUT_RECORD InRec;
+	DWORD NumRead;
+	hIn = GetStdHandle(STD_INPUT_HANDLE);
+	hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	
+	//cout << "Key Events   : " << endl;
+	//cout << "Mouse Events : " << flush;
+	
+	KeyWhere.X = 0;
+	KeyWhere.Y = 0;
+
+
+//
+//	//while( true )
+//	//{
+//	//	Sleep( 1000 );
+//	//	BYTE b = VK_F1;
+//	//	printf( "%d", GetKeyboardState( &b ) );
+//	//	printf( "%d\n", b );
+//	//}
+//	//while( true )
+//	//{
+//	//	Sleep( 1000 );
+//	//	printf( "%d\n", GetAsyncKeyState( VK_LBUTTON ) );
+//	//}
+//
+//	//while( true )
+//	//{
+//	//	POINT PNT;
+//	//	CURSORINFO	i;
+//	//	GetCursorPos( &PNT );
+//
+//	//	printf( "%d %d\n", PNT.x, PNT.y );
+//	//}
+//
+//
+//HHOOK MouseHook = 0; 
+//HHOOK KeyHook = 0; 
+//HWND hwnd = GetConsoleWindow();
+//HINSTANCE hInstance = (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE);
+//MouseHook = SetWindowsHookEx(WH_MOUSE_LL,MouseHookProc,hInstance,0); 
+//KeyHook = SetWindowsHookEx(WH_KEYBOARD_LL,KeyHookProc,hInstance,0);
+//
+//MSG uMsg = {};
+//uMsg.message = WM_CREATE;
+//while (WM_QUIT != uMsg.message)
+//{
+//	 while (GetMessage (&uMsg, hwnd, 0, 0) > 0) //Or use an if statement
+//	 {
+//		  TranslateMessage (&uMsg);
+//		  DispatchMessage (&uMsg);
+//	 }
+//}
+//
+//Sleep( 5000 );
+//return 0;
+//
+//while( true )
+//{
+//	Sleep( 100 );
+//}
+
+	if( !GetConsoleMode( hIn, &fdwSaveOldMode ) )
+	{
+		printf( "-----" );
+		return 0;
+	}
+
+	if (!SetConsoleMode(hIn, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT) ) 
+	{
+		printf( "000" );
+		return 0;
+	}
+
+
+	while (Continue)
+	{
+		Sleep( 100 );
+		ReadConsoleInput(hIn, &InRec, 1, &NumRead);
+
+		++Events;
+		SetConsoleCursorPosition(hOut, KeyWhere);
+		printf( "Counts		%d\n", Events );
+
+		printf( "== FocusEvent ==\n" );
+		printf( "bSeFocus	%d\n", InRec.Event.FocusEvent.bSetFocus );
+
+		printf( "== KeyEvent ==\n" );
+		printf( "bKeyDown	%d\n", InRec.Event.KeyEvent.bKeyDown );
+		printf( "KeyState	%d\n", InRec.Event.KeyEvent.dwControlKeyState );
+		printf( "Ascii		%d\n", InRec.Event.KeyEvent.uChar.AsciiChar );
+		printf( "Unicode	%d\n", InRec.Event.KeyEvent.uChar.UnicodeChar );
+
+		printf( "== MenuEvent ==\n" );
+		printf( "CommandId	%d\n", InRec.Event.MenuEvent.dwCommandId );
+
+		printf( "== Mouse ==\n" );
+		printf( "BtnState	%d\n", InRec.Event.MouseEvent.dwButtonState );
+		printf( "KeyState	%d\n", InRec.Event.MouseEvent.dwControlKeyState );
+		printf( "EventFlags	%d\n", InRec.Event.MouseEvent.dwEventFlags );
+		printf( "Pos	X	%d\n", InRec.Event.MouseEvent.dwMousePosition.X );
+		printf( "Pos	Y	%d\n", InRec.Event.MouseEvent.dwMousePosition.Y );
+
+		printf( "== WindowBuffer ==\n" );
+		printf( "WinBuf X	%d\n", InRec.Event.WindowBufferSizeEvent.dwSize.X );
+		printf( "WinBuf Y	%d\n", InRec.Event.WindowBufferSizeEvent.dwSize.Y );
+
+		printf( "== EventType ==\n" );
+		printf( "EventType	%d\n", InRec.EventType );
+	}
+
+    SetConsoleMode(hIn, fdwSaveOldMode);
+
+	return 0;
+} 
+
+
+
+
+
+// KEY_EVENT
+// MOUSE_EVENT

@@ -1,0 +1,24 @@
+* DB 동적 증가
+  1. SStdType<__table> 의 Bindeds 에 영향을 미치는데... 이거 수정하려면 CmdInfo는 Conn에 속하도록 해야 할듯.
+  2. tWorker, tConnector 간 _Conns 처리에 안전하도록 할것.
+  3. 생성자에서 커넥션 정보 넣고 이후 AddConn 하는 방식으로도 가능하도록?
+
+* DB 동적 증가 처리 후 Json 동적 로딩 처리할것.
+  1. Json파일 로딩시간을 고려하여 스레드를 생성하여 주기적 로딩 후 변경사항이 있으면 콜백으로 처리?
+  2. LFQueue가 쌓이지 않도록 동적로딩클래스에서 Proc을 주기적 호출하는 방식을 쓰지 않아도 되는 방식이 있는가?
+
+
+이후 MSSQL->AddCmd 의 CallbackFunc은 외부템플릿의 멤버변수로 가지도록하고(안가질수도 있도록), 결과는 Recv함수로만 하고, 
+ Recv(CKey Key_, TUID UID_, TReturn Ret_, __int32 SpRet_, CStream& InStrea_, CStream& OutStream_) 로 받을것.
+
+<Connect Index Managing>
+1. first Bind, second AddConnection
+2. possible dynamic AddConnection?
+3. how to assign connNum with uid at dynamic assing
+
+ 
+* ConnTimeOut 적용하려면? ( 64bit 로 변환 이후 적용 안됨 )
+
+
+< NoSQL >
+* MONGODB making client library ( remove main function and project attrib -> lib )

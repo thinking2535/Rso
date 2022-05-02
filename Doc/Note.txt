@@ -1,0 +1,555 @@
+* 표 A.4 특수 수학 함수
+------------------------------------------------------------------------------
+assoc_laguerre
+comp_ellint_3f
+ellint_1l
+legendre
+assoc_laguerref
+comp_ellint_3l
+ellint_2
+legendref
+assoc_laguerrel
+cyl_bessel_i
+ellint_2f
+legendrel
+assoc_legendre
+cyl_bessel_if
+ellint_2l
+riemann_zeta
+assoc_legendref
+cyl_bessel_il
+ellint_3
+riemann_zetaf
+assoc_legendrel
+cyl_bessel_j
+ellint_3f
+riemann_zetal
+beta
+cyl_bessel_jf
+ellint_3l
+sph_bessel
+betaf
+cyl_bessel_jl
+expint
+sph_besself
+betal
+cyl_bessel_k
+expintf
+sph_bessell
+comp_ellint_1
+cyl_bessel_kf
+expintl
+sph_legendre
+comp_ellint_1f
+cyl_bessel_kl
+hermite
+sph_legendref
+comp_ellint_1l
+cyl_neumann
+hermitef
+sph_legendrel
+comp_ellint_2
+cyl_neumannf
+hermitel
+sph_neumann
+comp_ellint_2f
+cyl_neumannl
+laguerre
+sph_neumannf
+comp_ellint_2l
+ellint_1
+laguerref
+sph_neumannl
+comp_ellint_3
+ellint_1f
+laguerrel
+------------------------------------------------------------------------------
+
+* 표 A.1 파일 시스템 라이브러리의 구성
+------------------------------------------------------------------------------
+
+<형식>
+path
+recursive_directory_iterator
+perms
+filesystem_error
+file_status
+copy_options
+directory_entry
+space_info
+directory_options
+directory_iterator
+file_type
+file_time_type
+
+<함수>
+absolute
+create_directories
+permissions
+system_complete
+create_hard_link
+read_symlink
+canonical
+create_symlink
+remove
+weakly_canonical
+create_directory_symlink
+remove_all
+relative
+current_path
+rename
+proximate
+exists
+resize_file
+copy
+equivalent
+space
+copy_file
+file_size
+status
+copy_symlink
+hard_link_count
+symlink_status
+create_directory
+last_write_time
+temp_directory_path
+
+<파일 종류 및 상태 판정 술어>
+is_block_file
+status_known
+is_regular_file
+is_character_file
+is_fifo
+is_socket
+is_directory
+is_other
+is_symlink
+is_empty
+------------------------------------------------------------------------------
+
+
+* 표 A.2 병렬 실행을 지원하는 표준 알고리즘
+------------------------------------------------------------------------------
+adjacent_difference
+adjacent_find
+all_of
+any_of
+copy
+copy_if
+copy_n
+count
+count_if
+equal
+exclusive_scan
+fill
+fill_n
+find
+find_end
+find_first_of
+find_if
+find_if_not
+for_each
+for_each_n
+generate
+generate_n
+includes
+inclusive_scan
+inner_product
+inplace_merge
+ 
+is_heap
+is_heap_until
+is_partitioned
+is_sorted
+is_sorted_until
+lexicographical_compare
+max_element
+merge
+min_element
+minmax_element
+mismatch
+move
+none_of
+nth_element
+partial_sort
+partial_sort_copy
+partition
+partition_copy
+reduce
+remove
+ 
+remove_copy
+remove_copy_if
+remove_if
+replace
+replace_copy
+replace_copy_if
+replace_if
+reverse
+reverse_copy
+rotate
+rotate_copy
+search
+search_n
+set_difference
+set_intersection
+set_symmetric_difference
+set_union
+sort
+stable_partition
+stable_sort
+swap_ranges
+transform
+transform_exclusive_scan
+transform_inclusive_scan
+transform_reduce
+uninitialized_copy
+uninitialized_copy_n
+uninitialized_fill
+uninitialized_fill_n
+unique
+unique_copy
+------------------------------------------------------------------------------
+
+< Char set >
+    // Character literals
+    auto c0 =   'A'; // char
+    auto c1 = u8'A'; // char
+    auto c2 =  L'A'; // wchar_t
+    auto c3 =  u'A'; // char16_t
+    auto c4 =  U'A'; // char32_t
+
+    // String literals
+    auto s0 =   "hello"; // const char*
+    auto s1 = u8"hello"; // const char*, encoded as UTF-8
+    auto s2 =  L"hello"; // const wchar_t*
+    auto s3 =  u"hello"; // const char16_t*, encoded as UTF-16
+    auto s4 =  U"hello"; // const char32_t*, encoded as UTF-32
+
+    // Raw string literals containing unescaped \ and "
+    auto R0 =   R"("Hello \ world")"; // const char*
+    auto R1 = u8R"("Hello \ world")"; // const char*, encoded as UTF-8
+    auto R2 =  LR"("Hello \ world")"; // const wchar_t*
+    auto R3 =  uR"("Hello \ world")"; // const char16_t*, encoded as UTF-16
+    auto R4 =  UR"("Hello \ world")"; // const char32_t*, encoded as UTF-32
+
+    // Combining string literals with standard s-suffix
+    auto S0 =   "hello"s; // std::string
+    auto S1 = u8"hello"s; // std::string
+    auto S2 =  L"hello"s; // std::wstring
+    auto S3 =  u"hello"s; // std::u16string
+    auto S4 =  U"hello"s; // std::u32string
+
+    // Combining raw string literals with standard s-suffix
+    auto S5 =   R"("Hello \ world")"s; // std::string from a raw const char*
+    auto S6 = u8R"("Hello \ world")"s; // std::string from a raw const char*, encoded as UTF-8
+    auto S7 =  LR"("Hello \ world")"s; // std::wstring from a raw const wchar_t*
+    auto S8 =  uR"("Hello \ world")"s; // std::u16string from a raw const char16_t*, encoded as UTF-16
+    auto S9 =  UR"("Hello \ world")"s; // std::u32string from a raw const char32_t*, encoded as UTF-32
+
+
+< C++ >
+참고 https://www.slideshare.net/utilforever/c17-key-features-summary-ver-2
+
+
+std::any
+std::variant
+
+* std::invoke
+* std::optional
+* folding expression
+
+
+* 다중반환
+using Coordinate = std::pair<int, int>;
+Coordinate origin()
+{
+
+return Coordinate{ 0, 0 };
+}
+void main()
+{
+
+const auto[x, y] = origin();
+}
+
+
+* 중첩 namespace
+namespace A::B::C
+{
+}
+
+* inline variables
+struct Test
+{
+
+static inline std::string const str = "ok"; // 클래스 내의 static 변수 정의 가능
+};
+
+* 값에 의한 this 캡쳐    *this 
+
+* 람다식에 constexpr 사용 가능
+
+* auto와 {} 초기화 리스트 모호함 제거
+
+auto x1{1};  // int
+
+auto x2 = {2}; // initializer_list<int>
+
+auto x3 = {1, 2}; // initializer_list<int>
+
+auto x4{1, 2}; // error
+
+
+
+< 수학함수 및 일반 계산 속도 비교 >
+sqrt
+38 2.10818e+10
+hardrep
+56 4.7619e+145
+forrep
+63 4.7619e+145
+rand
+185 1.63823e+11
+cos
+337 1.33854
+sin
+341 1.53534
+powrep
+317 4.7619e+145
+pow
+532 inf
+
+
+< 멤버 변수 초기화 >
+ 1. 헤더 초기화와 emplace 초기화 중 emplace 우선
+
+
+< 클래스간 상호 참조를 위한 Include >
+ 1. 전방선언이 들어있는 Base.h 를 모든 클래스 헤더 파일의 선두에 include
+ 2. 각 클래스에서 참고하는 클래스의 헤더파일은 자신의 헤더파일의 Base.h 다음에 include
+ 3. 각 클래스의 cpp 파일의 선두에는 자신의 헤더파일만 include 할것.
+
+
+< 익셉션 핸들링 >
+ 0. 현재는 메모리 부족의 경우만 내, 외부에서 처리 불가능 하므로 그냥 throw 하고 외부에서는 해당 함수를 호출한 개체(유저 라든지) 를 끊어버리는 방식으로 처리
+ 1. 해당 범위 내에서 허용 가능한 오류가 아니면 throw, 허용가능하다면 return value 로 처리
+   - 허용가능한지 아닌지는 최종적으로 외부에서 판단해야 하므로 내부에서 결정하는 것은 의미 없음
+     (DB.Push의 경우 에러 발생시 외부에서 진행 가능할 수도, 아닐 수도 있으므로 )
+ 2. throw, return 는 공존할 수 있음.
+ 3. 최대한 체크를 먼저하여 에러 발생시 롤백하는 코드를 많들지 않도록 불가피 할 경우 반드시 롤백되도록 할것.
+ 4. 하나의 함수가 throw 할 수도 있고 return value 할 수 있으나 이 경우 최대한 throw 로 통일할것.
+ 5. 등록된 외부로의 콜백 Func 는 try 로 감싸지 말것. (외부에서 throw 할 수 있도록)
+
+
+< 게임서버 익셉션 핸들링 >
+ 1. 익셉션 난 유저에 대해서는 Close를 원칙으로 함.
+ 2. 어떠한 프로세스의 종료(나가기, 로그아웃, UnLink, Close, End 등등)는 에러가 없는것을(익셉션 포함) 원칙으로 한다.
+ 3. 외부 콜백에서 exception 발생한 경우는 Link, Recv에서는 Close하고, LinkFail, UnLink 에서는 그냥 catch 하여 넘어갈것.
+
+
+< 소멸자 호출 규칙 >
+ 1. 클래스에서 익셉션이 발생 한 경우 외부에서 catch 했다면 해당 클래스의 멤버 변수는 소멸자가 호출되지만, 해당클래스의 소멸자는 호출되지 않는다.
+
+< 생성자, 소멸자 대입연산자 규칙 >
+ 0 생성자, 연산자 등을 삭제하면 해당 생성자, 연산자만 삭제됨(아마도)
+ 1 소멸자 정의는 생성자 대입 연산자 자동생성과 관련이 없다.
+ 2 생성자, 연산자 모두를 정의하지 않으면 기본,복사,이동 생성자 및 복사, 이동 연산자가 자동으로 생성됨
+ 3 기본생성자(파라미터 생성자 포함)만 정의하면 복사, 이동 생성자 및 복사 이동 연산자가 자동으로 생성됨.
+ 4 복사생성자를 정의하면 기본, 이동 생성자, 이동 연산자가 삭제됨.
+ 5 이동생성자를 정의하면 기본, 복사 생성자, 복사 연산자가 삭제됨.   # 4, 5에 의해 복사생성자를 정의해도 복사연산자는 자동으로 생김, 이동생성자를 정의해도 이동연산자는 자동으로 생김
+ 6 복사연산자를 정의하면 복사,이동 생성자와 이동연산자가 삭제됨.
+ 7 이동연산자를 정의하면 복사,이동 생성자와 복산연산자가 삭제됨.
+# 6, 7에 의해 복사연산자를 정의해도 복사생성자는 자동으로 생기지 않음, 이동연산자를 정의해도 이동생성자는 자동으로 생성되지 않음
+
+ # 이동생성자, 이동연산자가 없을경우 이동생성, 이동연산은 복사생성, 복사연산 으로 대체된다.
+
+
+
+ < 이동 생성, 연산 규칙 >
+  1. 이동 생성자, 연산자가 없을 경우 복사 생성자, 연산자가 호출됨.
+  2. 기본적으로 객체가 이후에 쓰이지 않는다면(return Obj, return Class();   Class()  등 의 방법으로 사용) 이동연산자가 호출됨.
+  3. return Obj; 를 호출하면 Obj 의 이동연산자가 있을 경우 이동연산자가 호출됨. (std::move 사용하지 않더라도)
+  4. 이동 파라미터로 move 로 객체를 return 시킨 함수를  바로 쓸 경우 이동연산은 1회만 호출됨.
+  5. 이는 기본타입 (int, char 등)에 대해서도 마찬가지 이다, 3 등은  CClass() 등과같이 사용한 것과 같음.
+  6. 이동연산가능성이 있는 객체(컨테이너 포함) 을 반환할 일이 있을 경우 Get()함수를 사용하면 복사, 이동이 자동으로 처리되므로 코드량을 줄일 수 있음.
+
+
+< Login DB 로딩쿼리, Login DB 로딩쿼리 결과,  외부 DB 수정 쿼리 처리 순서 >
+ - 기본적으로 DB는 게임서버의 처리를 거친 후 저장(index생성 포함) 의 개념이므로 최초 Login DB 로딩 쿼리로 게임서버에 처리 되기 전에는 Index등 게임서버가 디비 쿼리를 위한 데이터를 만들 수 없음.
+   따라서 로그인 디비 결과 처리하기 전에는 게임서버가 가공한 데이터를 디비에 쿼리 할 수 없어야 함(예 : Index를 게임서버가 만드는 메일을 디비에 쓰는 경우, 최초 디비의 메일 Index를 읽어와야 함.)
+
+
+[임시큐를 두어 유저의 로그인 여부에 상관없이 서버에서 가공 처리 하는 시퀀스]
+
+- 외부의 쿼리 시도 콜백함수
+
+유저가 없거나 로그인(Login2 완료) 하지 않았으면
+
+
+try
+
+{
+
+auto ib = TempQue.emplace(UID, Que());
+
+auto QueSize = ib.first->second.size();
+
+
+try
+
+{
+
+ib.first->second.emplace_back(Data);
+
+
+if (QueSize == 0)
+
+try
+
+임시데이터(예: 인덱스, 날짜 등) 얻는 디비 쿼리
+
+catch
+
+ib.first->second.pop_back();
+
+throw 0;
+
+
+}
+
+catch( ...)
+
+{
+
+if (ib.first->second.empty())
+
+TempQue.erase(ib.first);
+
+
+throw 0;
+
+}
+
+}
+
+catch
+
+{
+
+return;
+
+}
+
+
+
+아니면 (유저가 디비로딩 완료 했으면)
+
+유저의 데이터에서 가공
+
+
+try
+
+실제 디비처리
+
+catch
+
+마지막 가공(추가) 한것 롤백(삭제)
+
+
+- 임시데이터 쿼리 결과 콜백함수
+
+
+
+에러이면
+
+해당 유저 임시큐 모두 제거
+
+return
+
+
+// (1) //////////////////////////////////////////////////////
+
+임시큐가 없으면
+
+return
+
+
+임시 데이터 세팅하고
+
+try
+
+임시큐 한번에 DB Push 하고(정식 쿼리 1개로 처리)
+
+catch
+
+do nothing
+
+
+임시큐 삭제
+
+임시 데이터 삭제
+
+////////////////////////////////////////////////////////////
+
+
+- 정식데이터 쿼리 결과 콜백 함수
+
+에러이면
+
+return;
+
+
+유저가 로그인 완료(login2) 하였으면
+
+유저에 다수 메일 수신 처리하고
+
+결과 처리 유저에 통보
+
+
+ServerToServerEnd() 호출 (증가된 세션 카운터 감소)
+
+
+- 유저 로그인 결과 (login2) 콜백함수
+
+유저가 로그인 한 상태이면
+
+(1) 수행
+
+
+
+
+< DB, Server 처리 순서 >
+1. 서버 선 처리 가 일반적으로 유리할듯.
+ - 디비에서 Index등을 받아와야 하는 경우를 제거할것(서버 Index생성)
+ - 디비 에러시 클라  Close
+ - 디비 응답 전까지 클라로 부터 수신 처리가 금지되었다면 디비 결과는 서버에 체크 없이 그냥 적용
+   -> 아니라면 디비 결과는 없도록 할것.
+
+< 서버 선처리 방식 구조에서, 외부에서 DB 로 추가(증가) 시키는 경우 DB, Server 처리 순서 >
+ - 로그인 시에 DB Loading 하여 처리, 로그인 중에 증가된 것은 주기적 조회 또는 증가시킨 외부에서 조회를 유발시키도록
+
+< 외부에서 Server 로 추가(증가) 시키는 경우 DB, Server 처리 순서 >
+ - 디비로 증가쿼리를 먼저날리고 DBOut 결과 처리시에
+  1. 유저가 로그인이 안된 경우
+    - 아무처리 안함.
+  2. 유저가 로그인 중 (DB Load Query 결과를 기다리는 중)인 경우
+    - DB Load Query 에서 증가된 내용을 가져오도록 처리
+  3. 유저가 로그인 완료 된 경우
+    - 서버에서 증가된 내용을 반영하고(증가분이 서버에 저장된다면 해당내용도 차감하고), 증가분을 차감하는 DB Query 를 수행 (쿼리 결과에서는 아무처리 안함)
+
+
+ <Exception Handling 및 try catch 사용 규칙>
+ - 클래스 내부에서 오류로 인해 외부에서 조차 더 이상 진행할 수 없을 때(예:메모리 부족 에러)에만 throw 하고 그 외에는 에러 코드를 return 하여 속도 보장
+
+->
+왜냐하면 throw 의 장점중 하나는 함수 외부에서 별도의 에러 처리를 하지 않더라도 외부의 외부로 바로 에러 상황을 전달할 수 있기 때문에
+
+함수 외부에서 조차 정상 진행할 수 없는 상황이 함수 내부에서 발생하면 예외를 throw 하는 것이 코드를 줄이는 방법이다.
+ - 내부에서 발생한, 진행 계속 할 수 있는 exception은 try catch 를 사용
+
+- 또한 catch 내부의 에러 처리 문을 사용하기 위해 에러 상황시 try 내에서 throw 를 할 수 있다.
+ - Net Library 의 LinkCallback, UnLinkCallback, LinkFailCallback 의 내부에서 exception 이 발생할 경우 일반적인 처리는 해당 Peer를 Close하는 것이므로
+
+이 기능을 기본적으로 탑재함.
+ - 

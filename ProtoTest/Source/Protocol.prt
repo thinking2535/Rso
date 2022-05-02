@@ -1,0 +1,9 @@
+using namespace rso
+using namespace core
+
+struct STest<T,GG>
+{
+	int32 a
+}
+
+

@@ -1,0 +1,8 @@
+namespace rso
+{
+	namespace gameskill
+	{
+		using namespace core
+		using namespace json
+	}
+}

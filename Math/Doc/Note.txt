@@ -1,0 +1,7 @@
+double relative_dist(double value_)
+{
+    if (value_ < 0.0)
+        return -::log(-(value_ - 16.8)) / ::log(1.6) + 6.0;
+    else
+        return ::log(value_ + 16.8) / ::log(1.6) - 6.0;
+}

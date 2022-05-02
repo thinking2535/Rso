@@ -1,0 +1,66 @@
+#include "Move.h"
+
+
+namespace Galaxy
+{
+	SMoveInfo	CMove::GoForward(double Time_)
+	{
+		auto PosTheta = _Object->GetPosTheta(Time_);
+		if (_Object->Mode() == EMoveMode::Spin)
+		{
+			new(&_MoveObject)CMoveObject(
+				PosTheta.Pos,
+				PosTheta.Theta,
+				(_Collided ? 0.0 : _Speed(_Size)),
+				Time_);
+			_Object = &_MoveObject;
+		}
+		return _MoveObject.GetMoveInfo();
+	}
+	SMoveInfo	CMove::TurnRight(double Time_)
+	{
+		if (_Object->Mode() == EMoveMode::Move)
+		{
+			auto PosTheta = _MoveObject.GetPosTheta(Time_);
+			new(&_SpinObject)CSpinObject(
+				(_Collided ? PosTheta.Pos : PosTheta.Pos + SPoint(cos(PosTheta.Theta - c_PI_2) * _Radius(_Size), sin(PosTheta.Theta - c_PI_2) * _Radius(_Size))),
+				(_Collided ? 0.0 : _Radius(_Size)),
+				-_dTheta(_Size),
+				PosTheta.Theta + c_PI_2,
+				Time_);
+			_Object = &_SpinObject;
+			return _SpinObject.GetMoveInfo();
+		}
+		else if (_Object->Mode() == EMoveMode::Spin)
+		{
+			return _SpinObject.TurnRight(Time_);
+		}
+		else
+		{
+			return SMoveInfo();
+		}
+	}
+	SMoveInfo	CMove::TurnLeft(double Time_)
+	{
+		if (_Object->Mode() == EMoveMode::Move)
+		{
+			auto PosTheta = _MoveObject.GetPosTheta(Time_);
+			new(&_SpinObject)SSpinObject(
+				(_Collided ? PosTheta.Pos : PosTheta.Pos + SPoint(cos(PosTheta.Theta + c_PI_2) * _Radius(_Size), sin(PosTheta.Theta + c_PI_2) * _Radius(_Size))),
+				(_Collided ? 0.0 : _Radius(_Size)),
+				_dTheta(_Size),
+				PosTheta.Theta - c_PI_2,
+				Time_);
+			_Object = &_SpinObject;
+			return _SpinObject.GetMoveInfo();
+		}
+		else if (_Object->Mode() == EMoveMode::Spin)
+		{
+			return _SpinObject.TurnLeft(Time_);
+		}
+		else
+		{
+			return SMoveInfo();
+		}
+	}
+}

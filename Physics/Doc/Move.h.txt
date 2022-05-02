@@ -1,0 +1,281 @@
+#pragma once
+
+
+#include "Physics.h"
+
+
+namespace rso
+{
+	namespace physics
+	{
+		class CMove
+		{
+			// Need To run Proto Gen
+			//enum EMoveMode
+			//{
+			//	Move,
+			//	Spin,
+			//}
+			//struct SMoveInfo
+			//{
+			//	EMoveMode MoveMode
+			//		SPoint PosCenter
+			//		double Theta
+			//		double SpeedRadius
+			//		double dTheta
+			//}
+			///////////////////////////
+
+			inline static double _Speed(double Size_)
+			{
+				return (1000.0 / Size_);
+			}
+			inline static double _Radius(double Size_)
+			{
+				return (Size_ * 1.8);
+			}
+			inline static double _dTheta(double Size_)
+			{
+				return (_Speed(Size_) / _Radius(Size_));
+			}
+
+			class CObject
+			{
+			public:
+				virtual EMoveMode Mode(void) const = 0;
+				virtual SPosTheta GetPosTheta(double Time_) = 0;
+				virtual SMoveInfo GetMoveInfo(void) const = 0;
+				virtual SMoveInfo GetMoveInfoTime(double Time_) const = 0;
+				virtual SMoveInfo SetSize(double Size_, double Time_) = 0;
+				virtual SMoveInfo Collided(double Time_) = 0;
+				virtual SMoveInfo UnCollided(double Size_, double Time_) = 0;
+			};
+			class CMoveObject : public CObject
+			{
+				SMoveObject _Object;
+
+			public:
+				CMoveObject() {}
+				CMoveObject(const SPoint& Pos_, double Theta_, double Speed_, double Time_) :
+					_Object(Pos_, Theta_, Speed_, Time_)
+				{
+				}
+				inline EMoveMode Mode(void) const override
+				{
+					return EMoveMode::Move;
+				}
+				inline SPosTheta GetPosTheta(double Time_) override
+				{
+					return _Object.GetPosTheta(Time_);
+				}
+				SMoveInfo GetMoveInfo(void) const override
+				{
+					return SMoveInfo(
+						EMoveMode::Move,
+						_Object.Pos,
+						_Object.Theta,
+						_Object.Speed,
+						0.0);
+				}
+				SMoveInfo GetMoveInfoTime(double Time_) const override
+				{
+					return SMoveInfo(
+						EMoveMode::Move,
+						_Object.GetPos(Time_),
+						_Object.Theta,
+						_Object.Speed,
+						0.0);
+				}
+				SMoveInfo SetSize(double Size_, double Time_) override
+				{
+					_Object.SetSpeed(_Speed(Size_), Time_);
+					return GetMoveInfo();
+				}
+				SMoveInfo Collided(double Time_) override
+				{
+					_Object.SetSpeed(0.0, Time_);
+					return GetMoveInfo();
+				}
+				SMoveInfo UnCollided(double Size_, double Time_) override
+				{
+					_Object.SetSpeed(_Speed(Size_), Time_);
+					return GetMoveInfo();
+				}
+			};
+			class CSpinObject : public CObject
+			{
+				SSpinObject _Object;
+				double _LastTheta = 0.0;	// 3시방향을 기준으로 Center-Pos 간의 각이 아닌 기준방향과 Pos의 진행방향 의 각	// dTheta 가 0.0 일때 최근 회전방향을 알기 위함
+
+			public:
+				CSpinObject()
+				{
+				}
+				CSpinObject(const SPoint& Center_, double Radius_, double dTheta_, double BaseTheta_, double BaseTime_) :
+					_Object(Center_, Radius_, dTheta_, BaseTheta_, BaseTime_)
+				{
+				}
+				inline EMoveMode Mode(void) const override
+				{
+					return EMoveMode::Spin;
+				}
+				inline SPosTheta GetPosTheta(double Time_) override
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+					if (_Object.dTheta > 0.0) // 반시계방향
+						PosTheta.Theta += c_PI_2;
+					else if (_Object.dTheta < 0.0) // 시계방향
+						PosTheta.Theta -= c_PI_2;
+					else
+						PosTheta.Theta = _LastTheta;
+
+					_LastTheta = PosTheta.Theta;
+
+					return PosTheta;
+				}
+				SMoveInfo GetMoveInfo() const override
+				{
+					return SMoveInfo(
+						EMoveMode::Spin,
+						_Object.Center,
+						_Object.BaseTheta,
+						_Object.Radius,
+						_Object.dTheta);
+				}
+				SMoveInfo GetMoveInfoTime(double Time_) const override
+				{
+					return SMoveInfo(
+						EMoveMode::Spin,
+						_Object.Center,
+						_Object.GetTheta(Time_),
+						_Object.Radius,
+						_Object.dTheta);
+				}
+				SMoveInfo SetSize(double Size_, double Time_) override
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+					_Object.SetdTheta(_dTheta(Size_), Time_);
+
+					auto dVector = Vector(PosTheta.Theta, _Object.Radius - _Radius(Size_));
+					_Object.Center += dVector;
+					_Object.Radius = _Radius(Size_);
+
+					return GetMoveInfo();
+				}
+				SMoveInfo Collided(double Time_) override
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+
+					_Object.Center = PosTheta.Pos;
+					_Object.Radius = 0.0;
+					_Object.BaseTheta = PosTheta.Theta;
+					_Object.BaseTime = Time_;
+
+					return GetMoveInfo();
+				}
+				SMoveInfo UnCollided(double Size_, double Time_) override
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+					_Object.Radius = _Radius(Size_);
+					_Object.Center = (PosTheta.Pos - (Vector(PosTheta.Theta, _Object.Radius)));
+					_Object.BaseTheta = PosTheta.Theta;
+					_Object.BaseTime = Time_;
+
+					return GetMoveInfo();
+				}
+				SMoveInfo TurnRight(double Time_)
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+
+					if (_Object.dTheta > 0.0)
+					{
+						_Object.Center = (PosTheta.Pos + (PosTheta.Pos - _Object.Center));
+						_Object.BaseTheta -= c_PI;
+						_Object.SetdTheta(-_Object.dTheta, Time_);
+					}
+
+					return GetMoveInfo();
+				}
+				SMoveInfo TurnLeft(double Time_)
+				{
+					auto PosTheta = _Object.GetPosTheta(Time_);
+
+					if (_Object.dTheta < 0.0)
+					{
+						_Object.Center = (PosTheta.Pos + (PosTheta.Pos - _Object.Center));
+						_Object.BaseTheta += c_PI;
+						_Object.SetdTheta(-_Object.dTheta, Time_);
+					}
+
+					return GetMoveInfo();
+				}
+			};
+
+			double _Size = 1.0;
+			CMoveObject _MoveObject;
+			CSpinObject _SpinObject;
+			CObject*	_Object = nullptr;
+			bool _Collided = false;
+
+		public:
+			CMove() {}
+			CMove(const SPoint& Pos_, double Size_, double Theta_, double Time_) :
+				_Size((Size_ <= 0 ? THROWEX() : Size_)),
+				_MoveObject(Pos_, Theta_, _Speed(Size_), Time_),
+				_Object(&_MoveObject)
+			{
+			}
+			inline SPosTheta	GetPosTheta(double Time_)
+			{
+				return _Object->GetPosTheta(Time_);
+			}
+			SMoveInfo	GoForward(double Time_);
+			SMoveInfo	TurnRight(double Time_);
+			SMoveInfo	TurnLeft(double Time_);
+			inline SMoveInfo	SetSize(double Size_, double Time_)
+			{
+				return _Object->SetSize(Size_, Time_);
+			}
+			SMoveInfo	Collided(double Time_)
+			{
+				_Collided = true;
+				return _Object->Collided(Time_);
+			}
+			SMoveInfo	UnCollided(double Time_)
+			{
+				_Collided = false;
+				return _Object->UnCollided(_Size, Time_);
+			}
+			SMoveInfo GetMoveInfo(void) const
+			{
+				return _Object->GetMoveInfo();
+			}
+			SMoveInfo GetMoveInfoTime(double Time_) const
+			{
+				return _Object->GetMoveInfoTime(Time_);
+			}
+			void SetMoveInfo(SMoveInfo Info_, double Time_)
+			{
+				if (Info_.MoveMode == EMoveMode::Move)
+				{
+					new(&_MoveObject) CMoveObject(
+						Info_.PosCenter,
+						Info_.Theta,
+						Info_.SpeedRadius,
+						Time_);
+					_Object = &_MoveObject;
+				}
+				else if (Info_.MoveMode == EMoveMode::Spin)
+				{
+					new(&_SpinObject) CSpinObject(
+						Info_.PosCenter,
+						Info_.SpeedRadius,
+						Info_.dTheta,
+						Info_.Theta,
+						Time_);
+					_Object = &_SpinObject;
+				}
+			}
+		};
+	}
+}

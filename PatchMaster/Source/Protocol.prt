@@ -1,0 +1,22 @@
+include <Rso/Net/Protocol>
+
+using namespace std
+using namespace rso
+using namespace net
+
+struct SIDPW
+{
+	wstring ID
+	wstring PW
+}
+struct SOption
+{
+	wstring Title
+	wstring DataFile
+	TPeerCnt ChildCntMax
+	SNamePort ChildBindNamePort
+	SNamePort ClientBindNamePort
+	SNamePort ClientBindNamePortPub
+	SNamePort AgentBindNamePort
+	list<SIDPW> Accounts
+}

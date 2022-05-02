@@ -1,0 +1,13 @@
+{
+	"test": {
+		"Name" : "Ok"
+	},
+	"Port" : 20000,
+	"Bool" : false,
+	"DBs" :	[
+		{ "Port" : 1234, "DBName" : "a" },
+		{ "DBName" : "a", "Port" : 1235 },
+		{ "DBName" : "a", "Port" : 1236 },
+		{ "DBName" : "a", "Port" : 1237 }
+	]
+}

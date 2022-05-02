@@ -1,0 +1,69 @@
+* Error
+	에러 직후 Close 여부는 서버가 결정, 클라이언트는 알 필요 없음.
+	Cs에 대한 결과 Sc를 기대하는 프로토콜에 대한 ScError  Cs와 관계 없이 받을 수 있는 ScNoti 를 구분
+	클라이언트는 Sc 를 기대하는 Cs 를 알고있으므로 ScError에 CsNumber 는 불필요
+	서버는 Cs를 받은 이후 Sc, ScError 혹은 Close 중 하나가 반드시 실행되도록 처리
+	서버는 서버간 프로토콜을 전송하기전에 전송측에서 상태를 바꾸는 경우가 있고, 이에 따라 각 프로토콜의 실패여부에 따른 롤백 처리로 인해 Fail 프로토콜이 개별적으로 있어야 하지만
+	클라이언트는 롤백처리를 허용하지 않도록 하고, 보낸 Cs 순서대로 Sc 가 도달한다는 것을 전제로 ScError 에 Cs 번호를 넣을 필요가 없음.
+		- Sc 를 받지 않은 가장 먼저의 Cs 에 대한 에러일 것이므로
+
+
+
+* ChangeNick
+	Clear Master.dat
+	CmChangeNick
+	MaChangeNick
+	AuthChangeNikcDB
+	AmChangeNick
+	MasterChangeNikcDB
+	McChangeNick
+
+
+* 서버 비선택 구조에서
+	- DB를 순차 저장방식이면 디비서버는 Client의 위치에 상관없이 처리
+	- 전투방 등의 경우에만 IP 로 위치 파악 후 인스턴스를 새로 생성
+
+* 서버 선택 구조에서
+	- Auth 할당시 유저가 선택한 곳으로 이동
+
+< 계정 생성, 로그인 절차 >
+* DB Create : auth, master 순서로 계정을 생성하되 중간에 실패하더라도 다시 생성이 가능하도록 생성(Create) 계열은 데이터가 존재하더라도 실패없이 진행하되
+	auth 에서만 있을 경우 암호 일치여부 검사할것.
+* DB Login : 정상적이라면 master 부터로그인 하는데, Master에 없다면 auth 로 로그인 시도할것, 로그인 시에는 계정을 생성하지 않으므로 이후 Master 로 접속 실패하여
+	이후에는 다시 생성절차에 돌입하도록
+	
+
+* 계정이 Auth 에 없다면 Master, Server까지 모두 없는것이고, Server에 계정이 있다면, Master, Auth 까지 계정이 있은 것으로 간주
+* Server는 내부적으로 Login 으로만 처리되며, 외부에서 spLogin 결과가 없으면 spJoin 을 자동으로 호출하여 생성
+
+* Auth, Master, Server 순서로 계정로그인 처리하며 없으면 바로 에러
+* Auth, Master, Server 순서로 계정생성 처리하며 없으면 INSERT 하고, 있으면 SELECT (외부 spJoin 역시)
+
+* Auth 에서 Master 까지 Login 실패라 함은 Auth, 또는 Master 까지 Login 시도중 한번이라도 실패함을 의미
+* Auth 에서 Master 까지 Create 논리적인 실패는 없음(계정이 있을 경우 SELECT 하므로. 단, 시스템 에러등 제외)
+
+* 클라이언트 Login(ID, PW)를 추가하여 ID가 공백이면, 로컬파일이 없을 경우 로그인 실패하고, 파일이 있으면  그 정보로 로그인 수행 (이는 FireBase 인증등 을 쓰지않을 경우 대비)
+	ID가 공백이 아니면, 파일이 없을경우 해당 ID, PW로 로긴하고, 파일이 있을 경우 ID가 다르면
+	입력받은 ID, PW 로 Auth로 로긴 시도
+
+* 클라이언트의 Login() return 결과가
+	true 이면
+		로그인 처리가 진행됨
+	false 이면
+		외부에서는 Create() 를 호출
+
+* 외부에서 계정 존재유무 체크하기위해서는 클라이언트의 Check() 를 호출하고,
+	Auth, Master, Server, GameDB, Server, Master, Auth, Client 로 정보가 전달됨
+
+
+< 계정 연동 등의 절차 >
+* 최초 로그인시 [Guest로 로그인], [기존아이디로 로그인] 버튼 활성화
+* 이후 로컬 계정파일이 생성된 경우 [기존아이디로 로그인] 버튼 비활성화
+
+* [기존아이디로 로그인] 를 실행한 경우, 유저는 자신의 계정과 연결된 ID(FireBase통하든 아니든 상관 없음.)가 없으면
+		Create(Guest ID) : 게임서버군에 계정이 있더라도 로그인 절차와 동일하게 처리되므로 상관 없음.
+	있으면
+		Check (연동된 ID) 호출하여 계정정보를 가져오기하여 정보가 있으면
+			Guest를 새로 연동할지, 기존 ID를 사용할지 유저가 선택할 수 있도록
+		없으면			
+			Create(Guest ID)

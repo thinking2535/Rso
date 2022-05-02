@@ -1,0 +1,10 @@
+struct _STest
+{
+	int64	Index
+	wstring Name
+}
+
+struct STest2
+{
+	list<_STest>	Datas
+}

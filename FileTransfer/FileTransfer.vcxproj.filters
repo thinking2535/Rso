@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{b2c850db-3872-47a7-9c03-cd3b355fa60b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileTransfer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileTransferServer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileTransferClient.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Base.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

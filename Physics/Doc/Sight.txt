@@ -1,0 +1,367 @@
+#pragma once
+
+
+#include <functional>
+#include <Rso/Base/List.h>
+#include <Rso/Physics/Physics.h>
+
+
+namespace rso
+{
+	namespace physics
+	{
+		using namespace std;
+		using namespace placeholders;
+		using namespace base;
+
+		template<typename _TObject>
+		class CSight
+		{
+		private:
+			using _TCellCoord = __int32;
+			struct _SCellPos
+			{
+				_TCellCoord X = 0;
+				_TCellCoord Y = 0;
+
+				_SCellPos(_TCellCoord X_, _TCellCoord Y_) :
+					X(X_), Y(Y_)
+				{}
+				bool operator < (const _SCellPos& rhs_) const
+				{
+					return (X < rhs_.X || (X == rhs_.X && Y < rhs_.Y));
+				}
+				bool operator == (const _SCellPos& rhs_) const
+				{
+					return (X == rhs_.X && Y == rhs_.Y);
+				}
+				bool operator != (const _SCellPos& rhs_) const
+				{
+					return !(operator == (rhs_));
+				}
+			};
+			struct _SObject;
+			using _TObjects = CList<_SObject>;
+		public:
+			using iterator = typename _TObjects::iterator;
+			using iterators = set<iterator>;
+		private:
+			struct _SCell
+			{
+				iterators Seers;
+				iterators Blinds;
+			};
+			using _TCells = map<_SCellPos, _SCell>;
+			struct _SObject
+			{
+				bool CanSee = false;
+				SPoint Pos;
+				_SCellPos CellPos; // double 오차로 매번 계산할 경우 CellPos가 달라질 수 있다고 가정하고 저장
+				double Radius = 0.0;
+				iterators InSightObjects;
+				_TObject Object{};
+
+				_SObject(bool CanSee_, const SPoint& Pos_, const _SCellPos& CellPos_, double Radius_, const _TObject& Object_) :
+					CanSee(CanSee_), Pos(Pos_), CellPos(CellPos_), Radius(Radius_), Object(Object_)
+				{}
+			};
+			using _TSightProcCell = function<void(iterator it_, const _SCell& Cell_)>;
+		public:
+			using TInSightCallback = function<void(iterator it_, iterator Target_)>;
+			using TOutSightCallback = function<void(iterator it_, iterator Target_)>;
+
+		private:
+			double _MaxRadius = 0.0;
+			double _Error = 0.0;
+			TInSightCallback _InSightCallback;
+			TOutSightCallback _OutSightCallback;
+			_TObjects _Objects;
+			_TCells _Cells;
+
+			_TCellCoord _CellCoord(double Value_)
+			{
+				if (Value_ >= 0.0)
+					return _TCellCoord(Value_ / _MaxRadius);
+				else
+					return _TCellCoord(Value_ / _MaxRadius) - 1;
+			}
+			_SCellPos _CellPos(const SPoint& Pos_)
+			{
+				return _SCellPos(_CellCoord(Pos_.X), _CellCoord(Pos_.Y));
+			}
+			bool _CanSee(iterator it_, iterator itTarget_)
+			{
+				return (it_->Radius >= Distance(it_->Pos, itTarget_->Pos));
+			}
+			void _InSightProc(iterator it_, iterator itTarget_)
+			{
+				if (!_CanSee(it_, itTarget_))
+					return;
+
+				it_->InSightObjects.emplace(itTarget_);
+				_InSightCallback(it_, itTarget_);
+			}
+			void _OutSightProc(iterator it_, iterator itTarget_)
+			{
+				auto itTarget = it_->InSightObjects.find(itTarget_);
+				if (itTarget != it_->InSightObjects.end())
+				{
+					it_->InSightObjects.erase(itTarget);
+					_OutSightCallback(it_, itTarget_);
+				}
+			}
+			void _SightProc(iterator it_, iterator itTarget_)
+			{
+				if (_CanSee(it_, itTarget_))
+				{
+					if (it_->InSightObjects.emplace(itTarget_).second)
+						_InSightCallback(it_, itTarget_);
+				}
+				else
+				{
+					auto itTarget = it_->InSightObjects.find(itTarget_);
+					if (itTarget != it_->InSightObjects.end())
+					{
+						it_->InSightObjects.erase(itTarget);
+						_OutSightCallback(it_, itTarget_);
+					}
+				}
+			}
+			void _SeerInSightProcCell(iterator itSeer_, const _SCell& Cell_) // call when insert
+			{
+				for (auto& it : Cell_.Seers)
+				{
+					if (it.Index() == itSeer_.Index()) // it's me
+						continue;
+
+					_InSightProc(itSeer_, it);
+					_InSightProc(it, itSeer_);
+				}
+
+				for (auto& it : Cell_.Blinds)
+					_InSightProc(itSeer_, it);
+			}
+			void _BlindInSightProcCell(iterator itBlind_, const _SCell& Cell_) // call when insert
+			{
+				for (auto& it : Cell_.Seers)
+				{
+					if (it.Index() == itBlind_.Index()) // it's me
+						continue;
+
+					_InSightProc(it, itBlind_);
+				}
+			}
+			void _OutSightProcCell(iterator it_, const _SCell& Cell_) // call when erase
+			{
+				for (auto& it : Cell_.Seers)
+				{
+					if (it.Index() == it_.Index()) // it's me
+						continue;
+
+					_OutSightProc(it, it_);
+				}
+			}
+			void _SeerSightProcCell(iterator itSeer_, const _SCell& Cell_)
+			{
+				for (auto& it : Cell_.Seers)
+				{
+					if (it.Index() == itSeer_.Index()) // it's me
+						continue;
+
+					_SightProc(itSeer_, it);
+					_SightProc(it, itSeer_);
+				}
+
+				for (auto& it : Cell_.Blinds)
+					_SightProc(itSeer_, it);
+			}
+			void _BlinedSightProcCell(iterator itBlind_, const _SCell& Cell_)
+			{
+				for (auto& it : Cell_.Seers)
+				{
+					if (it.Index() == itBlind_.Index()) // it's me
+						continue;
+
+					_SightProc(it, itBlind_);
+				}
+			}
+
+		public:
+			CSight(double MaxRadius_, double Error_, TInSightCallback InSightCallback_, TOutSightCallback OutSightCallback_) :
+				_MaxRadius(MaxRadius_),
+				_Error(Error_),
+				_InSightCallback(InSightCallback_),
+				_OutSightCallback(OutSightCallback_)
+			{
+			}
+			iterator insert(bool CanSee_, const SPoint& Pos_, double Radius_, const _TObject& Object_)
+			{
+				auto CellPos = _CellPos(Pos_);
+
+				auto itObject = _Objects.emplace(CanSee_, Pos_, CellPos, Radius_, Object_);
+				if (!itObject)
+					return iterator();
+
+				try
+				{
+					auto ib = _Cells.emplace(CellPos, _SCell());
+					_TSightProcCell SightProcCell;
+
+					if (CanSee_)
+					{
+						try
+						{
+							ib.first->second.Seers.emplace(itObject); // _Objects 에 삽입 성공했다면 itObject.Index()가 고유할 것이므로 여기도 성공한다고 간주
+						}
+						catch (...)
+						{
+							if (ib.second) // 처음에 Cell이 없었으면 다시 제거
+							{
+								_Cells.erase(ib.first);
+								return iterator();
+							}
+						}
+
+						SightProcCell = std::bind(&CSight::_SeerInSightProcCell, this, _1, _2);
+					}
+					else
+					{
+						try
+						{
+							ib.first->second.Blinds.emplace(itObject); // _Objects 에 삽입 성공했다면 itObject.Index()가 고유할 것이므로 여기도 성공한다고 간주
+						}
+						catch (...)
+						{
+							if (ib.second) // 처음에 Cell이 없었으면 다시 제거
+							{
+								_Cells.erase(ib.first);
+								return iterator();
+							}
+						}
+
+						SightProcCell = std::bind(&CSight::_BlindInSightProcCell, this, _1, _2);
+					}
+
+					try
+					{
+						SightProcCell(itObject, ib.first->second);
+						++CellPos.X; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						--CellPos.Y; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						--CellPos.X; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						--CellPos.X; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						++CellPos.Y; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						++CellPos.Y; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						++CellPos.X; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+						++CellPos.X; ib.first = _Cells.find(CellPos); if (ib.first != _Cells.end()) SightProcCell(itObject, ib.first->second);
+					}
+					catch (...)
+					{
+					}
+				}
+				catch (...)
+				{
+					_Objects.erase(itObject);
+					return iterator();
+				}
+
+				return itObject;
+			}
+			void erase(iterator it_)
+			{
+				auto CellPos = it_->CellPos;
+
+				auto itCell = _Cells.find(CellPos);
+				if (itCell == _Cells.end())
+					return;
+
+				if (it_->CanSee)
+					itCell->second.Seers.erase(it_);
+				else
+					itCell->second.Blinds.erase(it_);
+
+				_OutSightProcCell(it_, itCell->second);
+
+				if (itCell->second.Seers.empty() &&
+					itCell->second.Blinds.empty())
+					_Cells.erase(itCell);
+
+				++CellPos.X; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				--CellPos.Y; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				--CellPos.X; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				--CellPos.X; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				++CellPos.Y; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				++CellPos.Y; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				++CellPos.X; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+				++CellPos.X; itCell = _Cells.find(CellPos); if (itCell != _Cells.end()) _OutSightProcCell(it_, itCell->second);
+
+				_Objects.erase(it_);
+			}
+			void change(iterator it_, const SPoint& Pos_, double Radius_)
+			{
+				if (Distance(it_->Pos, Pos_) + sqrt((it_->Radius - Radius_) * (it_->Radius - Radius_)) < _Error)
+					return;
+
+				auto NewCellPos = _CellPos(Pos_);
+
+				if (NewCellPos != it_->CellPos)
+				{
+					새로운 cell에 자신 삽입
+
+
+
+						과거 Cell에서 자신 제거
+
+					에러시 return;
+				}
+
+
+				it_->Pos = Pos_;
+				it_->CellPos = NewCellPos;
+
+
+
+				작업중 새로운 셀은 insignt만, 중복된것은 sightProc을 과거 셀은 outcell
+				Cell 마다 Counter 를 두어
+					++_Counter 하고 기존 9Cells 에 _Counter를 set, ++_Counter 하고 새로운 9Cells 에 _Counter를 
+
+
+
+				_Counter가 오버플로우 되기 전에 Cells의 Counter리셋
+
+
+					++_Counter 이후 기존 9Cell에서 SightProcCell 처리(각 Cell.Counter에 _Counter 저장)
+					다시 새로운 9Cell에서 SightProcCell 처리하되 Cell.Counter가 _Counter와 같으면 처리 생략
+
+
+
+
+				//Cell변경 실패하면
+				//	변경 안한걸로 처리
+
+
+
+				// Cell 이 변경되었으면
+				//		 왓두?
+				// 아니면
+				//		 왓두?
+
+				//Cell이 변경되지 않았으면
+				//	9개 Cell에서 시야 처리
+				//아니면
+				//	과거 셀 대비 이동된 위치에 따라 삭제할 Cell 추가할 Cell 처리
+
+
+
+				//_InSightCallback, _OutSightCallback 처리
+			}
+
+
+
+
+			//iterator Add(const _TObject& Object_, const SPoint& Pos_, double Radius_);
+			//void ChangePos(iterator Iterator_, const SPoint& Pos_);
+			//void ChangeRadius(iterator Iterator_, double Radius_);
+			//void ChangePosRadius(iterator Iterator_, const SPoint& Pos_, double Radius_);
+		};
+	}
+}

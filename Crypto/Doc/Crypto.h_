@@ -1,0 +1,33 @@
+#pragma once
+
+#include "Base.h"
+#include <string>
+
+NS_BEGIN
+
+namespace crypto
+{
+	using namespace std;
+
+	class CCrypto
+	{
+	private:
+		__int64	_EncodePrivateKey;
+		__int64	_EncodePublicKey;
+		__int64	_EncodeMulti;
+		__int64	_DecodePrivateKey;
+		__int64	_DecodePublicKey;
+		__int64	_DecodeMulti;
+
+	public:
+		CCrypto();
+		~CCrypto();
+
+		void	SetEncodeKey( __int64 PrivateKey_, __int64 PublicKey_ );
+		void	SetDecodeKey( __int64 PrivateKey_, __int64 PublicKey_ );
+		void	Encode( char* pData_o, __int64 Size_ );
+		void	Decode( char* pData_o, __int64 Size_ );
+	};
+}
+
+NS_END

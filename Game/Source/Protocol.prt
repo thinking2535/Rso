@@ -1,0 +1,969 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace game
+	{
+		using namespace std
+		using namespace core
+		using namespace json
+		using namespace net
+
+		typedef	int8 TVer
+		typedef u16string TID
+		typedef u16string TNick
+		typedef u16string TMessage
+		typedef uint8 TState
+
+		const int32 c_IDLengthMax 255
+		const int32 c_BinaryIDLengthMax 32
+		const int32 c_NickLengthMin 2
+		const int32 c_NickLengthMax 32
+
+		const TState c_Default_State 0
+
+		enum class EProto
+		{
+			MaMasterOn
+			AmMasterOn
+			MsMasterOn
+			AmOtherMasterOn
+			MsOtherMasterOn
+			AmOtherMasterOff
+			MsOtherMasterOff
+			SmServerOn
+			MsServerOn
+			MsOtherServerOn
+			MaServerOn
+			AmOtherMasterServerOn
+			MsOtherMasterServerOn
+			MsOtherServerOff
+			MaServerOff
+			AmOtherMasterServerOff
+			MsOtherMasterServerOff
+			CaCreate
+			AmCreate
+			MaCreate
+			MaCreateFail
+			CaLogin
+			AcLogin
+			AcLoginFail
+			SmChangeNick
+			MaChangeNick
+			AmChangeNick
+			AmChangeNickFail
+			MsChangeNick
+			MsChangeNickFail
+			CaCheck
+			AmCheck
+			MsCheck
+			SmCheck
+			MaCheck
+			MaCheckFail
+			AcCheck
+			AcCheckFail
+			CmLogin
+			MsLogin
+			SmLogin
+			SmSessionEnd
+			SmSetOpened
+			McLogin
+			McLoginFail
+			CsLogin
+			ScLogin
+			ScLoginFail
+			ScError
+
+			CsAddFriend
+			SmAddFriend
+			MaAddFriendGetUID
+			AmAddFriendGetUID
+			AmAddFriendGetUIDFail
+			MaAddFriend
+			AmAddFriendRequest
+			MsAddFriendRequest
+			ScAddFriendRequest
+			MaAddFriendRequest
+			MaAddFriendRequestFail
+			AmAddFriend
+			AmAddFriendFail
+			MsAddFriend
+			MsAddFriendFail
+			ScAddFriend
+			CsAllowFriend
+			SmAllowFriend
+			MsAllowFriend
+			MsAllowFriendFail
+			ScAllowFriend
+			CsDenyFriend
+			SmDenyFriend
+			MsDenyFriend
+			MsDenyFriendFail
+			ScDenyFriend
+			CsBlockFriend
+			SmBlockFriend
+			MsBlockFriend
+			MsBlockFriendFail
+			ScBlockFriend
+			CsUnBlockFriend
+			SmUnBlockFriend
+			MsUnBlockFriend
+			MsUnBlockFriendFail
+			ScUnBlockFriend
+			CsMessageSend
+			SsMessageSend
+			ScMessageReceived
+
+			CsChangeState
+			SmChangeState
+			MsChangeState
+			MsChangeStateFail
+			ScChangeState
+			MmFriendStateChanged
+			MsFriendStateChanged
+			ScFriendStateChanged
+			MmFriendStateChangedRenew
+			MsFriendStateChangedOffline
+			ScFriendStateChangedOffline
+
+			SmToServer
+			MaToServer
+			AmToServer
+			MsToServer
+			MsSessionHold
+			
+			AmPunish
+			MsPunish
+			
+			AmUserProto
+			MaUserProto
+			MsUserProto
+			SmUserProto
+			ScUserProto
+			CsUserProto
+
+			Max
+			Null
+		}
+		enum class EGameRet
+		{
+			Ok
+			UserClose
+			HeartBeatFail
+			KeepConnectTimeOut
+			ConnectFail
+			CertifyFail
+			SystemError
+			SocketError
+			InvalidPacket
+			NetError
+			InvalidAccess
+			InvalidVersion
+			InvalidUID
+			InvalidID
+			InvalidIDLength
+			InvalidNick
+			InvalidNickLength
+			InvalidSession
+			AlreadyExist
+			DataBaseError
+			DataBasePushError
+			NoAuthToConnect
+			NoMasterToConnect
+			NoServerToConnect
+			ConnectAuthFail
+			ConnectMasterFail
+			ConnectServerFail
+			SessionNotFound
+			AddSessionFail
+			Punished
+			AuthDisconnected
+			Max
+			Null
+		}
+		enum class EFriendState
+		{
+			Adding
+			Request
+			Normal
+			Blocked
+			Max
+			Null
+		}
+
+		struct SHeader
+		{
+			EProto	Proto
+		}
+
+		struct SUIDPair
+		{
+			TUID UID
+			TUID SubUID
+		}
+
+		struct SServerNet
+		{
+			SNamePort ServerBindNamePort
+		}
+		typedef set<SServerNet> TServerNets
+		struct SMasterNet
+		{
+			SRangeUID RangeUID
+			TServerNets Servers
+		}
+		typedef list<SMasterNet> TMasterNets
+		struct SMaMasterOn : SMasterNet
+		{
+			SNamePort ClientBindNamePortPub
+			TPort MasterBindPort
+		}
+		struct SMaster : SMasterNet
+		{
+			SNamePort MasterBindNamePort
+		}
+		struct SAmMasterOn
+		{
+			list<SMaster> OtherMasters
+		}
+		struct SMsMasterOn
+		{
+			list<SMaster> OtherMasters
+		}
+		struct SAmOtherMasterOn
+		{
+			SMaster Master
+		}
+		struct SMsOtherMasterOn : SMasterNet
+		{
+		}
+		struct SAmOtherMasterOff
+		{
+			SRangeUID MasterRangeUID
+		}
+		struct SMsOtherMasterOff
+		{
+			SRangeUID MasterRangeUID
+		}
+		struct SSmServerOn
+		{
+			SNamePort ClientBindNamePortPub
+			TPort ServerBindPort
+		}
+		struct SMsServerOn
+		{
+			SNamePort ServerBindNamePort
+			TServerNets OtherServers
+			TMasterNets OtherMasters
+		}
+		struct SMsOtherServerOn
+		{
+			SServerNet Server
+		}
+		struct SMaServerOn
+		{
+			SNamePort ServerBindNamePort
+		}
+		struct SAmOtherMasterServerOn
+		{
+			SRangeUID MasterRangeUID
+			SServerNet Server
+		}
+		struct SMsOtherMasterServerOn
+		{
+			SRangeUID MasterRangeUID
+			SServerNet Server
+		}
+		struct SMsOtherServerOff
+		{
+			SServerNet Server
+		}
+		struct SMaServerOff
+		{
+			SServerNet Server
+		}
+		struct SAmOtherMasterServerOff
+		{
+			SRangeUID MasterRangeUID
+			SServerNet Server
+		}
+		struct SMsOtherMasterServerOff
+		{
+			SRangeUID MasterRangeUID
+			SServerNet Server
+		}
+
+		struct SCaCreate
+		{
+			TID ID
+			TNick Nick
+			TState State
+		}
+		struct SAccount
+		{
+			TID ID
+			TNick Nick
+		}
+		struct SAmCreate
+		{
+			TUID UID
+			SAccount Account
+			TState State
+			SKey UserKey
+		}
+		struct SMaCreate
+		{
+			SKey UserKey
+			TUID UID
+		}
+		struct SMaCreateFail
+		{
+			SKey UserKey
+			EGameRet GameRet
+		}
+		struct SCaLogin
+		{
+			TUID UID
+			TID ID
+		}
+		struct SAcLogin
+		{
+			TUID UID
+			SNamePort ClientBindNamePortPubToMaster
+		}
+		struct SAcLoginFail
+		{
+			EGameRet GameRet
+		}
+		struct SSmChangeNick
+		{
+			TUID UID
+			TNick Nick
+			SKey ClientKey
+		}
+		struct SMaChangeNick : SSmChangeNick
+		{
+			SKey ServerKey
+		}
+
+		struct SMsChangeNick
+		{
+			TNick Nick
+			SKey ClientKey
+			TUID UID
+		}
+		struct SMsChangeNickFail
+		{
+			EGameRet GameRet
+			SKey ClientKey
+			TUID UID
+		}
+		struct SAmChangeNick : SMsChangeNick
+		{
+			SKey ServerKey
+		}
+		struct SAmChangeNickFail : SMsChangeNickFail
+		{
+			SKey ServerKey
+		}
+		struct SCaCheck
+		{
+			TID ID
+		}
+		struct SAmCheck
+		{
+			TUID UID
+			SKey UserKey
+		}
+		struct SMsCheck
+		{
+			TUID UID
+			SKey UserKey
+			SKey AuthKey
+			TSessionCode SessionCode
+		}
+		struct SSmCheck
+		{
+			TUID UID
+			SKey UserKey
+			SKey AuthKey
+			stream Stream
+		}
+		struct SMaCheck
+		{
+			TUID UID
+			SKey UserKey
+			stream Stream
+		}
+		struct SMaCheckFail
+		{
+			SKey UserKey
+			EGameRet GameRet
+		}
+		struct SAcCheck
+		{
+			TUID UID
+			stream Stream
+		}
+		struct SAcCheckFail
+		{
+			EGameRet GameRet
+		}
+
+		struct SCmLogin
+		{
+			TUID UID
+			TID ID
+			TUID SubUID
+		}
+		struct SFriendDB
+		{
+			TNick Nick
+			EFriendState FriendState
+		}
+		struct SFriendInfo
+		{
+			SNamePort ServerBindNamePort
+			TState State
+		}
+		struct SFriend : SFriendDB
+		{
+			SFriendInfo Info
+		}
+		typedef map<TUID,SFriendDB> TFriendDBs
+		typedef map<TUID,SFriend> TFriends
+		struct SMsLogin
+		{
+			TUID UID
+			SAccount Account
+			TUID SubUID
+			TFriends Friends
+			SKey UserKey
+			TSessionCode SessionCode
+		}
+		struct SSmLogin
+		{
+			SKey UserKey
+			TSessionCode SessionCode
+		}
+		struct SSmSessionEnd
+		{
+			TUID UID
+			TSessionCode SessionCode
+		}
+		struct SSmSetOpened
+		{
+			bool Opened
+		}
+		struct SMcLogin
+		{
+			SNamePort ClientBindNamePortPubToServer
+			TSessionCode SessionCode
+		}
+		struct SMcLoginFail
+		{
+			EGameRet GameRet
+		}
+
+		struct SVersion
+		{
+			TVer Main
+			uint64 Data
+		}
+		struct SCsLogin
+		{
+			TUID UID
+			TID ID
+			TUID SubUID
+			TSessionCode SessionCode
+			SVersion Version
+			bool Create
+			stream Stream
+		}
+		struct SScLogin
+		{
+			TNick Nick
+			TFriends Friends
+		}
+		struct SScLoginFail
+		{
+			EGameRet GameRet
+		}
+		struct SScError
+		{
+			EGameRet GameRet
+		}
+		struct SCsAddFriend
+		{
+			TNick Nick
+		}
+		struct SSmAddFriend
+		{
+			TNick ToNick
+			TUID FromUID
+			TNick FromNick
+		}
+		struct SMaAddFriendGetUID
+		{
+			TNick ToNick
+			TUID FromUID
+			TNick FromNick
+			SKey FromServerKey
+		}
+		struct SAmAddFriendGetUID
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+			TNick FromNick
+			SKey FromServerKey
+		}
+		struct SAmAddFriendGetUIDFail
+		{
+			EGameRet GameRet
+			TUID FromUID
+			SKey FromServerKey
+		}
+		struct SMaAddFriend
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+			TNick FromNick
+			SKey FromServerKey
+		}
+		struct SAmAddFriendRequest
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+			TNick FromNick
+			SKey FromServerKey
+			SKey FromMasterKey
+		}
+		struct SMsAddFriendRequest
+		{
+			TUID ToUID
+			TUID FromUID
+			TNick FromNick
+		}
+		struct SScAddFriendRequest
+		{
+			TUID FromUID
+			TNick FromNick
+		}
+		struct SMaAddFriendRequest
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+			SKey FromServerKey
+			SKey FromMasterKey
+		}
+		struct SMaAddFriendRequestFail
+		{
+			EGameRet GameRet
+			TUID ToUID
+			TUID FromUID
+			SKey FromServerKey
+			SKey FromMasterKey
+		}
+		struct SAmAddFriend
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+			SKey FromServerKey
+		}
+		struct SAmAddFriendFail
+		{
+			EGameRet GameRet
+			TUID ToUID
+			TUID FromUID
+			SKey FromServerKey
+		}
+		struct SMsAddFriend
+		{
+			TUID ToUID
+			TNick ToNick
+			TUID FromUID
+		}
+		struct SMsAddFriendFail
+		{
+			EGameRet GameRet
+			TUID FromUID
+		}
+		struct SScAddFriend
+		{
+			TUID ToUID
+			SFriend Friend
+		}
+		struct SCsAllowFriend
+		{
+			TUID FriendUID
+		}
+		struct SSmAllowFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsAllowFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsAllowFriendFail
+		{
+			EGameRet GameRet
+			SKey UserKey
+		}
+		struct SScAllowFriend
+		{
+			TUID FriendUID
+		}
+		struct SCsDenyFriend
+		{
+			TUID FriendUID
+		}
+		struct SSmDenyFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsDenyFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsDenyFriendFail
+		{
+			EGameRet GameRet
+			SKey UserKey
+		}
+		struct SScDenyFriend
+		{
+			TUID FriendUID
+		}
+		struct SCsBlockFriend
+		{
+			TUID FriendUID
+		}
+		struct SSmBlockFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsBlockFriend
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+			SKey UserKey
+		}
+		struct SMsBlockFriendFail
+		{
+			EGameRet GameRet
+			SKey UserKey
+		}
+		struct SScBlockFriend
+		{
+			TUID FriendUID
+		}
+		struct SCsUnBlockFriend
+		{
+			TUID FriendUID
+		}
+		struct SSmUnBlockFriend
+		{
+			TUID UID
+			TUID FriendUID
+			SKey UserKey
+		}
+		struct SMsUnBlockFriend
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+			SKey UserKey
+		}
+		struct SMsUnBlockFriendFail
+		{
+			EGameRet GameRet
+			SKey UserKey
+		}
+		struct SScUnBlockFriend
+		{
+			TUID FriendUID
+		}
+		struct SCsMessageSend
+		{
+			TUID ToUID
+			TMessage Message
+		}
+		struct SSsMessageSend
+		{
+			TUID FromUID
+			TUID ToUID
+			TMessage Message
+		}
+		struct SScMessageReceived
+		{
+			TUID FromUID
+			TMessage Message
+		}
+
+		struct SCsChangeState
+		{
+			TState State
+		}
+		struct SSmChangeState
+		{
+			TUID UID
+			TState State
+			SKey UserKey
+		}
+		struct SMsChangeState
+		{
+			TState State
+			SKey UserKey
+		}
+		struct SMsChangeStateFail
+		{
+			EGameRet GameRet
+			SKey UserKey
+		}
+		struct SScChangeState
+		{
+			TState State
+		}
+		struct SUIDFriendInfo
+		{
+			TUID UID
+			SFriendInfo FriendInfo
+		}
+		typedef list<SUIDFriendInfo> TUIDFriendInfos
+		typedef map<TUID,SFriendInfo> TFriendInfos
+		struct SMmFriendStateChanged
+		{
+			TUIDFriendInfos UIDFriendInfos
+			TUID FriendUID
+		}
+		struct SMsFriendStateChanged
+		{
+			TUIDFriendInfos UIDFriendInfos
+			TUID FriendUID
+		}
+		struct SScFriendStateChanged
+		{
+			TUID FriendUID
+			TState FriendState
+		}
+		struct SMmFriendStateChangedRenew
+		{
+			list<SMmFriendStateChanged> MmFriendStateChangeds
+		}
+		struct SMsFriendStateChangedOffline
+		{
+			map<TUID,list<TUID>> Friends
+		}
+		struct SScFriendStateChangedOffline
+		{
+			list<TUID> Friends
+		}
+
+		struct SAmPunish
+		{
+			TUID UID
+			time_point EndTime
+		}
+		struct SMsPunish
+		{
+			TUID UID
+			time_point EndTime
+		}
+
+		enum EDataBaseError
+		{
+			InvalidID=50003
+		}
+
+		enum class EAuthProtoDB
+		{
+			Create
+			Login
+			AddFriendGetUID
+			ChangeNick
+			Check
+		}
+		struct SDummyOutDb
+		{
+		}
+		struct SAuthLoginInDb
+		{
+			TID ID
+		}
+		struct SAuthCreateInDb : SAuthLoginInDb
+		{
+			TNick Nick
+		}
+		struct SAuthAddFriendGetUIDInDb
+		{
+			TNick Nick
+		}
+		struct SAuthAddFriendGetUIDOutDb
+		{
+			list<TUID> UIDs
+		}
+		struct SAuthChangeNickInDb
+		{
+			TUID UID
+			TNick Nick
+		}
+		struct SAuthCheckInDb : SAuthLoginInDb
+		{
+		}
+
+		struct SAuthUser
+		{
+			TUID UID
+			TNick Nick
+		}
+		struct SAuthLoginOutDb
+		{
+			list<SAuthUser> Users
+		}
+
+		enum class EMasterProtoDB
+		{
+			Create
+			Login
+			ChangeNick
+			Check
+			Punish
+			AddFriendBegin
+			AddFriendRequest
+			AddFriendEnd
+			AddFriendFail
+			AllowFriend
+			DenyFriend
+			BlockFriend
+			UnBlockFriend
+			ChangeState
+		}
+		struct SMasterCreateInDb
+		{
+			TUID UID
+			SAccount Account
+			TState State
+		}
+		struct SMasterCreateOutDb
+		{
+		}
+		struct SMasterLoginInDb
+		{
+			TUID UID
+			TID ID
+		}
+		struct SMasterUser
+		{
+			TNick Nick
+			TState State
+			time_point PunishEndTime
+		}
+		struct SMasterLoginOutDb
+		{
+			list<SMasterUser> Users
+			TFriendDBs Friends
+		}
+		struct SMasterChangeNickInDb
+		{
+			TUID UID
+			TNick Nick
+		}
+		struct SMasterAddFriendBeginInDb
+		{
+			TUID UID
+			TUID FriendUID
+			TNick FriendNick
+			EFriendState FriendState
+		}
+		struct SMasterAddFriendRequestInDb
+		{
+			TUID UID
+			TUID FriendUID
+			TNick FriendNick
+			EFriendState FriendState
+		}
+		struct SMasterAddFriendRequestOutDb
+		{
+			list<int32> RowCounts
+		}
+		struct SMasterAddFriendEndInDb
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+		}
+		struct SMasterAddFriendFailInDb
+		{
+			TUID UID
+			TUID FriendUID
+		}
+		struct SMasterAllowFriendInDb
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+		}
+		struct SMasterDenyFriendInDb
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+		}
+		struct SMasterBlockFriendInDb
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+		}
+		struct SMasterUnBlockFriendInDb
+		{
+			TUID UID
+			TUID FriendUID
+			EFriendState FriendState
+		}
+		struct SMasterChangeStateInDb
+		{
+			TUID UID
+			TState State
+		}
+		struct SMasterCheckInDb
+		{
+			TUID UID
+		}
+		struct SMasterCheckOutDb
+		{
+			list<time_point> PunishEndTimes
+		}
+		struct SMasterPunishInDb
+		{
+			TUID UID
+			time_point EndTime
+		}
+		struct SMasterPunishOutDb
+		{
+		}
+
+		struct SLoginInfo
+		{
+			TUID UID
+			TID ID
+		}
+	}
+}

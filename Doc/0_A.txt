@@ -1,0 +1,206 @@
+warning C4717: 'rso::game::operator<': recursive on all control paths, function will cause runtime stack overflow
+
+* Rnn 은 뉴런이 한번 활성화 되면 활성강도가 0이되는데 얼마나 걸리는가의 문제인듯???????????
+	그것이 다음 타이밍에 바로 0이 되느냐(일반 DNN) 아니면 짧게 또는 오래 걸리느냐 (LSTM) 인듯?
+
+* sckop   snd,rcv 0
+
+*limit 에 의해 Del 추가 한 경우
+	양쪽에서 삭제하면 서로 추가하지 않은상태와 같음.
+
+* when sending my state
+	gather all friend for same server
+
+* add DelFriend prevent limitation count over
+	- check when add or be added by request
+
+
+* TUIDE 는 id, pw 를 포함하는 개념으로 보고 당사자에게만 노출하고, 다른 cli에게는 노출하지 않도록
+	따라서 친구추가 등에는 UID 로 하고,
+	로그인(현재는 ID 가 별도로 존재하므로 불필요) 등에는 UIDE 로 처리
+
+
+
+*!!! 중요
+	- 클라에서 먼저 master까지 (server까지) 모두 접속 성공해서 master nameport 가 저장된 이후
+	- game auth 가 아닌 game 의 계정 정보 제거하고
+	- 클라가 master 로긴 실패하여, 다시 auth 로 로그인 하도록 하여최총 로그인 실패하고 local 접속 파일제거된 후
+	- create 가 제대로 되는지 체크
+	? 클라는 Login 실패후 어떤기준으로 Create 할것인가?
+		점검으로 로그인 실패한 경우 구분해야 하므로 그냥 실패가 아닌 NoUser 등의 에러메시지를 받았을 경우
+		Create 할것.
+		또한 Master로 접속 했고 Server만 접속 실패한경우에는 Datafile 삭제 안되는지체크
+			-> 즉 Master로의 접속이 실패한 경우만 COptionStream<CNamePort>> MasterNamePort clear 할것.
+
+ game Auth 에는 계정이 있고, game 에는 없을 경우
+	클라에서 Auth 를 통해 CaLogin? 
+
+* Nick 은 새로 설정하지 못하도록?
+	0. gme_svr has msn.client net obj? and then net cntrl
+	1. g 로부터 encded 된 nck 을 포함한 str을 전달받아서 create?
+	msn 에서는 무시하고?(unique_index 걸려있는데?)
+	gme_svr에서 전달?
+	기존 mdplnt 에서의 방식?
+	
+
+
+* UIDE 적용 후 rso::game 에서 AuthMode 는 제거할것.(Nick은 불일치 할 수 있는데 방법은?)
+	str -> str_e 로 uide + nck 으로 ?
+
+
+
+
+
+
+
+
+
+
+enum ERet
+	NotEnoughStat
+
+class CBattleGround
+	AddTeam(Index, Team)
+	Proc()
+
+	? CastCallback(Object Caster, ETarget Target)
+
+class CTeam
+	AddPlayer(Index, Player)
+	Proc()
+
+class CObject
+
+class CArea : CObject
+	SCircle Circle
+
+class Player : CObject
+	AddSkill(Index, Skill)
+	Move
+	UseSkill(Index, Target)
+	UseSkill(Index, Object)
+	Proc()
+
+class CMonster : CObject
+
+struct SSkill
+	float CoolTime
+	list<pair<Int32,float>> Cost  // StatIndex, StatValue
+
+struct CSkill : SSkill
+	float CoolEndTime
+	ETarget _Target
+	FPrereq _fPrereq
+	FCast _fCast
+
+	Cast()
+		Check Cost
+		Check _fPrereq
+	Proc()
+
+enum ETarget
+	Caster
+	Object
+	Area
+	Team
+	Ally
+	All
+
+struct SStat
+	float CurValue
+	float MaxValue
+
+FPrereq = function<ERet(CObject Caster, CObject Target)>;
+FCast = function<void(CObject Caster, ETarget Target)>;
+
+TOperator = function<void(SValue Value_)>;
+	
+
+
+
+
+
+*
+	1. full calc phy at svr
+	c
+		same with ddctd ?
+		hevi lod?
+	
+	2. calc part (ht, dmg - mv pnt,    
+	c
+		
+
+* Interface
+	MoveCs (dest point or points list)
+	Act (code)
+	
+
+
+
+<Not>
+* Hero$Actor : Hit_Duration, Summon_Duration, Corpse_Duration
+* Monster$Actor : Hit_Duration, Summon_Duration, Corpse_Duration, IsMoveable
+* Common$Skill :
+	DamageType
+	SkillAttackType
+	CanDodge
+	NeedMP
+	Use_Attack_Speed_Stat
+	Init_Skill_Delay
+	Cooldown
+	SP_RegenFromSuccess
+	Skill_Target_Type
+* Skill$Effect
+	UnitTargetPriority/ID
+	ESrSkillEffectFunction
+
+* Abnormal
+	Abnormal_Type
+	Abnormal_Duration
+	Abnormal_Duration_Type
+	Abnormal_Duration_Value1
+	Abnormal_Duration_Value2
+	CanDelete
+	
+
+* Skill_Target_Type
+	Single
+	Self
+	Direction
+	Position
+	CurrentPosition
+	
+
+
+UnitTargetPriority/ID	Target(map key?) 
+	enemy, ally (불필요)
+	hero, boss, monster, beed, bomb, object? etc?
+
+
+ESrSkillEffectFunction	
+
+<Th>
+- Moving Skill 은 
+
+
+<Nt>
+- 스킬모션 종료 후 CooldownTime이 시작되지 않도록 확인	
+
+<Qu>
+- 명중 반대는 회피(Dodge?) 인가?
+- CanDodge 의 수치는 어디에?
+- Abnormal 이 디버프와 차이점은?
+- Abnormal_down은?
+- 우파파 엘리트 지팡이 A1 물폭탄?  MoveToLocation_ByBezierCurve
+
+- Abnormal_Duration_Type 에서 아래 항목의미?
+	Overlap?
+	SkillUseCount?
+
+- SkillPawn : Skillpawn_GroupID 의 하위 번호가 있는가?
+
+- Mastery&Skill 은 뭔가?
+- 전투중 레벨업 하나? 그럴경우 전투중 능력치 변경
+
+
+* Proc delay 는 조건에 맞게

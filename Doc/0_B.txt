@@ -1,0 +1,209 @@
+// physics and skill /////////////////
+ - com lib
+
+
+// Ranking ////////////////////////////////
+* Reward 는 과거 데이터를 남겨놓는 방식으로 변경할것. (Counter 역시 tRanking 에 포함시킬것. 보관 랭킹 Counter 개수는 생성자에서 받고 Refresh 시에 과거 데이터 날릴것.)
+* 유저데이터는 Stream으로 또는 TemplateStruct 로 처리할것.
+
+ - 외부 프로토콜 사용하되 스트림으로 저장해서 디비에선 볼필요 없도록?
+	아니면 구조체 GetStdName(), GetMemberName() 사용해서 테이블 필드 및 SP 에 변수명 그대로 나오도록?
+ - 보상 일반화 가능?
+
+
+* Retention Lib만들것.
+
+// Protocol ///////////////////////////////////
+* CS 버전도 CStream.Push(Enum ) 바로 가능하도록
+
+
+
+SDefine(생성자 인자 Name 이 가장 먼저오게
+
+InsertClass(void) 제거
+
+* SuperName 제거
+
+InsertMemberCore 수정할것.
+
+* GetStdNameIncludeEnum 호출시 int32() 등을 파라미터로 넣음으로 객체가 지속적으로 생성 소멸을 반복하는데
+	어떻게 하면 이를 막을 수 있을까? container 에 대한 추론만 가능하면 되는데...
+
+엔진에서 wstring 으로  출력해볼것.
+CStream 사용하여 Push, Pop 후에 출력 해볼것.
+
+
+* 템플릿
+	- 무사용 선언
+	- 기본 사용
+	- 템플릿 타입이 구조체
+	- 상속
+	- 템플릿의 템플릿
+
+	+ 템플릿구조체의 템플릿타입 멤버 변수 초기화 문제
+
+
+
+* StdName뒤에 무조건 , 를 붙이기로 하였다면 MSSQL 에서 { } 등 파싱하는 부분도 수정할것. Excel 도
+* 빈 구조체변수를 두개 갖는 경우 StdName 은 ","  를 반환하는데 수정할것.
+
+
+* array<a,여기에 enum 또는 상수도 가능하도록>
+
+
+// Balance ////////////////////////////////////////////////
+* Balance Svr 의 연산자 공유 시나리오
+<Svr>
+ - Create
+	CServer<int, TRange>
+ - LinkD
+ - UnLinkD
+ - RecvD
+	RecvDServerOn
+
+<Svr2>
+ - Create
+	
+ - LinkU
+	SendServerOn (RangeUID<>)
+ - UnLinkU
+ - RecvU
+
+<Cli>
+ - LinkS
+ - UnLinkS
+ - RecvS
+
+* balance 에서 CMaster, CServer 로 분리할것. CServer : CMaster 구조로
+
+* module encapsulation
+		balance	UID	RR	LC
+Include Me	o	x	x	x
+ConnCnt Noti	o	x	x	o
+Move to Other	o	o	o	o
+
+* how to merge UIDRange, ConnCnt
+* UIDRange type is declared by client, but type is declared by server
+	-> share operator to external ?
+		Operator(
+
+
+
+
+* allocate lib 만들고 game에 적용할것. (전투서버? 적용시 구상)
+
+	INet, IClient, IServer 정리, mobile net gamelib 적용 방법 (template? 파라미터? 
+
+	auth for other server group
+		1. use main auth (send from main server)
+		2. 
+
+	bill lib (db, 모듈화)
+	ranking lib (1개만 적용되도록 해서 lib 용이하도록?)
+	agent file up gage
+	ftp lib
+	path lib
+	balance lib (rr, lc, uid 인터페이스 통일)
+	skill lib
+
+
+
+* 모바일 빌드 및 로그인 테스트 해볼것.
+
+* InternetAddress->SetIp(IP.Value); 에서 Value 는 Endian 문제 없는가? (iOS 에서 접속 테스트 해볼것)
+* unreal::CSocket IPv4, IPv6, dns 접근 가능한가?
+
+* _pSocket->GetConnectionState()가 SCS_NotConnected or SCS_ConnectionError 일때 _pSocket->Recv 반환값등 결과는?
+	만일 return false 이면  Recv 호출전에 _pSocket->GetConnectionState() 호출할 필요 없을 것이므로
+	현 상태 그대로 둘것.
+
+* CJsonDummy 동작하도록 작업할것.
+
+
+
+* Net.Login Auth 로 가는 이유?
+
+* 엑셀 행중에 # 주석 처리해?
+	생성자에서 주석 시작문자 받어? 행 첫 문자가 같으면 주석으로?
+	만일 아직 Column 을 받지 않은 상태에서 주석문자를 만나면?
+  아니면 메모는 일정 라인 다음에 있도록 정해? => 유력?
+	특정데이터의 # 은 작동하도록? (이럴바엔 그냥 다 작동하도록)
+
+
+// Balance2 ////////////////////////////////
+* 자신의 국가에 맞는 Master로 인계하도록(국가보다 작은 위치도 가능하면)
+  -> 이럴경우 유저는 다른 서버군의 유저와 겜할 수 없음.
+
+
+
+///////// 닉네임 ///////////////////////////
+* 중요 rso.game.Master 의 _ChangeNickClients 는 제거할것!!!
+	변경시도했으면 성공 결과 처리되거나, Auth 로부터 실패 통보받아서 전체 롤백 처리되기 전 까지
+	클라가 로그인 할때마다 재시도 하도록할것.
+	
+* ChangeNick 전송전 tUser.ChangeNick 플래그 수정에 대한 DBOut 받고 메모리플래그 수정하고 Master에 전송할것.
+	* g_Net.Certify 날리기 전 미결내용은 자동 전송(InBattle 고려할것)
+* 로긴완료시 Certify 전에
+	닉네임 변경미처리 있으면
+		자동완료
+	아니면
+		Certify()
+* MsChangeNick 에 대한 Server.Callback 에서 돈 차감 처리하고,
+	Certify 호출 안한 상태면 호출할것.
+
+
+* ChangeNickFreeCount 는 game 에서 제거할것.
+* ChangeNickFreeCount 초기 값은 Auth 의 Option.ini 에 넣을것.
+* ChangeNickFreeCount 는 Auth 로 이동시킬것. (체크는 Server Session에서 하지만 변경은 위에서 부터 내려오면서 되도록)
+* LoginCallback 에 Nick 추가할것.
+* 닉네임 변경시 클라 Master 파일만 Clear 할것
+
+
+* 기존유저중 닉네임 변경하였는데 중복 없으면 0 으로 변경하는 쿼리 준비하고 DB.txt 에 포함시킬것.
+
+
+
+* 기존 ChangeNick 제거
+
+* 최초 닉네임 선점한 계정도 변경하여 비활성 계정이 닉네임 독점하지 못하도록
+ -> 뭔소리야??
+
+* _DBCheck 가 SAuthLoginInDb, SAuthLoginOutDb 를 사용하므로 sys_sp_check 는 sys_sp_login 과 같도록 수정할것.수정할것.
+
+
+// Physics ////////////////////////////////////////////
+* CEnginePlayer -> RigidBody
+* physics.CEngine 으로 분리시킬것.
+* 하락중인 지형에 부딪 혔을때, 계속 착지 날기 반복함 (착지시 하락중인 지형의 속도에 맞게 캐릭으 하락 속도를 설정?)
+	- RigidBody 끼리 먼저 FixedUpdate
+	- RigidBody 와 Structure 와 FIxedUpdate
+
+
+// Network //////////////////////////////////
+* ipv6 전용으로 커넥트 해볼것. (External 에서)
+	-ipv4 로 접속하는 코드는 수정할것.(CPP 역시 수정할것)
+
+
+// Protocol ///////////////////////////////////////////
+* Rsocs 프로토콜 GetCopy 만들것. (클래스면 GetCopy로 값 복사 할것)
+
+
+
+// Monitor //////////////////////////////
+* 파일 전송 실수 가능성? (이것에 대한 안전장치가 있어?)
+* 종료 취소 가능하도록, 종료 연장 가능하도록
+* 종료 중인 서버에 할당되지 않도록 할것.
+* 종료 중인 서버에 유저가 로긴한 경우 종료 메시지 날릴것.
+ (종료 커맨드시에 Message를 받을것.)
+
+// Game //////////////////
+* 서버브레이크중에 클라접속하면 서버 다 올려도 클라는 계속 붙기시도하고 바로 끊김. (RsoCS 버전의 클라가)
+  - Rso CPP 버전에서는 Logout 을 하면 로그아웃 후 재 로그인 해버림
+
+
+// Etc /////////////////
+* 프로세스 종료중 GameEnd 쿼리 결과에서 DLOG 찍으면 m_Lock 에서 에러나는데, (변수의 값들은 이상이 없어 보이는데)
+
+
+// Json //////////////////
+* RsoCS.CJson 개선할것. operator[] 로 모든 타입 추가 가능하도록

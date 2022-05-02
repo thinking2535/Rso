@@ -1,0 +1,412 @@
+* 모니터 툴에서 svn update 할 경우 WaitSingle~~ 에서 반환이 안됨 --> CCmd 로 테스트 하든지 더 세분화 하여 테스트 해볼것.
+	CreateProcess 로 cmd.exe를 열고 바로 닫아버려서?
+	-> svn help 는 이상없음.
+
+* ENum 파일로 뽑도록할것.
+
+* 구글 웹서버 plist 만들것.
+
+* 로그인 신에서 서버접속실패로 계정 생성 실패한 경우 진행 안됨  크레이트 버튼 다시 활성화할것.
+	- 생성 버튼 누르자 마자 TextBox, Button 비활성화 할것,
+	- 실패시 다시 활성화
+
+* 서버 모두 동시에 올리고(겜서버먼저)
+ - 클라는 겜서버가 붙기전 접속시도해서 NoMasterToConnect 오류받고, 또 시도하고 오류받고 (이때 Disconnect 했나?)
+	이후 겜서버가 뜨고나서도 접속시도하면 먹통(클라 재시작해야함)
+
+* 사각형 충돌시 동일한 크기의 두 정사각형이 서로 모서리로 부딧힌 경우 세로라인끼리, 가로라인끼리 충돌 검사할 경우
+	동과할 수 있을듯.
+	1. 가로세로, 세로가로 라인끼리 검사하는 방법?
+
+* 재 로그인 시에 맵 맞게 로딩하도록
+
+* GameClient rrr 수정할것.
+
+* _Me.Land 시에 중첩되지 않도록 위치 보정
+
+* 데브서버의 Svn 에서
+	svn: This client is too old to work with working copy '..\..\..'.  You need  해결할것.
+
+* 다시하기 기능 넣을것
+
+* CMultiIndexMap iterating 되도록 get_users 대체
+* CUsers 의 using _TUser = shared_ptr<CUser>; 에서 uniquePtr로 가능한가?
+
+
+Punish 는 lib로 이동
+
+Purchase 역시 lib 로 이동
+
+
+
+
+
+
+* static 움직이지 않는 오브젝트
+
+* occluder static, occludee static
+
+* C# 버전 public delegate void TRecvFunc(CKey Key_, int ProtoNum_, CStream Stream_); 제거
+
+* Hub의 DB기능 Auth 로 이동할것.
+
+* 스킬, sto, 분산, PetsDay, Reminder, PathFinder, FTP, 
+
+* rso.proto에 duration 넣을것. (milliseconds, minutes 등, c# 용 TimeSpan 도)
+
+* 어떻게 Hub, Auth, Master, Server  및 Game, Clan 서버간 통신시 프로토콜 Enum 과 구조체 및 양식을 통일 할 수 있을까?
+  prob
+  1. 전송 후 다시 응답 받기 위해 전송경로를 저장 함으로인해 복잡
+    (송신자와 수신자만 둘것? 하지만 GameServer -> ClanAuth, ClanServer -> GameAuth 의 전송은 가능하나 GameMaster -> ClanServer, ClanMaster -> GameServer 로의 통신이 불가... 이에대한 방법으로
+	1. Game, Clan 간 통신은 Hub 를 통해서 하면 가능 (병목)
+	2. GameServer -> ClanMaster, ClanServer -> GameMaster 등도 연결 하는 방법 (소켓 증가)
+
+
+* rso.net,  rso.game, rso.mobile 등의 UnLink, LogoutCallback 에서 CKey 가 아닌 TPeerCnt PeerNum_ 으로 처리할것
+  - UnLink, LogoutCallback 이 뜨기 전까지 해당 Peer는 존재 하기 때문에 해당 PeerNum과 PeerCounter는 같으므로 
+
+
+* Punish 사유, 시각 통지?
+	- UnLink 파라미터로 EGameRet, wstring 을 반환할 수 있으나, wstring 에 시각을 문자열로 날린다면 외부에서 명확하게 어떤 스타일로 받는지 알 수 없는데...
+		1. 별도의 콜백으로 받어? -> 복잡,
+		2. 콜백을 후에 Add 하는식으로? -> 인지의 어려움에 의한 누락 가능성
+
+* 리텐션 매일의 값 가져올것. left join 으로 최적화?
+
+
+Mobile 의 LinkSoft, UnLinkSoft는 CNet에도 추가하든지, 아니면 GetSoftLinked()? 함수를 virtual 로 공통으로 두고, CServerMobile 은 CServer를 상속 받도록?하여
+ CGameServer내부의 Net을 net.CServer, mobile.CServer 중 선택 가능하도록 할것.
+
+* 겜서버 실행 직후 겜서버가 올라갈 시점에 유저 로긴하면 유저 로그인 실패도 안되고 응답이 없는데 이후 모든 서버가 정상 시작 되었더라도 로긴하면 응답 없음. 3분 지나도 응답이 없는지 체크할것
+
+* 모바일 스토어 별로 접속 오픈 처리 (서버는 점검이 끝나면 띄워놓고, 열린 스토어만 개별적으로 Open 되도록)
+
+* 겜서버 브레이크 걸고 클라 끊긴 후 서버 브레이크 풀고, 클라 유니온 서버 재접하면 접속이 끊김.
+
+* MonitorAgent 동일한 프로세스에서는 한개만 실행되도록 할것.
+ - Agent가 상위 폴더여야 하는데
+ - 모니터 클라에서 ProcNum 필드추가할것.
+- Dev에 적용하고 라이브에 적용할것.
+
+
+* FCM Push 시에 Google로부터 Http결과에 Token 만료 여부를 알 수 있다면 Http콜백에서
+	해당 유저를 지울것 (multi_index 적용하여 DelUser() 호출)
+
+ -FCM 기본값은 보내지 않는 걸로하고, Offset도 0, 
+  ChangeUID Del 등등 Sp 에서 기존 데이터를 최대한 보존하고
+  겜서버소스에서도 기존데이터 최대한 보존
+  겜서버에서는 최소한의 변경 데이터만 쿼리할것
+
+
+* Rso.CBill 오류 체크할것.
+  잘못된 커서는 XACT ON? 때문인가?
+
+CStoredProcedure 의 소멸자가 호출되었고, _DBCallbacks 의 size가 0 이고 CBill::_DBCallback 에서 
+오류남.
+
+* spDAU, spPU, spARPDAU, arppu 등 만들것.
+  retention 주기(주기 기준일은 과거일이고 주기가 달라지더라도 기준일은 그대로 이도록)별, 종류별 함수 만들것.
+
+ - 위 내용 클래스로 만들것.
+	GameLog 로 만들것.
+ - tPlay, tConnect 통합가능한가? tConnect에는 로그인, 로그아웃을 합쳐놓아서 플레이 시간에 대한 계산이 빠르지만, 로그아웃 쿼리가 실패하면 로그인 조차 기록이 남지 않는 문제 있음.
+	1. 여분의Field 를 두어 처리 => 로그인, 로그아웃 별도로 하되 로그아웃시에는 플레이시간을 여분의 Field에 저장
+	
+
+
+* 점검시 유저 CS 막는 기간이 종료 몇초전만 되도록 할것
+ - Stop 취소 만들것. (메시지 없이 Stop 되는것도 만들어?)
+ - Open, Close 만들것.
+
+
+* 관리툴에서svn update 시에 락 걸리는 것,
+
+
+
+**** 서버구조에서 외부에서 해당 서버군 (Hub, Auth, Master, Server) 로의 접속은 Balance : Hub-Auth 를 통해서만 연결되도록하여 연결 단순화 할것
+ (예를 들면 Game군으로 Clan, League 서버군이 접속하려면 한개포트로 receive하도록 할것, 현재는 Game 군으로 Clan, League 가 별도로 붙고 있고, 다른 서버군도 마찬가지)
+**** 게임 포트 규칙은 현재는 서버 자신이 Binding할 포트를 결정하지만 Hub 가 관장하도록 하여 포트 설정 단순화?
+  - 단, 동일한 레벨의 노드는 동일한 포트를 바인딩 하게될것이므로 동일한 머신에서 동일한 노드가 2개 이상 실행될 경우 포트 충돌이 되므로 바인딩 오류시 +1  시켜주는 알고리즘 필요?(효용성이 있는가?)
+
+
+* 아래는 rso.FileTransfer 관련???-----------------------------------
+* Agent 에서 파일 이동시에 실제 파일을 Add하고 Delete도 실제 하도록 할것.
+* CClient 에서 경로이름중 data 가 적용되지 않음.
+* 클라 다운중 처리되도록 수정 ( 세션은 1개로 고정이므로 새로운 콜백만 추가)
+* Http 에 CompleteCallback, ChangeCallback 구분하여 넣을것.
+		OutFunc에 세션 번호 넣을것.
+		OutFunc에 조각 단위로 콜백 날릴것
+		Sesson에 new_buf는 매 조각마다 처리되도록 중간에 넣을것.
+-----------------------------------
+
+
+* 패치 시스템 ( Auth 에서 처리해야 할듯.Hub는 분산이 안되니? 그렇다면 기존 로그인 루틴에 영향을 미치는데 어떻게 통합할까?)
+
+            파일 등록하여 한번에 Update, Reset 할것. 다른 Agent것도 같이 반영?
+
+            1. 파일 등록
+                - CDN 에 Upload 실패시?
+                    에러처리
+
+                - 로컬 파일에 갱신 실패시?
+                    
+
+            ? CDN 의 트리구조를 그대로 가져올 수 있나?
+                그렇다면 마스터의 
+            아니면
+                마스터는 파일 리스트만 보관하고 CDN 으로 UPLOAD 는 하지 않아?
+
+            파일은 Agent, Master에 는 실존하지 않고, CDN에만 실존하도록 처리
+                파일 전송절차
+                    파일 실존 스트림 Agent->Master->CDN
+                    파일 경로 결과 CDN->Master->Agent
+                                
+* 패치서버에서 ChildCntMax 는  Master로부터 받도록 할것.
+* 클라우드는 데이터서버(아마존의 S3)가 캐싱을 하기 때문에 패치서버로 쓸 경우 매번 새로운 폴더에 업로드 하는 방식 을 써야 할 것이고
+	이를 패치 모듈에 적용할것.(기존 작업중인 모듈은 다운로드가 필요한 최소한의 파일들을 가져오는데 이 시스템과 호환되도록 할것)
+	-> 아마존에는 버전번호가 곧 폴더 병이고, 내부에 동일한 자원파일 트리구조를 가지며, 그버전에 새로 수정된 파일들만 업로드 해놓도록 할것.
+
+* S3 버킷을 생으로 처리하는 것 대신 CloudFront 를 활용하여 심의 버전 처리 할 수 있나?
+  - CloudFront 캐시 클리어 가능한가? (라이브 서버와 심의 서버는 독립적으로 구동되어야 하고, 구글 심의 버전이 통과되면 곧 심의용 앱이 라이브에 붙을 수 있도록 해야함)
+
+
+* 모니터 툴에서 프로세스가 내려갔을 때 통보?dmp 발생시 바로 알려주는 알람? 또는 내려갔을 때 알람? 또는 그냥 dump 파일이 생기면 표시가 되도록?
+
+* rso.proto 에서 CS 버전의 using namespace 는  풀 네임으로 써지도록 할것. ( 이미 작업한건가?? 아닌가? )
+
+* auto 스케일 가능하도록 자신의 외부아이피 동적으로 스스로 알도록 할것.
+
+* 패치 구조 설계 후 클라의 ServerInfo 구조체 바꿀것. 아니면 구조체로 파싱하지 말고, 바로 Json으로 파싱?(구조체 호환 안되므로)
+
+* 클라는 영수증을 보내고  ProductID 는 영수증 파싱에서 얻어올것. 프로덕트는 영수증과 상관없는 것으로 보낼 수 있으므로
+* 애플 영수증 처리 클라 라이브러리 만들것.
+
+* 서버점검 -> 안내 팝업 (월, 일, 시작시간, 종료시간) 필요 -> 클라 전달
+* GameAuth, ClanAuth에서  ClanBindIPPortPub, GameBindIPPortPub 는 필요 없지 않나? 클랜서버와 게임서버는 각각 Private 로 접속할텐데.
+
+* 운영툴에서 터미널 연결 가능하도록
+* 운영툴 조작내용 서버에 로그 남길것.
+
+* rso.Game 에서
+		void CServer::_UnLinkC(const CKey& Key_, ENetRet NetRet_)
+		{
+			auto itClient = _Clients.get(Key_.PeerNum);
+			if (itClient)
+			{
+				_LogoutFunc(Key_, NetRet_);
+				_Session.Logout(*itClient, Key_); // _LogoutFunc 에서 itSession 을 사용할 수 있기 때문에 _LogoutFunc를 먼저 호출함.
+				_Clients.erase(itClient);
+			}
+		}
+
+	위 _LogoutFunc 는 _Clients.erase(itClient); 아래로 내릴경우 외부에서는 이미 세션이 나간 상태인데 어떤게 맞는가?
+		- 원칙은 Logout 외부에서는 이미 끊긴 것으로 처리해야 맞는데, 외부에서 세션을 사용해야 하는 이유가 있나?( 디비 처리 등 있음... )
+
+
+* 모니터툴에서 Open, Close 명령 만들것. 이 명령은 모든 서버타입(Hub, Auth, Master, Server )에 적용할 수 있도록 하고, Opened == false 일때에는 유저 접속, Send에 대해 각각 다른 처리를 하도록
+
+* 점검처리시 겜서버의 아래 함수에서 GetOpened() 를 호출하여 무시할 것이 아니라 game.CServer클래스에서 막을것, GetOpened 는 제거할것.
+void RecvC(const CKey& Key_, CStream& Stream_)
+{
+	if (!g_Net->GetOpened())
+		return;
+
+* 위 작업 관련 master 에서는 유저에 바로 점검중인 상태 오류 보내고, Server할당하지 말것.
+
+* 점검처리
+	1. Master가 GameServer가 점검중인것을 통보?, Auth 역시 통보, 유저가 어디 붙을 지 알 수 없기 때문에
+
+* 겜서버 및 Master서버 등은 고정 아이피로 하지말고 상위 서버가  하위 서버의 외부 아이피를 알아낸 다음.이를 클라에 통보하도록 할것.
+   - 하위서버가 상위서버에 접속할 때 외부 아이피로 접속하여 상위 서버가 하위 서버의 외부아이피를 알도록 하게하고,  이후 하위 서버는 내부 아이피로 상위서버에 접속
+	- 하위서버의 외부아이피를 안 상위 서버는 이후 클라가 접속하면 하위 서버의 외부 아이피를 통보?
+
+* 서버 영수증 요청 제한 건수 (분당, 일당-일일 한도는 자정 기준인가? 아니면?) , 동적 적용되도록.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+* 클라에서 FCM Token갱신 주기 너무 짧지 않도록 처리할것.
+  - 클라 라이브러리에 반영할것.
+
+* Auth 의 DBOption.ini 는 Hub로 부터 받도록, 받아서 초기화가 된 이후 외부 접속을 허용하고 Hub로 응답하고,
+	응답받은 Hub는 Auth 를 등록
+
+* 연동시 이미 계정이 있으면 (결과가 -5 이면) 계정의 Nick 과 CP의 Level을 유저에게 알려주도록 할것? 해당계정이 다른 Master, 다른 서버에 있으면로직 복잡?
+* 클라는 SDK로 인증 한 경우, 서버로 해당 계정에 대한 존재를 조회하여 있으면 유저에 통보하고, 계정 정보를 불러올지 결정? 연동된 계정이 있을 경우 ? 
+   - 계정정보 조회를 만들경우, 1:조회하고 2:있으면 로그인, 없으면 ChangeAccount 인데 ChangeAccount 결과를 받아야 하므로  
+	조회를 통해서 연동하면 절차 하나가 더 생김 따라서 조회는 안 넣는게 좋을듯.
+
+
+
+* 아바타 테이블 분리된것 게임서버에 적용할것.
+
+* 결제 시스템 설계시 오류 없이(네트워크 불량, 유저의 앱 종료 등으로 인해 발생하는) 원자적으로 수행되도록 알고리즘 구현해볼것 (모듈화)
+	- SOne 클라 참고
+
+
+* 계정 연동 클라 모듈화 할것.
+ - 자체 인증의 경우 메일주소로 인증번호를 보내고, 인증번호를 입력하여 인증되도록
+ - 자체 계정 로그아웃 한 경우 로컬에 저장된 Guest 계정으로 로긴할것.
+
+* 계정 AuthDB의 sys_tbl_User.IsDeleted 추가하여 IsDeleted = 0 인것만 로그인 되도록 할것.
+
+
+* FileTransfer 완성할것. (전송 요청시 연결, 및 완료후 끊음)
+	- 여러 요청 가능하도록해야하나?( 패치에서 단일 파일 단위로 하면 불편?)
+	- 보안없는 클라가 서버로 파일 전송하는것을 어떻게 막을까?
+		1. 클라 모듈 분리
+			- 
+		2. 접속 포트 분리 <= 유력
+			- 
+
+	- Put, Get(PeerNum) 도 추가할까?
+	- GetPeerCnt 만들것
+	- 서버측에서는 PingPong 으로 끊을것.
+	- 수신측에서 
+
+	- Update, Reset 에서 파일 추가 하는 경우라도 기존파일과 같다면(checksum만? 좀더 긴 체크섬?) 생략할까?
+
+
+* Balance 의 분산기준은 _NetC의 GetPeerCnt() 인데 Patch 에서는 FileTransfer 모듈에 붙어있는 PeerCnt 가 중요하므로 이를 반영해야 하는데
+	1. 그냥 무시
+	2. 분산모듈에 SetClientCnt() 를 두어 외부에서 입력할 수 있도록 옵션을 둬?
+
+
+* PatchAgent 의 파일 항목이 Detail 로 보이지 않는 이유는? 
+	컬럼 세팅이 안되어서? (MonitorClient 참고할것)
+
+* rso.balance 에서  lc, rr 은 상위 폴더의 것으로 대체 불가한가?
+	0. 신규 모듈은 부모가 자식과 같은 일을 하지만 부모는 자식이 하는일을 하지 않아야 할 경우도 있기 때문에.
+		- Auth, Master 서버처럼 유저가 최종 접속하는 서버도 아니고, 다른 중요한 일을 하는 서버가 필요하므로.
+	1. rr 의 경우 자신과 모든 자식을 공평하게 순회하지 못함
+
+
+* rso, rsocs.net Proc() 에서 무조건 한번의 proc()에서 최대 한번의 Recv()를 콜백하도록 하지 말고, Recv() 반환값으로 처리할것.
+	-> 왜?? 왜 이런 글을 쓴거지? 이 기능은 불필요할 듯.->삭제할것.
+
+* <Rso, RsoCs>
+ - Send(PeerNum), Close(PeerNum), WillClose(PeerNum) 등은
+	 _Link, _LinkFail, _UnLink, _LinkSoft, _UnLinkSoft 등의 파라미터로 itPeer로 받아와서
+	itPeer를 직접 사용하도록 할까?
+	- _UnLink, _LinkFail, _UnLinkSoft 에서는 itPeer가 사라진 상태이므로 itPeer를 파라미터로 넘겨서 콜백해줄수 없고,
+	- _Link, _LinkSoft 에서는 itPeer를 넘길 수 있으나 외부에 노출할 필요 없는 정보까지 노출되어버림.
+	-> 외부에 PeerNum_을 넘겼으므로 외부에서 PeerNum을 통해 itPeer에 빠르게 액세스하도록 하면 되겠는데
+		현재 Close(PeerNum)의 경우 _Peers.get(PeerNum) 하여 itPeer를 얻은다음 erase(itPeer) 를 호출하여 삭제하고 있음.
+	
+
+* MSSQL 에서 SaveState, LoadState가 불필요한지 체크 ( 이 함수는 GetWithoutPop 함수로 처리할것 )
+
+* MSSQL.Push 는 throw 로 통일할것 (BulkSelect, BulkCopy, StoredProcedure)
+	-> 메모리가 부족하여 throw 한 경우 외부에서도 처리를 진행 할 수 없으므로 함수 내부의 throw 가 이유가 외부에서도 
+
+* 다각형 장애물, 실 탐색
+	- Obstacle 추가시 노드를 연결하기 위해 체크할 Obstacle 최소화 할것.
+		1. 서로 인접한 Obstacle 에 대해서 하나의 Obstacle 로 처리?
+		2. Obstacle 간 중첩 구간을 인정?
+		3. Obstacle 의 모서리에 대한 처리(사각형이 아닌 팔각형 에 대한 처리) 는 나중에 할것.
+
+* net에서 fileTransfer를 처리하면 game 을 이용할 수 없는데
+ 1. net에 반환값 추가된 send 로 처리
+ 2. ft lib 용 net 생성 (분산 새로 구현?
+
+
+* FileTransfer BlockSize, BPS 적용할것.(Proc에서)
+
+
+* 프로토콜 array 상수, enum 처리 되도록 할것. (형변환 등등?)
+
+
+
+< FCM >
+ - 푸시부낸 후 해당 유저가 에러나면 _Users 에서 삭제하고, 외부에 RID 삭제할 것을 통보하고, 외부에서는 삭제할것.
+
+
+* rso.proto에 ns::ns2::class_name ,   ns::ns2::enum_name,  ns::ns2::type_name 등 처리할것.
+ - 위 처리 후 게임서버와 유니온서버의 프로토콜 내에서 namespace 만 다르고 이름은 같은 타입에 대해서 ns::type_name 이런 식으로 쓸까?
+  아니면 동일한 게임(게임서버, 유니온서버 모두 합해서)에 대해서는 여러 네임슬페이스를 쓰는것은 문제가 있어보임. 그러므로 굳이 rso.proto 에 기능을 추가할 필요가 있는가?
+
+
+
+* 클래스를 키로 하는 Dictionary, HashSet 가능하도록 할것(가장좋은것은 프로토콜 내부에서 operator < 까지 정의할 수 있는것이지만,
+  프로토콜 외부에서 C# 연산자를 정의할 수 있으면 그렇게 처리할것)
+
+
+* // unit share  로 검색 (방어 유니온 유닛 을 쓰지 못하도록 막음.)
+
+
+!!!!!!!!!!!! 데이터 복제 는 Node 외부에서 알아서 처리할것 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*** 어떻게 하면 마스터에 재 설정된 서버들이 이미 받은 데이터를 부모서버로부터 다시 받는 일을 없앨 수 있을까? 단, 새로 갱신되는 데이터는 예외
+	1. 받은 데이터 구간(또는 무조건 처음부터 받게된다고 가정할 경우 구간이 아닌 마지막 데이터 번호)를 부모에 통보하여 받지 않은 데이터만을 수신
+		- 데이터의 수정시기가 다른 동일한 두 데이터의 경우 어느것이 최신데이터인지 어떻게 알 수 있을까?
+			-> 알려면 동일한 DB에서만 입력을 해서 날짜를 비교하든, 증가 Index로 처리하든지 하여 해결?
+			-> 그렇다면 개개 서버에서 데이터를 추가하는 것은 애초에 불가?
+
+	2. 클라이언트가 접속한 서버에서 데이터를 갱신하고, 다른 서버로 해당 데이터가 전파중 클라가 다른서버에 접속하고(이것은 애초에 막아야 함, 세션이 존재하여 과거 서버로 접속하도록)
+		거기서 다시 클라이언트가 데이터를 수정하고 이후 직전서버 과거에 수정한 데이터가 들어온 경우 어느것이 최신(현재서버에서 생성된 데이터가 최신)이라고 간주할 수 있을까?
+
+
+=>> 마스터만 DB에서 최신 데이터를 받을 수 있다면 하향전파가 맞고, 각 서버에서 개별적으로 최신정보가 생성되면 전방향 전송이 맞다.
+	단 개개서버에서 최신정보가 생성된다면 데이터 전송량은 점점 증가하게됨.( 이 데이터량을 어떻게 처리해야하나? )
+
+Tree 클래스 만들되 노드추가 삭제시 해당노드포함 부모, 자식의 변화 내용을 콜백으로 통보하도록 할것.
+	- 콜백함수에서 실제 서버간 연결을 마스터에서 컨트롤 할것.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+* 기존 CBalance 와 같이 개개 서버에서 간헐적으로 밸런스를 계산해서 상위로 보내는 방식은 시간차로 오차가 생길 수 있음. 또한 서버 할당시 Master부터 순차적으로 1개의 경로를 모두 접속하게 됨. 해결방법은?
+	1. 마스터에서 해당 서버에 고유번호를 할당하여 해당 서버가 할당중이면 Tree클래스에 임시 할당하고, 해당서버가 할당완료를 Master로 전송하면 임시 Tree서버를 정식으로 처리하고
+		- 일정시간안에 할당완료가 오지 않으면 임시 서버를 삭제(삭제후 할당완료가 오면 Master에서는 Tree에 없으면 아래로 해당 서버 삭제를 Broadcast)
+		- 서버 삭제 명령을 받았고 고유번호가 자신이면 _NetU.Close(), _NetD.Close() 호출할것, 자신이 아니면 하위에 전달
+		- 자식의 접속이 끊어지면 부모에 내용을 전달하여 Master가 Tree를 수정하도록 할것.
+	2. 1.의 개념을 개개 서버에 적용하여 현 서버에 접속 시도하면 (일정시간 지나서 서버 제거하는게 각 서버마다 다를 수 있기 때문에 문제)
+		새로 자식 생성이 가능하면
+			자식 추가, 부모에 추가된 서버의 고유번호를 AddedChild 프로토로 전송
+		아니면
+			여유로운 자식에 임시 할당 및 인계
+
+
+* warning CS0420: 'CThread._Exit': volatile 필드에 대한 참조는 volatile 로 처리되지 않습니다.
+
+
+* rso.net 에서 패킷 암호화는 파라미터로 수행여부 받도록
+
+* 채팅서버
+ - 유저 서버군과는 별도로 채팅방 서버그룹을 따로 두고 채팅방을 개설하는 유저가 방을 개설성공하면 초대대상유저에 초대장을 전송하고 해당 서버의 클라(유저)는 채팅방에 접속
+ - 일반 겜서버는 서버군에서 유저의 디비정보도 가지게 되는데, 채팅방 그룹은 디비정보를 안가질 수도 있으므로 디비 처리부분은 그룹에서 분리된 프레임을 따로 설계할것.
+  ( 겜서버는 DB에 저장된 UID 로 구분을 하므로 )
+
+* Rso.Buffs 복사 생성자, 복사 연산자 가능하도록(현재 iterator 가 복사되어 익셉션 남)
+
+
+* Rso, RsoCS 개선사항
+ - 모니터서버에 게임서버 구조 보이도록
+ - 서버 실행파일, 데이터 파일, 옵션파일등 배포 전략
+
+* rso.Proto.Template 가능하도록 적용할것.
+
+* rso  and  rsocs.proto. 각 프로토구조체에 operator ==(),  Equals() 함수 만들것?
+
+* C# global 은 namespace 내부로 들어오도록
+
+* 서버가 부하가 걸린 상태여서 더 띄워야 하는지 여부를 알 수있도록 어떠한 지표를 보여주도록 할것
+  1. Proc이 호출되는 시간 간격
+  2. 
+
+* Balance, Game.Server, Game.Client 에 INet, IClient 인터페이스 적용?
+
+
+* 현재 balance.CClient 에서 저장된 Server 로 접속 실패했으면 Allocator 로 접속 시도 했으면 좋겠지만 접속 실패처리되고 저장된 Server 지우고, 다음번 시도시 Allocator 로 접속 함.
+
+
+* class CSight 시야공유 동맹, 적 구분되는지 체크 및 작업.(괴수 참고)
+
+* Rso.Proto   : 두번째 네임스페이스에서 using namespace aaa 를 prt 파일에 사용하면 인식하지 못함, 첫번째 namespace 에서는 먹음.
+
+* Rso.Proto  -  Array 의 Cnt 첨자로 프로토 내부 상수 사용 가능하도록 할것.(include 포함 내부 정의된 상수는 프로토 내부에서 저장하고, 내부 저장 상수가 아니면 to_int 로 변환하여 처리할것.)
+	-> std::array<>::size() 가 상수를 반환하지 않는 문제가 있음.
+
+* cmd proc  rso.Monitor.CServer 에서 _SendScNotify() 시에 Key_ 를 설정해야 하는데 CCmd 콜백처리 문제로 보류
+	- CCmd 는 모니터 클라가 접속할 때 마다 객체를 생성하여 CCmd 의 결과는 해당 객체에 할당된 클라의 Key 로만 결과를 전송하도록 할것.
+	- 위 수정한 후 _SendScNotify() 파라미터 Key_ 를 _NetC->SendAll 대신 Send 로 바꿔 Key_ 사용할것.

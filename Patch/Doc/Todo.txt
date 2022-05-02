@@ -1,0 +1,49 @@
+* 이미 더할때 이미 있거나, 뺄때 이미 없으면 무시.
+* 서버그룹간 최고 속도로 전송
+* S-c 간 기준속도로 전송
+* 패치서버를 Cdn과 같은 방식만 써야하나? 해당 상황에 맞게 서버구조 설계할것.
+	y : 패치서버와 혼용가능한가?
+	n : 그냥 텍스트 방식으로 처리?
+* As, Sa는 모든 에이전트에 통보할것.
+* 파일 전송은 현 프로토콜에서 CStream 으로 실어보낼까? 아니면 FileTransfer를 쓸까?
+
+
+<Server>
+- LinkA
+- UnLinkA
+	_Agnets.erase(); // 없어도 상관 없도록.
+- RecvA
+	if (!_Agents.get())
+	{
+		SLoginAs
+			_Agents.emplace();
+			Send(SLoginSa()); // 현제 버전, 전체 파일 리스트 전송
+			Certify(Key_)
+	}
+	else
+	{
+		SVersionUpAs
+		
+	}
+
+- LinkC
+	Certify(Key_);
+- UnLinkC
+- Recv
+	SLoginCs : 현 버전부터 마지막 버전까지의 파일 목록 머징하여 Send(SLoginSc())
+		TVer Version
+
+
+<Client>
+- LinkS
+- LinkFailS
+- UnLinkS
+- RecvS
+	SLoginSc
+		list<wstring> Files
+		전달받은 내용 파일서버에 요청
+
+
+<Agent>
+- LinkC
+- 

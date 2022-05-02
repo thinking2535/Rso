@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4ba22391-2616-48b9-802e-e3f9411f32d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{6382c39d-cfa9-4c86-a4ab-94b417209e36}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Buffs.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Devider.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Inventory.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Equip.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Quest.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Match.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Package.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rank.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Ranking.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\KeyCnt.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TimeSync.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PunishLimiter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PeriodCounter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OptionJson.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SimpleRandom.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Command.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkillTimer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Latency.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RandomBox.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tick.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TickScale.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Boost.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Quest.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Package.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TimeSync.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PeriodCounter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SimpleRandom.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Latency.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Boost.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

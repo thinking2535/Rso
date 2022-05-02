@@ -1,0 +1,48 @@
+< 증설절차 >
+- 인스턴스 추가(AZ 분배)
+- 윈도우 방화벽
+- 보안그룹 설정(겜서버, 디비서버)
+- sqlncli.msi, svn 툴 설치, svn update
+- 서비스 등록
+- 모니터 및 서버 Bind IP 변경
+- 클라 접속 테스트
+
+
+
+
+
+< 디비서버 >
+* 생성시 퍼블릭 연결 허용
+* sqlncli.msi 설치
+* 개발PC 접근 가능하도록 윈도우, AWS 방화벽 오픈
+* 게임서버 접근 가능하도록 윈도우, AWS 방화벽 오픈
+* SSMS 로 디비 생성 및 스크립트 실행
+* 디비자동 축소 설정
+
+< 게임서버 >
+* 자동 업데이트 해제
+* 고정아이피 할당
+* tortoise 설치
+* svn update
+* 모니터서버로 타 서버의 Agent가 접속 가능하도록 모니터서버의 윈도우, AWS 방화벽 오픈
+	- MonitorServer	25400
+
+* 게임서버간 접속 가능하도록 윈도우, AWS 방화벽 오픈
+	- GameHub	10000-10100
+	- GameAuth	10100-10200
+
+* 클라이언트 접속 가능하도록 윈도우, AWS 방화벽 오픈
+	- MonitorServer	25410
+	- GameHub	10020
+	- GameAuth	10110
+	- GameMaster	10210
+	- GameServer	10300
+	- ClanHub	11020
+	- ClanAuth	11110
+	- ClanMaster	11210
+	- ClanServer	11300
+
+* sc 서비스 등록
+* 서비스 자동 실행
+* 모니터 클라이언트 실행하여 서버 정상 실행 확인
+* 클라이언트 로그인 확인

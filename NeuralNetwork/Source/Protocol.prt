@@ -1,0 +1,19 @@
+namespace rso
+{
+	namespace brain
+	{
+		struct SNeuron
+		{
+			double Bias
+			list<double> PrevSynapses
+		}
+		struct SLayer
+		{
+			list<SNeuron> Neurons
+		}
+		struct SNeuronGroup
+		{
+			list<SLayer> Layers
+		}
+	}
+}

@@ -1,0 +1,238 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace monitor
+	{
+		using namespace net
+
+		enum class ECsProto
+		{
+			Login
+			UserProto
+			ToAgent
+			Max
+			Nul
+		}
+		struct SCsHeader
+		{
+			ECsProto Proto
+			list<SKey> AgentKeys
+		}
+		struct SCsLogin
+		{
+			wstring ID
+			wstring PW
+		}
+
+		enum class EScProto
+		{
+			AgentOn
+			AgentOff
+			ProcOn
+			ProcOff
+			AgentInfos
+			AgentOption
+			AgentStat
+			ProcStat
+			Notify
+			Max
+			Null
+		}
+		struct SAgentOption
+		{
+			bool KeepAlive
+		}
+		struct SAgent
+		{
+			wstring Name
+			SAgentOption Option
+			wstring Stat
+		}
+		struct SProc
+		{
+			wstring Name
+			wstring Stat
+		}
+		struct SAgentInfo
+		{
+			SKey Key
+			SAgent Agent
+			SProc Proc
+		}
+		struct SScHeader
+		{
+			EScProto Proto
+		}
+		struct SScAgentOn : SAgent
+		{
+			SKey Key
+		}
+		struct SScAgentOff
+		{
+			SKey Key
+		}
+		struct SScProcOn
+		{
+			SKey Key
+			SProc Proc
+		}
+		struct SScProcOff
+		{
+			SKey Key
+		}
+		struct SScAgentInfos
+		{
+			list<SAgentInfo> Infos
+		}
+
+		struct SKeyData
+		{
+			wstring Key
+			wstring Data
+		}
+		struct SScAgentOption
+		{
+			SKey AgentKey
+			SAgentOption Option
+		}
+		struct SScAgentStat
+		{
+			SKey AgentKey
+			SKeyData KeyData
+		}
+		struct SScProcStat
+		{
+			SKey AgentKey
+			SKeyData KeyData
+		}
+		struct SScNotify
+		{
+			wstring Msg
+		}
+
+		enum class ESaProto
+		{
+			FileSend
+			KeepAlive
+			RunProcess
+			KillProcess
+			ShellCommand
+			UserProto
+			ToApp
+			Max
+			Null
+		}
+		struct SSaHeader
+		{
+			ESaProto Proto
+
+		}
+		struct SFileInfo
+		{
+			wstring PathName
+			stream Stream
+		}
+		struct SSaFileSend
+		{
+			list<SFileInfo> Files
+		}
+		struct SSaKeepAlive
+		{
+			bool On
+		}
+		struct SSaRunProcess
+		{
+		}
+		struct SSaKillProcess
+		{
+		}
+		struct SSaShellCommand
+		{
+			wstring Command
+		}
+
+		enum class EAsProto
+		{
+			AgentOn
+			ProcOn
+			ProcOff
+			AgentOption
+			AgentStat
+			ProcStat
+			NotifyToClient
+			Max
+			Null
+		}
+		struct SAsHeader
+		{
+			EAsProto Proto
+		}
+		struct SAsAgentOn : SAgent
+		{
+		}
+		struct SAsProcOn : SProc
+		{
+		}
+		struct SAsProcOff
+		{
+		}
+		struct SAsAgentOption
+		{
+			SAgentOption Option
+		}
+		struct SAsAgentStat : SKeyData
+		{
+		}
+		struct SAsProcStat : SKeyData
+		{
+		}
+
+		enum class EApProto
+		{
+			Stop
+			Message
+			UserProto
+			Max
+			Null
+		}
+		struct SApHeader
+		{
+			EApProto Proto
+		}
+		struct SApStop
+		{
+			wstring Message
+			int32 SecondLeft
+		}
+		struct SApMessage
+		{
+			wstring Message
+		}
+
+		enum class EPaProto
+		{
+			ProcOn
+			Stat
+			NotifyToClient
+			Max
+			Null
+		}
+		struct SPaHeader
+		{
+			EPaProto Proto
+		}
+		struct SPaProcOn : SProc
+		{
+		}
+		struct SPaStat : SKeyData
+		{
+		}
+
+		struct SNotifyToClient
+		{
+			SKey Key
+			wstring Msg
+		}
+	}
+}

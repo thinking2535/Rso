@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{646df3d7-ab63-408b-8a8a-e98c211a4b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\fresnel">
+      <UniqueIdentifier>{f36a431c-f820-4eab-8034-58596dc2dc66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{a44be23e-acc1-4e39-a5d5-f376b5dec67e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\fresnel\alglibinternal.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\alglibmisc.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\ap.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\dataanalysis.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\diffequations.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\fasttransforms.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\integration.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\interpolation.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\linalg.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\optimization.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\solvers.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\specialfunctions.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\fresnel\statistics.cpp">
+      <Filter>Source\fresnel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBound.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Average.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SumRange.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Deviation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\alglibinternal.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\alglibmisc.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\ap.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\dataanalysis.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\diffequations.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\fasttransforms.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\integration.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\interpolation.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\linalg.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\optimization.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\solvers.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\specialfunctions.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\statistics.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\fresnel\stdafx.h">
+      <Filter>Source\fresnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tracer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Permutation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\Note.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\GCD_LCM_Old.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

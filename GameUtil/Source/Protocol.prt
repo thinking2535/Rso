@@ -1,0 +1,34 @@
+namespace rso
+{
+	namespace gameutil
+	{
+		using namespace core
+		using namespace json
+
+		typedef int32	TCode
+
+		enum class EOS : uint8
+		{
+			Android
+			iOS
+			Max
+			Null
+		}
+
+		struct SIndexCode
+		{
+			int64 Index
+			TCode Code
+		}
+		struct SIndexCodeCnt : SIndexCode
+		{
+			int32 Cnt
+		}
+
+		struct STimeBoost
+		{
+			time_point EndTime
+			double Speed
+		}
+	}
+}

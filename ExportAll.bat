@@ -1,0 +1,13 @@
+call Export.bat Base
+call Export.bat Core
+call Export.bat Crypto
+call Export.bat Json
+call Export.bat Log
+call Export.bat Math
+call Export.bat Net
+call Export.bat Physics
+call Export.bat Win
+call Export.bat GameUtil
+call Export.bat Balance
+call Export.bat Game
+call Export.bat Mobile

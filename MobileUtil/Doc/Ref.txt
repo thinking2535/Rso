@@ -1,0 +1,32 @@
+< 구글 영수증 검증 >
+# 참고 URL
+https://medeev.tistory.com/6
+ * 클라이언트 아이디는 apps.google~~ 모두 포함
+
+1. Goolge Play Android Developer API 활성화
+- 구글 API 관리자
+	- 라이브러리
+		- Google API 검색란에서
+			Goolge Play Android Developer API 검색 및 활성화
+2. 사용자 인증정보 만들기
+- 구글 API 관리자
+	- 사용자 인증 정보
+		- 사용자 인증정보 만들기
+			- OAuth 클라이언트 ID 만들기
+			(플레이게임서비스를 사용중이면 기존에 하나가 있을것이지만 또 사용자인증정보를 만든다.
+			이 사용자가 곧 영수증 검증처리를 하는 서버가 되는것이다.)
+
+			- * 기타   (이름 : 당신의 서버이름 아무거나)  생성
+		- 클라이언트 ID 입니다, 클라이언트 보안 비밀입니다. 확인
+		(클라이언트 아이디는 apps.google~~ 모두 포함)
+
+3. 아래 URL 로 접속하여 OAuth Code 을 얻기
+https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=클라이언트id
+
+
+#	OAuth Code 는 10분 후 만료되며, 최초 AccessToken, RefreshToken 을 얻기위함임.
+	RefreshToken 은 만료되지 않는다고 가정.
+	최초 서버 기동시 AccessToken은 만료되었다고 간주하고 가지고 있는 RefreshToken 으로 Refresh 하여 AccessToken 을 새로 받을것.
+	이후 AccessToken 의 만료시각이 되면  RefreshToken으로 AccessToken을 갱신하여, AccessToken 을 항상 유효하도록 유지시켜 줄것.
+	Callback 결과로 오는 AccessToken 의 만료시간(현 1시간)이 되기 전 새로운 Token이 완전히 전파될 수 있는 충분한 시간 전에 Refresh 할것
+	기존 AccessToken이 만료되기 전에 Refresh 한다고 해서 기존 AccessToken 이 무효화 되는것이 아님 (아마도, 각 AccessToken의 주기가 모두 1시간 인듯)

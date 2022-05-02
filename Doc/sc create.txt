@@ -1,0 +1,6 @@
+sc create MonitorServer binpath= C:\Server\Rso\MonitorAgent\x64\MonitorAgent_sMTd.exe
+sc create GameHub binpath= C:\Server\GameServer\GameHub\Agent\MonitorAgent_sMTd.exe
+sc create GameAuth binpath= C:\Server\GameServer\GameAuth\Agent\MonitorAgent_sMTd.exe
+sc create GameMaster binpath= C:\Server\GameServer\GameMaster\Agent\MonitorAgent_sMTd.exe
+sc create GameServer binpath= C:\Server\GameServer\GameServer\Agent\MonitorAgent_sMTd.exe
+sc create RankingServer binpath= C:\Server\GameServer\RankingServer\Agent\MonitorAgent_sMTd.exe

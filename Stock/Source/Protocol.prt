@@ -1,0 +1,172 @@
+namespace rso
+{
+	namespace stock
+	{
+		using namespace core
+		using namespace json
+
+		struct SDataDb
+		{
+			time_point	TimePoint
+			int32	Open
+			int32	Close
+			int32	High
+			int32	Low
+			int32	Volume
+			int32	Val
+			int32	OpenInterest
+		}
+		struct _STick : SDataDb
+		{
+			int32	Offer0
+			int32	Bid0
+			int32	Trade
+			datetime	InsertedTime
+		}
+		struct _SRemain
+		{
+			int64	DateTime
+			int32	OfferHo1
+			int32	BidHo1
+			int32	OfferRem1
+			int32	BidRem1
+			int32	OfferCnt1
+			int32	BidCnt1
+			int32	OfferHo2
+			int32	BidHo2
+			int32	OfferRem2
+			int32	BidRem2
+			int32	OfferCnt2
+			int32	BidCnt2
+			int32	OfferHo3
+			int32	BidHo3
+			int32	OfferRem3
+			int32	BidRem3
+			int32	OfferCnt3
+			int32	BidCnt3
+			int32	OfferHo4
+			int32	BidHo4
+			int32	OfferRem4
+			int32	BidRem4
+			int32	OfferCnt4
+			int32	BidCnt4
+			int32	OfferHo5
+			int32	BidHo5
+			int32	OfferRem5
+			int32	BidRem5
+			int32	OfferCnt5
+			int32	BidCnt5
+			int32	TotalOfferRem
+			int32	TotalBidRem
+			int32	TotalOfferCnt
+			int32	TotalBidCnt
+			datetime	InsertedTime
+		}
+		struct STick
+		{
+			int32	Price
+			int32	Volume
+			int32	Offer0
+			int32	Bid0
+			int32	Trade
+			datetime	InsertedTime
+		}
+		struct SRemain
+		{
+			int32	OfferHo1
+			int32	BidHo1
+			int32	OfferRem1
+			int32	BidRem1
+			int32	OfferCnt1
+			int32	BidCnt1
+			int32	OfferHo2
+			int32	BidHo2
+			int32	OfferRem2
+			int32	BidRem2
+			int32	OfferCnt2
+			int32	BidCnt2
+			int32	OfferHo3
+			int32	BidHo3
+			int32	OfferRem3
+			int32	BidRem3
+			int32	OfferCnt3
+			int32	BidCnt3
+			int32	OfferHo4
+			int32	BidHo4
+			int32	OfferRem4
+			int32	BidRem4
+			int32	OfferCnt4
+			int32	BidCnt4
+			int32	OfferHo5
+			int32	BidHo5
+			int32	OfferRem5
+			int32	BidRem5
+			int32	OfferCnt5
+			int32	BidCnt5
+			int32	TotalOfferRem
+			int32	TotalBidRem
+			int32	TotalOfferCnt
+			int32	TotalBidCnt
+			datetime	InsertedTime
+		}
+		struct SRealTick
+		{
+			int64	Index
+			int64	DateTime
+			int32	Price
+			int32	CVolume
+			int32	Volume
+			int32	Val
+			int32	SellVolume
+			int32	SellCnt
+			int32	BuyVolume
+			int32	BuyCnt
+			int32	Pwr
+			int32	OfferHo1
+			int32	BidHo1
+			int32	OpenYak
+			int32	TheoryPrice
+			int32	Kasis
+			int32	SBasis
+			int32	IBasis
+			int32	OpenYakCha
+		}
+
+		struct SRemainUnit
+		{
+			int32 Price
+			int32 Volume
+			int32 Change
+			int32 Count
+		}
+		struct SRemainDB
+		{
+			time_point TimePoint
+			array<SRemainUnit,10> Datas
+		}
+
+		struct SChart
+		{
+			int32 Price
+			int32 Volume
+		}
+		struct SChartTime : SChart
+		{
+			time_point TimePoint
+		}
+
+		struct SOrder
+		{
+			int32 Price
+			int32 Volume
+		}
+
+		struct SCandle
+		{
+			int32 Open
+			int32 High
+			int32 Low
+			int32 Close
+		}
+	}
+}

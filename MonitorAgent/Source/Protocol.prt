@@ -1,0 +1,14 @@
+include <Rso/Net/Protocol>
+
+using namespace rso
+using namespace net
+
+struct SOption
+{
+	wstring LogDir
+	wstring ServiceName
+	SNamePort ServerNamePort
+	wstring WorkingRelativePath
+	wstring AppFile
+	SNamePort AppNamePort
+}

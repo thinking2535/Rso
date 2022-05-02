@@ -1,0 +1,92 @@
+using namespace rso
+using namespace core
+using namespace json
+
+struct SDBTestIn
+{
+	int8 i8
+	int32 i32
+	stream s
+	time_point tp
+	time_point tp_io
+	list<int32> i32s
+	list<time_point> tps
+	datetime dt
+	datetime dt_io
+	string str
+	wstring wstr
+}
+struct SDBTestOut
+{
+	list<int8> int8s
+	list<int32> int32s
+	list<stream> streams
+	list<time_point> tps
+	list<datetime> dts
+	list<string> strs
+	list<wstring> wstrs
+	int32 out_i32
+	time_point tp_io
+	datetime dt_io
+}
+struct SStringWStringInt
+{
+	string a
+	wstring b
+	int32 c
+}
+struct STestDBIn
+{
+	list<stream> s
+	list<string> a
+	list<wstring> b
+	list<SStringWStringInt> c
+	string d
+	stream e
+}
+struct STestDBOut
+{
+}
+
+struct STest2DBIn
+{
+	list<string> a
+}
+
+struct STest3DBIn
+{
+	string a
+}
+
+
+struct SBulkCopyDBIn
+{
+	int64 a
+}
+
+struct SUTFTestDBIn
+{
+	string Char
+	u16string WChar
+}
+struct SUTFDummyDBOut
+{
+}
+
+struct SDummyOutDb
+{
+}
+struct SAuthLoginInDb
+{
+	u16string ID
+}
+
+struct SAuthUser
+{
+	int64 UID
+	u16string Nick
+}
+struct SAuthLoginOutDb
+{
+	list<SAuthUser> Users
+}

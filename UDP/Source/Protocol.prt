@@ -1,0 +1,21 @@
+namespace rso
+{
+	namespace udp
+	{
+		using namespace core
+		using namespace json
+
+		typedef	int16 TCounter
+		typedef	int16 TPacketCnt
+
+		struct	SHeader
+		{
+			int64		Time
+			TCounter	Counter
+			TPacketCnt	PacketCnt
+			TPacketCnt	PacketNum
+			int32		TotalSize
+			int32		Index
+		}
+	}
+}

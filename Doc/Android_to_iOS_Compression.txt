@@ -1,0 +1,43 @@
+<Android>					<iOS>
+RGB Compressed DXT1				RGB Compressed ETC 4 bits
+RGB Crunched DXT1				RGB Crunched ETC
+
+RGBA Compressed DXT5				RGBA Compressed ETC2 8 bits
+RGBA Crunched DXT5				RGBA Crunched ETC2
+
+RGB Compressed ETC2 4 bits			RGBA Compressed ETC2 8 bits
+RGB + 1-bit Alpha Compressed ETC2 4 bits	RGBA Compressed ETC2 8 bits
+
+RGB Compressed ATC 4 bits			RGB Compressed ETC 4 bits
+RGBA Compressed ATC 8 bits			RGBA Compressed ETC2 8 bits
+
+-------------- same ------------------------------------------------
+RGB Compressed ETC 4 bits
+RGB Crunched ETC
+RGBA Compressed ETC2 8 bits
+RGBA Crunched ETC2
+
+RGB Compressed PVRTC 2bits
+RGBA Compressed PVRTC 2bits
+RGB Compressed PVRTC 4bits
+RGBA Compressed PVRTC 4bits
+
+RGB CompressedASTC 4*4 block
+RGB CompressedASTC 5*5 block
+RGB CompressedASTC 6*6 block
+RGB CompressedASTC 8*8 block
+RGB CompressedASTC 10*10 block
+RGB CompressedASTC 12*12 block
+RGBA CompressedASTC 4*4 block
+RGBA CompressedASTC 5*5 block
+RGBA CompressedASTC 6*6 block
+RGBA CompressedASTC 8*8 block
+RGBA CompressedASTC 10*10 block
+RGBA CompressedASTC 12*12 block
+
+RGB 16 bit
+RGB 24 bit
+Alpha 8
+RGBA 16 bit
+RGBA 32 bit
+------------------------------------------------------------------------

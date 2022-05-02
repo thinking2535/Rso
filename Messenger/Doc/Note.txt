@@ -1,0 +1,51 @@
+* Login, Join은  IP 로 가능하도록
+* ChangeSvr
+ - string Login_Parameter 둘것.
+
+* Msnr
+  - 계정 생성디비 1, 나머지 복제, 인증서버 다수
+  - Login : 
+  - add(needed ID_DB) : 추가자는 무조건 추가(Merge 로 이미 생성되어있는(Block등으로) 경우 대비)되고, 대상의 List에 추가(State = Invited)
+    대상이 수락 : State = Normal
+    대상이 거절 : State = Reject
+  - sub : UID, ID 로 삭제 : State = Delete
+  - block : State = Block
+  - Unblock : State = Normal
+  - ChatInvite
+    1. 대화로 연결, 초대로 연결 : 동일한 2인이상이 서로 대화를 시작한 경우 방이 2개 생기지 않도록
+  - CreateRoom
+  - EnterRoom : Receive ChatList
+  - LeaveRoom : if RoomMemberCnt < 2 then delete room and erase ChatList
+
+  - play_with(msnr 의 범용 기능으로 개별 app에서 invite 가 가능하도록
+  # Msngr DB script 는 Project에 보관
+
+
+
+
+
+
+
+
+MssngrNode
+	CsChat 은 서버에서 일정량은 Buffering 하다가 DB 로 보내도록.
+	AddFrnd	(id or UID )
+	DelFrnd(UID)
+	
+
+복제 분산 : ID추가시 등 전 계정 체크시 필요.
+	환형 구조로 순회 복제!!!
+
+	복제 분산 시스템을 어떻게 라이브러리 화 할 수 있을까?
+	 - 노드 추가시 자동 복제
+	 - 새로 추가된 노드에 기존 데이터 복제
+		- 데이터 메타 데이터 필요( 노드 조인시 선임 노드로 부터 메타 데이터 받고 테이블, SP 추가 )
+		- 현재 추가되는 데이터에대해서 복제에 참여 하면서, 기존 데이터 복제(기존 데이터가 모두 복제되면 정상 가동)
+	 - 자신이 최선임 노드라면 저장된 메타데이터를 사용, 아니라면 선임노드로부터 메타데이터 요청 후 메타 데이터 파일, DB 작성(덮어 써지도록)
+	 - 클라이언트는 노드 서버를 통해 통신할 것인가? DB와 통신할 것인가?
+	   - DB와 통신할 경우 조회만, 액세스 하려면 노드 서버를 통해서
+	 - 메타데이터를 이용 DB 동적 바인딩 할것, 구동중 메타데이터 추가 가능
+
+범위 분산 : 실제 클라이언트 데이터 처리시
+	 - 노드 추가시 복제 없음.
+	 - 추가시 인덱스 수동 설정

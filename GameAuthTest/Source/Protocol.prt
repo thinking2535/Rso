@@ -1,0 +1,18 @@
+include <Rso/Net/Protocol>
+
+using namespace std
+using namespace rso
+using namespace core
+using namespace json
+using namespace net
+
+struct SOption
+{
+	TPort MonitorBindPort
+	TPort MasterBindPort
+	int32 NetCThreadCnt
+	TPort ClientBindPort
+	string Title
+	string FCMServerKey
+	int32 ChangeNickFreeCount
+}

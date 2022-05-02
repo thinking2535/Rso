@@ -1,0 +1,62 @@
+< 일반 절차 >
+AWS 소스 업데이트 (메타데이타 버전 및 충돌 등 체크)
+
+Rebuild
+
+디비 스크립트 준비
+
+실행파일 메타데이타 커밋
+
+운영툴에서 KeepAlive : False
+
+아마존 툴에서 ServerInfo.txt 수정
+	- "IsBusy" : True
+
+운영툴에서 게임서버 Message (Not Push, Not Stop)
+	- Commenders. After 5 minutes, there will be a server check for 30 minutes.
+
+종료시각 10초전에 Stop (10 seconds)
+	- Commenders. After 10 seconds, server will stop for 30 minutes.
+	- Commenders. After 10 seconds, server will restart.
+
+운영툴에서 Stopped 확인
+
+디비 스크립트 적용
+
+운영툴에서 실행파일 및 메타 UPDATE
+	- 메타 데이터는 빌드 시점의 것으로 받아지도록 !!!
+
+서버 실행 및 테스트
+
+아마존 툴에서 ServerInfo.txt 수정
+	- "IsBusy" : False
+	- TestVersion 을 LiveVersion 에 복사
+	- TestVersion 증가
+
+
+
+
+============================================================================================================
+
+
+[AWS 쿼리]
+
+	* 모든 디비의 SP 갱신
+
+[Dev2 쿼리]
+
+
+[Dev 쿼리]
+
+	[Game]
+	 * 전 유저 토파즈 150 을 더해줄것.
+		UPDATE dbo.tUser SET Topaz = Topaz + 150
+
+	 * tUser
+		AdsNextTime 밑에
+
+			AdsLeftCount	int(0) 추가
+
+	* 모든 디비의 SP 갱신
+
+[Int 쿼리]

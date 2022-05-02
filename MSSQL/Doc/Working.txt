@@ -1,0 +1,57 @@
+ // rso ttt
+
+ // 입력으로 lob 가 있으면
+ // bind 시에 ( rso ttt 참조 ) SQL_LEN_DATA_AT_EXEC 등으로 cpVal 에 크기 셋, index 파라미터에는 ParamData 로 받을 Pointer 구분자 입력
+ // Execute 시에 99반환
+ // ParamData 호출하여 0이 반환될때까지 SQLPutData ( Pointer에 bind 시에 넣었던 구분자 얻어짐 )
+ // Fetch 이후 lob GetData 는  일정 버퍼로 cbLeft 가 어떤값이 될때까지  반복적 Get ( 어디다 적어뒀는데...............!!!!!!! )
+
+ //  SQLPOINTER Pointer = NULL;
+ //  Ret = m_paConn[ThreadNum_].ParamData( CmdNum_, &Pointer );
+ // 
+ // 
+ //  {
+ //  SDateTime N = GetTimeStamp( CTime::GetNow() );
+ //  TValueSize Ind = 1024;
+ //  char bb[1024] = {};
+ //  CopyMemory( bb, &N, sizeof(SDateTime) );
+ //  Ret = SQLPutData(
+ //  m_paConn[ThreadNum_].GetStmt(CmdNum_),
+ //  bb,
+ //  Ind);               // How much data we can get.
+ // 
+ // 
+ //  SDateTime Now;
+ //  TValueSize cbLeft = 0;
+ //  TValueSize BufSz = sizeof(SDateTime);
+ // 
+ //  Ret = SQLGetData( 
+ //  m_paConn[ThreadNum_].GetStmt(CmdNum_), 
+ //  (UWORD) 1,          // the value of the token is the ordinal. 
+ //  SQL_C_BINARY,           // The C-type.
+ //  &Now,            // A small buffer. 
+ //  BufSz,    // The size of the buffer.
+ //  &cbLeft);               // How much data we can get.
+ //  }
+
+
+
+ // rso ttt
+ //TReturn CCmd::ParamData( SQLPOINTER* pPointer_ )
+ //{
+ // TReturn Ret = SQLParamData( m_hStmt, pPointer_ );
+ // if( Ret != SQL_SUCCESS  &&  Ret != SQL_NO_DATA )
+ // _ErrorLogFunc( m_hStmt );
+
+ // return Ret;
+ //}
+
+
+
+ // rso ttt
+ //  pParamInfo->pBlock[0].cbVal = SQL_LEN_DATA_AT_EXEC(1);
+ //  Ret = SQLBindParameter( m_hStmt, (1), GetSqlParam(pParamInfo->pBlock[0].ParamType),
+ //  GetCType(pParamInfo->pBlock[0].Type), GetSqlType(pParamInfo->pBlock[0].Type), 1024, 0,
+ //  (SQLPOINTER)1, 0, &pParamInfo->pBlock[0].cbVal );
+ //  if( Ret != SQL_SUCCESS ) return Ret;
+

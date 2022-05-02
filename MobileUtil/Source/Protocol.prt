@@ -1,0 +1,61 @@
+namespace rso
+{
+	namespace mobileutil
+	{
+		struct SUserLoadAllDBIn
+		{
+		}
+		struct SUserDB
+		{
+			int64 UID
+			string Token
+			bool CanPushAtNight
+			int32 MinuteOffset
+		}
+		struct SUserLoadAllDBOut
+		{
+			list<SUserDB> Users
+		}
+		struct SUserInsertDBIn : SUserDB
+		{
+		}
+		struct SUserChangeTokenDBIn
+		{
+			int64 UID
+			string Token
+		}
+		struct SUserChangeUIDDBIn
+		{
+			int64 UID
+			string Token
+		}
+		struct SUserDelUIDChangeTokenDBIn
+		{
+			int64 DelUID
+			int64 UID
+			string Token
+			int32 MinuteOffset
+		}
+		struct SUserDelDBIn
+		{
+			int64 UID
+		}
+		struct SUserChangeDBIn
+		{
+			int64 UID
+			bool CanPushAtNight
+		}
+		struct SDummyDBOut
+		{
+		}
+
+		struct SReceiptOption
+		{
+			string OAuthCode
+			string PackageName
+			string ClientID
+			string ClientSecret
+			string RefreshToken
+		}
+	}
+}

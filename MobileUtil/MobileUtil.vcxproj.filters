@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{1b80cdba-821b-485c-b74f-74f764ed8c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{26397fb4-5fbb-4dd8-8421-45fe4058f5bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Billing.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FCMServer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FCMClient.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MsgQue.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ReceiptCheck.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ReceiptToken.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Billing.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FCMServer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FCMClient.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MsgQue.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ReceiptCheck.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ReceiptToken.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\Ref.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

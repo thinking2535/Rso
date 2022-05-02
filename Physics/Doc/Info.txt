@@ -1,0 +1,79 @@
+// 아래 GetShootInfo는 역탄도 계산 공식으로, 시작스칼라벡터(발사속도)와 목표지점과 중력가속도를 알 때 시작벡터를 구하는 공식
+	public class CShootInfo
+	{
+		public double X = 0.0;		//x 가속
+		public double Y = 0.0;   	//y 가속
+		public double Time = 0.0;	//적중 시간
+		
+		public CShootInfo(double X_, double Y_, double Time_)
+		{
+			X = X_;
+			Y = Y_;
+			Time = Time_;
+		}
+	};
+	
+	
+	double GetYWithTime(double Gravity_, double Time_, double dY0_)
+	{
+		return (-Gravity_ / 2.0 * Time_ * Time_ + dY0_ * Time_);
+	}
+	double GetXWithTime(double Time_, double dX0_)
+	{
+		return (dX0_ * Time_);
+	}
+	//중력, 파워, 상대좌표
+	//false 실패
+	public static CShootInfo GetShootInfo(double G_, double V_, double X_, double Y_)
+	{
+		var A = G_ * G_ / 4.0f;
+		var B = -(V_ * V_ - Y_ * G_);
+		var C = X_ * X_ + Y_ * Y_;
+		var D = B * B - 4.0f * A * C;
+		
+		double T = 0.0f;
+		
+		if (D < 0.0f)
+			return null;
+		
+		else if (D == 0.0f)
+		{
+			T = -B / (2.0f * A);
+			
+			if (T <= 0.0f)
+				return null;
+		}
+		else
+		{
+			var T0 = (-B + Math.Sqrt(D)) / (2.0f * A);
+			var T1 = (-B - Math.Sqrt(D)) / (2.0f * A);
+			
+			if (T0 > 0.0f)
+			{
+				if (T1 > 0.0f)
+					T = (T0 < T1 ? T0 : T1);
+				else
+					T = T0;
+			}
+			else
+			{
+				if (T1 > 0.0f)
+					T = T1;
+				else
+					return null;
+			}
+		}
+		
+		var t = Math.Sqrt(T);
+		
+		return new CShootInfo(X_ / t, Y_ / t + G_ * t / 2.0f, t);
+	}
+	
+	static void Main(string[] args)
+	{
+		while(true)
+		{
+			var Info = GetShootInfo(9.8, Double.Parse(Console.ReadLine()), Double.Parse(Console.ReadLine()), Double.Parse(Console.ReadLine()));
+			Console.WriteLine( "{0} {1} {2}", Info.X, Info.Y, Info.Time);
+		}
+	}

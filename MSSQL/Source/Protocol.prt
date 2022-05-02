@@ -1,0 +1,26 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace mssql
+	{
+		using namespace std
+		using namespace net
+
+		struct SConnInfo
+		{
+			wstring ServerName
+			wstring UserName
+			wstring PassWord
+			wstring DataBase
+			TPort Port
+			uint32 QueryTimeOut
+		}
+		struct SDBOption
+		{
+			int32 LoginTimeOut
+			int32 ConnTimeOut
+			SConnInfo ConnInfo
+		}
+	}
+}

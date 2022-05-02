@@ -1,0 +1,1 @@
+CClient 에서 IClient 사용할것.

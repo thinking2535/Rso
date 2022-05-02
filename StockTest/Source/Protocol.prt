@@ -1,0 +1,17 @@
+using namespace rso
+using namespace core
+using namespace json
+
+struct SBulkSelectTickDBIn
+{
+}
+struct SDataDB
+{
+	time_point	TimePoint
+	int32	Close
+	int32	Volume
+}
+struct SBulkSelectTickDBOut
+{
+	list<SDataDB> Datas
+}

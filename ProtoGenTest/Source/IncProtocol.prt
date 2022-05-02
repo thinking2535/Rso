@@ -1,0 +1,40 @@
+namespace ns
+{
+	namespace inc
+	{
+		using namespace rso
+		using namespace core
+
+		enum class ETest
+		{
+			A
+			B
+			C
+		}
+
+		struct STestBase
+		{
+			ETest e
+			int8 i8
+			uint8 ui8
+			int16 i16
+			uint16 ui16
+			int32 i32
+			uint32 ui32
+			int64 i64
+			uint64 ui64
+			float f
+			double d
+			string s
+			wstring ws
+			stream stm
+			datetime dt
+			time_point tp
+			array<int32,3> a
+			vector<stream> v
+			list<int8> l
+			set<float> st
+			map<int32,datetime> mp
+		}
+	}
+}

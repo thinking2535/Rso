@@ -1,0 +1,384 @@
+#include "stdafx.h"
+#include <Rso/Http/Http.h>
+#include <Rso/Crypto/Base64.h>
+#include <Rso/Crypto/Uri.h>
+#include <iostream>
+#include <Rso/Json/Json.h>
+
+using namespace std;
+using namespace rso;
+using namespace base;
+using namespace http;
+using namespace json;
+using namespace crypto;
+
+void ChangedFunc(size_t SessionIndex_, const string& ObjectName_, DWORD Received_, DWORD Total_)
+{
+	cout << "SessionIndex : " << SessionIndex_ << " ObjectName : " << ObjectName_ << " Received : " << Received_ << " Total : " << Total_ << endl;
+}
+void CompletedCallback(size_t SessionIndex_, EHttpRet Ret_, const string& ObjectName_, const TBuffer& Buffer_)
+{
+	if (Ret_ != EHttpRet::Ok)
+	{
+		cout << "Error : " << int32(Ret_) << endl;
+		return;
+	}
+
+	cout << string(Buffer_.begin(), Buffer_.end()) << endl;
+	cout << "SessionIndex : " << SessionIndex_ << " ObjectName : " << ObjectName_ << " Total : " << Buffer_.size() << endl;
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	//CHttp hf(2, ChangedFunc, CompletedCallback);
+	//string UserHeader2 = "Content-Type: application/x-www-form-urlencoded\r\n";
+	////hf.Push(0, SInObj(UserHeader2, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/test2.msi", "", true));
+	//hf.Push(0, SInObj(UserHeader2, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/ServerInfo.txt", "", true));
+
+	//while (true)
+	//{
+	//	hf.Proc();
+	//	this_thread::sleep_for(milliseconds(100));
+	//}
+
+	CHttp h(4, ChangedFunc, CompletedCallback);
+
+#if true
+	string UserHeader = "Content-Type: application/x-www-form-urlencoded\r\n";
+	h.Push(SInObj(UserHeader, "www.google.com/search?newwindow=1&sxsrf=ALeKk03AoKZ331pycXVajCM98Wihwr6Rjg%3A1609471966978&ei=3pfuX4zyOpuFr7wPmtqegAc&q=dog+%EC%98%81%EC%96%B4&oq=dog+%EC%98%81%EC%96%B4&gs_lcp=CgZwc3ktYWIQAzICCAAyBAgAEB4yBAgAEB4yBAgAEB4yBggAEAgQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIICAAQBRAKEB4yBggAEAgQHjoECCMQJzoGCCMQJxATOgQIABBDOgcIABAUEIcCOggIABCxAxCDAVCAFVjnHWCAImgAcAB4AIABtgGIAaQIkgEDMC43mAEAoAEBqgEHZ3dzLXdpesABAQ&sclient=psy-ab&ved=0ahUKEwiM2fem5vntAhWbwosBHRqtB3AQ4dUDCA0&uact=5", 443, "", "", EMethod::Post, "", "", true));
+	//h.Push(SInObj(UserHeader, "dic.daum.net/search.do", 443, "", "", EMethod::Post, "q=dog&dic=eng", "", true));
+
+
+#elif false
+	string UserHeader = "Content-Type: application/x-www-form-urlencoded\r\n";
+	h.Push(0, SInObj(UserHeader, "accounts.google.com", 443, "", "", EMethod::Post, "/o/oauth2/token", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/ServerInfo.txt", "", true));
+
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/a.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/b.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/c.bin", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/d.bin", "", true));
+
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/test2.msi", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/test2.msi", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 443, "", "", EMethod::Get, "/data/test2.msi", "", true));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 80, "", "", EMethod::Get, "/data/test2.msi", "", false));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 80, "", "", EMethod::Get, "/data/test2.msi", "", false));
+	h.Push(0, SInObj(UserHeader, "madplanet-patch.s3.ca-central-1.amazonaws.com", 80, "", "", EMethod::Get, "/data/test2.msi", "", false));
+
+	while (true)
+	{
+		h.Proc();
+
+		this_thread::sleep_for(milliseconds(1));
+	}
+
+	return 0;
+
+#elif false
+	// FCM Test //////////////////////////////////////////
+
+	//string Key = "AAAABqMA9ic:APA91bH2X5vnaDwfOPT7Pp6g3IQTcnJ3Ng_o461ZHNPxHO2bSAMWfkdh4DA0mn_qdhg4gcF2wIFhbGqz5bYVKPFJPaT3Z1Yws7puh9kEZdLvRbm06wRHwX3wi4Lhkl2WCVr73Bs0Tl8o";
+
+	//string Domain = "fcm.googleapis.com";
+	//string Object = "/fcm/send";
+
+
+	//Value JsonMsg;
+	//JsonMsg["message"]["token"] = "fsIH_sekC88:APA91bF5WzhCmlNmJZFHHsvOZYVf1mROEjXgDum9bj6uMzbeTanNyJcVuBexjqW0_gwno7yFOj7JQ2_yPWUDcOXnM1PuQP3LsdqWByRZbBC7TA4iyo1FnX3Uz-HB4rlRPv_FvHwplsOe";
+	//JsonMsg["message"]["notification"]["body"] = "Body";
+	//JsonMsg["message"]["notification"]["title"] = "Title";
+
+
+	//Value JsonMsg;
+	//JsonMsg["data"]["Title"] = "Title";
+	//JsonMsg["data"]["Msg"] = "Msgeeee";
+	//JsonMsg["registration_ids"][0] = "fsIH_sekC88:APA91bF5WzhCmlNmJZFHHsvOZYVf1mROEjXgDum9bj6uMzbeTanNyJcVuBexjqW0_gwno7yFOj7JQ2_yPWUDcOXnM1PuQP3LsdqWByRZbBC7TA4iyo1FnX3Uz-HB4rlRPv_FvHwplsOe";
+
+	//string Header = "Content-Type: application/json;\r\n";
+	//string UserHeader = Header + "Authorization: key=" + Key + "\r\n";
+
+	//wcout << UserHeader << endl;
+	//cout << JsonMsg.toStyledString() << endl;
+
+	//h.Push(0, SInObj(UserHeader, Domain, 443, "", "", EMethod::Post, Object, JsonMsg.toStyledString(), true));
+
+
+
+	// Web Test
+	// h.Push(0, SInObj(L"", L"google.com", 80, L"", L"", EMethod::Get, L"", L"", false));
+
+	// CDN
+	//CStream UserData;
+	//UserData << 2;
+	//h.Push(SInObj(1, UserData, L"", L"skykong.actoz.hscdn.com", 80, L"", L"", EMethod::Get, L"/skykong/test.txt", L"", false));
+
+	// 카카오 인증
+	//CStream UserData;
+	//UserData << 2;
+	//h.Push( SInObj(1, UserData, L"api.kakao.com", 443, L"", L"", EMethod::Get, L"/v1/token/check.json", L"access_token=U6HTBYz2VXplVpba0zK5RQcYW6BFfxxNf37y6JYlVODnacM549WNQQlzDCT9jWnpGcm73GxMvx9gKGxOqHmpHg&user_id=88135971554826609&client_id=89919914538799088&sdkver=1.2.1", true) );
+
+
+	// 카카오 Server to Server ////////////////////////////////////////////////////////////////
+	//wstring UserHeader( L"Content-Type: application/x-www-form-urlencoded\r\n" );
+	//wstring Params;
+	//Params += L"&client_id=89919914538799088";
+	//Params += L"&secret_key=5a9de56a3e8647caa2600e2cecaf2c5108fa2b0a68c8f52106be1cbb83fe8331";
+	//Params += L"&service_user_id=88039203505617744";
+	//Params += L"&platform=google";
+	//Params += L"&price=1";
+	//Params += L"&currency=KRW";
+	//Params += L"&os=android";
+	//Params += L"&buy_no=1234123412341234123";
+	//CStream UserData;
+	//UserData << 2;
+	//h.Push( SInObj(1, UserData, UserHeader, L"gameapi.kakao.com", 443, L"", L"", EMethod::Post, L"/payment_v1/payments.json", Params, true) );
+
+	//https://gameapi.kakao.com/payment_v1/payments.json
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+#elif false
+
+	// 애플 샌드박스
+	string UserHeader = "Content-Type: application/x-www-form-urlencoded\r\n";
+	//h.Push(0, SInObj(UserHeader, "sandbox.itunes.apple.com", 443, "", "", EMethod::Post, "/verifyReceipt", "{\"receipt-data\" : \"ewoJInNpZ25hdHVyZSIgPSAiQW5tOXM3dXZmZGlva2lFcFNwelFaU2E3MndJQ2tpU3FUODJoQ3NDT2E1UmxBZnhwWnVGN2hOSlFyMmdyWnltalpydEpmZnNoVGg3dGdESDNpTDhRNDdEREE3NStENjY5VjN5YStWL21CdUEyaVEyem9Tdm1sMVlmYSsva0ZZdzF0Rlg5T0ZJem5kZmxwcDVnQ0NDcmwvOVhJSWpEU1pEa0dXSjdjQ1NZNitFWEFBQURWekNDQTFNd2dnSTdvQU1DQVFJQ0NHVVVrVTNaV0FTMU1BMEdDU3FHU0liM0RRRUJCUVVBTUg4eEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUtEQXBCY0hCc1pTQkpibU11TVNZd0pBWURWUVFMREIxQmNIQnNaU0JEWlhKMGFXWnBZMkYwYVc5dUlFRjFkR2h2Y21sMGVURXpNREVHQTFVRUF3d3FRWEJ3YkdVZ2FWUjFibVZ6SUZOMGIzSmxJRU5sY25ScFptbGpZWFJwYjI0Z1FYVjBhRzl5YVhSNU1CNFhEVEE1TURZeE5USXlNRFUxTmxvWERURTBNRFl4TkRJeU1EVTFObG93WkRFak1DRUdBMVVFQXd3YVVIVnlZMmhoYzJWU1pXTmxhWEIwUTJWeWRHbG1hV05oZEdVeEd6QVpCZ05WQkFzTUVrRndjR3hsSUdsVWRXNWxjeUJUZEc5eVpURVRNQkVHQTFVRUNnd0tRWEJ3YkdVZ1NXNWpMakVMTUFrR0ExVUVCaE1DVlZNd2daOHdEUVlKS29aSWh2Y05BUUVCQlFBRGdZMEFNSUdKQW9HQkFNclJqRjJjdDRJclNkaVRDaGFJMGc4cHd2L2NtSHM4cC9Sd1YvcnQvOTFYS1ZoTmw0WElCaW1LalFRTmZnSHNEczZ5anUrK0RyS0pFN3VLc3BoTWRkS1lmRkU1ckdYc0FkQkVqQndSSXhleFRldngzSExFRkdBdDFtb0t4NTA5ZGh4dGlJZERnSnYyWWFWczQ5QjB1SnZOZHk2U01xTk5MSHNETHpEUzlvWkhBZ01CQUFHamNqQndNQXdHQTFVZEV3RUIvd1FDTUFBd0h3WURWUjBqQkJnd0ZvQVVOaDNvNHAyQzBnRVl0VEpyRHRkREM1RllRem93RGdZRFZSMFBBUUgvQkFRREFnZUFNQjBHQTFVZERnUVdCQlNwZzRQeUdVakZQaEpYQ0JUTXphTittVjhrOVRBUUJnb3Foa2lHOTJOa0JnVUJCQUlGQURBTkJna3Foa2lHOXcwQkFRVUZBQU9DQVFFQUVhU2JQanRtTjRDL0lCM1FFcEszMlJ4YWNDRFhkVlhBZVZSZVM1RmFaeGMrdDg4cFFQOTNCaUF4dmRXLzNlVFNNR1k1RmJlQVlMM2V0cVA1Z204d3JGb2pYMGlreVZSU3RRKy9BUTBLRWp0cUIwN2tMczlRVWU4Y3pSOFVHZmRNMUV1bVYvVWd2RGQ0TndOWXhMUU1nNFdUUWZna1FRVnk4R1had1ZIZ2JFL1VDNlk3MDUzcEdYQms1MU5QTTN3b3hoZDNnU1JMdlhqK2xvSHNTdGNURXFlOXBCRHBtRzUrc2s0dHcrR0szR01lRU41LytlMVFUOW5wL0tsMW5qK2FCdzdDMHhzeTBiRm5hQWQxY1NTNnhkb3J5L0NVdk02Z3RLc21uT09kcVRlc2JwMGJzOHNuNldxczBDOWRnY3hSSHVPTVoydG04bnBMVW03YXJnT1N6UT09IjsKCSJwdXJjaGFzZS1pbmZvIiA9ICJld29KSW05eWFXZHBibUZzTFhCMWNtTm9ZWE5sTFdSaGRHVXRjSE4wSWlBOUlDSXlNREV6TFRBNExUSXpJREl3T2pVM09qVXdJRUZ0WlhKcFkyRXZURzl6WDBGdVoyVnNaWE1pT3dvSkluVnVhWEYxWlMxcFpHVnVkR2xtYVdWeUlpQTlJQ0kxWVRSaFltRXdOVE15WldaaE9XTXpNek15WTJNMVpUVXpNV1ZrTWpCaU1UQmxaalk1WVRGa0lqc0tDU0p2Y21sbmFXNWhiQzEwY21GdWMyRmpkR2x2YmkxcFpDSWdQU0FpTVRBd01EQXdNREE0TlRBM01EWXhNeUk3Q2draVluWnljeUlnUFNBaU1TNHdOUzR3TWlJN0Nna2lkSEpoYm5OaFkzUnBiMjR0YVdRaUlEMGdJakV3TURBd01EQXdPRFV3TnpBMk1UTWlPd29KSW5GMVlXNTBhWFI1SWlBOUlDSXhJanNLQ1NKdmNtbG5hVzVoYkMxd2RYSmphR0Z6WlMxa1lYUmxMVzF6SWlBOUlDSXhNemMzTXpFMk5qY3dPREV5SWpzS0NTSjFibWx4ZFdVdGRtVnVaRzl5TFdsa1pXNTBhV1pwWlhJaUlEMGdJamxGTnpoRU4wWkRMVVUzUTBRdE5FRTFSUzFCTkRkRkxUY3lNekZDUVRaR1F6UTFSaUk3Q2draWNISnZaSFZqZEMxcFpDSWdQU0FpWVhCZlpHbGhiVzl1WkY4eE1qVWlPd29KSW1sMFpXMHRhV1FpSUQwZ0lqWTNOelV5TURFd05TSTdDZ2tpWW1sa0lpQTlJQ0pqYjIwdVlXTjBiM291YzJ0NWEyOGlPd29KSW5CMWNtTm9ZWE5sTFdSaGRHVXRiWE1pSUQwZ0lqRXpOemN6TVRZMk56QTRNVElpT3dvSkluQjFjbU5vWVhObExXUmhkR1VpSUQwZ0lqSXdNVE10TURndE1qUWdNRE02TlRjNk5UQWdSWFJqTDBkTlZDSTdDZ2tpY0hWeVkyaGhjMlV0WkdGMFpTMXdjM1FpSUQwZ0lqSXdNVE10TURndE1qTWdNakE2TlRjNk5UQWdRVzFsY21sallTOU1iM05mUVc1blpXeGxjeUk3Q2draWIzSnBaMmx1WVd3dGNIVnlZMmhoYzJVdFpHRjBaU0lnUFNBaU1qQXhNeTB3T0MweU5DQXdNem8xTnpvMU1DQkZkR012UjAxVUlqc0tmUT09IjsKCSJlbnZpcm9ubWVudCIgPSAiU2FuZGJveCI7CgkicG9kIiA9ICIxMDAiOwoJInNpZ25pbmctc3RhdHVzIiA9ICIwIjsKfQ==\"}", true));
+	//h.Push(0, SInObj(UserHeader, "sandbox.itunes.apple.com", 443, "", "", EMethod::Post, "/verifyReceipt", "{\"receipt-data\" : \"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\"}", true));
+//	h.Push(SInObj(UserHeader, "buy.itunes.apple.com", 443, "", "", EMethod::Post, "/verifyReceipt", "{\"receipt-data\" : \"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\"}", true));
+	//h.Push(SInObj(UserHeader, "sandbox.itunes.apple.com", 443, "", "", EMethod::Post, "/verifyReceipt", "{\"receipt-data\" : \"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\"}", true));
+
+	h.Push(SInObj(UserHeader, "sandbox.itunes.apple.com", 443, "", "", EMethod::Post, "/verifyReceipt", "{\"receipt-data\" : \"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\"}", true));
+	//h.Push( SInObj(0, UserData, L"", L"buy.itunes.apple.com", 443, L"", L"", EMethod::Post, L"/verifyReceipt", L"{\"receipt-data\" : \"ewoJInNpZ25hdHVyZSIgPSAiQW5tOXM3dXZmZGlva2lFcFNwelFaU2E3MndJQ2tpU3FUODJoQ3NDT2E1UmxBZnhwWnVGN2hOSlFyMmdyWnltalpydEpmZnNoVGg3dGdESDNpTDhRNDdEREE3NStENjY5VjN5YStWL21CdUEyaVEyem9Tdm1sMVlmYSsva0ZZdzF0Rlg5T0ZJem5kZmxwcDVnQ0NDcmwvOVhJSWpEU1pEa0dXSjdjQ1NZNitFWEFBQURWekNDQTFNd2dnSTdvQU1DQVFJQ0NHVVVrVTNaV0FTMU1BMEdDU3FHU0liM0RRRUJCUVVBTUg4eEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUtEQXBCY0hCc1pTQkpibU11TVNZd0pBWURWUVFMREIxQmNIQnNaU0JEWlhKMGFXWnBZMkYwYVc5dUlFRjFkR2h2Y21sMGVURXpNREVHQTFVRUF3d3FRWEJ3YkdVZ2FWUjFibVZ6SUZOMGIzSmxJRU5sY25ScFptbGpZWFJwYjI0Z1FYVjBhRzl5YVhSNU1CNFhEVEE1TURZeE5USXlNRFUxTmxvWERURTBNRFl4TkRJeU1EVTFObG93WkRFak1DRUdBMVVFQXd3YVVIVnlZMmhoYzJWU1pXTmxhWEIwUTJWeWRHbG1hV05oZEdVeEd6QVpCZ05WQkFzTUVrRndjR3hsSUdsVWRXNWxjeUJUZEc5eVpURVRNQkVHQTFVRUNnd0tRWEJ3YkdVZ1NXNWpMakVMTUFrR0ExVUVCaE1DVlZNd2daOHdEUVlKS29aSWh2Y05BUUVCQlFBRGdZMEFNSUdKQW9HQkFNclJqRjJjdDRJclNkaVRDaGFJMGc4cHd2L2NtSHM4cC9Sd1YvcnQvOTFYS1ZoTmw0WElCaW1LalFRTmZnSHNEczZ5anUrK0RyS0pFN3VLc3BoTWRkS1lmRkU1ckdYc0FkQkVqQndSSXhleFRldngzSExFRkdBdDFtb0t4NTA5ZGh4dGlJZERnSnYyWWFWczQ5QjB1SnZOZHk2U01xTk5MSHNETHpEUzlvWkhBZ01CQUFHamNqQndNQXdHQTFVZEV3RUIvd1FDTUFBd0h3WURWUjBqQkJnd0ZvQVVOaDNvNHAyQzBnRVl0VEpyRHRkREM1RllRem93RGdZRFZSMFBBUUgvQkFRREFnZUFNQjBHQTFVZERnUVdCQlNwZzRQeUdVakZQaEpYQ0JUTXphTittVjhrOVRBUUJnb3Foa2lHOTJOa0JnVUJCQUlGQURBTkJna3Foa2lHOXcwQkFRVUZBQU9DQVFFQUVhU2JQanRtTjRDL0lCM1FFcEszMlJ4YWNDRFhkVlhBZVZSZVM1RmFaeGMrdDg4cFFQOTNCaUF4dmRXLzNlVFNNR1k1RmJlQVlMM2V0cVA1Z204d3JGb2pYMGlreVZSU3RRKy9BUTBLRWp0cUIwN2tMczlRVWU4Y3pSOFVHZmRNMUV1bVYvVWd2RGQ0TndOWXhMUU1nNFdUUWZna1FRVnk4R1had1ZIZ2JFL1VDNlk3MDUzcEdYQms1MU5QTTN3b3hoZDNnU1JMdlhqK2xvSHNTdGNURXFlOXBCRHBtRzUrc2s0dHcrR0szR01lRU41LytlMVFUOW5wL0tsMW5qK2FCdzdDMHhzeTBiRm5hQWQxY1NTNnhkb3J5L0NVdk02Z3RLc21uT09kcVRlc2JwMGJzOHNuNldxczBDOWRnY3hSSHVPTVoydG04bnBMVW03YXJnT1N6UT09IjsKCSJwdXJjaGFzZS1pbmZvIiA9ICJld29KSW05eWFXZHBibUZzTFhCMWNtTm9ZWE5sTFdSaGRHVXRjSE4wSWlBOUlDSXlNREV6TFRBNExUSXpJREl3T2pVM09qVXdJRUZ0WlhKcFkyRXZURzl6WDBGdVoyVnNaWE1pT3dvSkluVnVhWEYxWlMxcFpHVnVkR2xtYVdWeUlpQTlJQ0kxWVRSaFltRXdOVE15WldaaE9XTXpNek15WTJNMVpUVXpNV1ZrTWpCaU1UQmxaalk1WVRGa0lqc0tDU0p2Y21sbmFXNWhiQzEwY21GdWMyRmpkR2x2YmkxcFpDSWdQU0FpTVRBd01EQXdNREE0TlRBM01EWXhNeUk3Q2draVluWnljeUlnUFNBaU1TNHdOUzR3TWlJN0Nna2lkSEpoYm5OaFkzUnBiMjR0YVdRaUlEMGdJakV3TURBd01EQXdPRFV3TnpBMk1UTWlPd29KSW5GMVlXNTBhWFI1SWlBOUlDSXhJanNLQ1NKdmNtbG5hVzVoYkMxd2RYSmphR0Z6WlMxa1lYUmxMVzF6SWlBOUlDSXhNemMzTXpFMk5qY3dPREV5SWpzS0NTSjFibWx4ZFdVdGRtVnVaRzl5TFdsa1pXNTBhV1pwWlhJaUlEMGdJamxGTnpoRU4wWkRMVVUzUTBRdE5FRTFSUzFCTkRkRkxUY3lNekZDUVRaR1F6UTFSaUk3Q2draWNISnZaSFZqZEMxcFpDSWdQU0FpWVhCZlpHbGhiVzl1WkY4eE1qVWlPd29KSW1sMFpXMHRhV1FpSUQwZ0lqWTNOelV5TURFd05TSTdDZ2tpWW1sa0lpQTlJQ0pqYjIwdVlXTjBiM291YzJ0NWEyOGlPd29KSW5CMWNtTm9ZWE5sTFdSaGRHVXRiWE1pSUQwZ0lqRXpOemN6TVRZMk56QTRNVElpT3dvSkluQjFjbU5vWVhObExXUmhkR1VpSUQwZ0lqSXdNVE10TURndE1qUWdNRE02TlRjNk5UQWdSWFJqTDBkTlZDSTdDZ2tpY0hWeVkyaGhjMlV0WkdGMFpTMXdjM1FpSUQwZ0lqSXdNVE10TURndE1qTWdNakE2TlRjNk5UQWdRVzFsY21sallTOU1iM05mUVc1blpXeGxjeUk3Q2draWIzSnBaMmx1WVd3dGNIVnlZMmhoYzJVdFpHRjBaU0lnUFNBaU1qQXhNeTB3T0MweU5DQXdNem8xTnpvMU1DQkZkR012UjAxVUlqc0tmUT09IjsKCSJlbnZpcm9ubWVudCIgPSAiU2FuZGJveCI7CgkicG9kIiA9ICIxMDAiOwoJInNpZ25pbmctc3RhdHVzIiA9ICIwIjsKfQ==\"}", true) );
+
+	// 실행결과
+//6 Etc/GMT", "receipt_creation_date_ms":"1601986586000", "receipt_creation_date_pst":"2020-10-06 05:16:26 America/Los_Angeles", "request_date":"2020-10-06 12:20:48 Etc/GMT", "request_date_ms":"1601986848262", "request_date_pst":"2020-10-06 05:20:48 America/Los_Angeles", "original_purchase_date":"2013-08-01 07:00:00 Etc/GMT", "original_purchase_date_ms":"1375340400000", "original_purchase_date_pst":"2013-08-01 00:00:00 America/Los_Angeles", "original_application_version":"1.0",
+//"in_app":[
+//{"quantity":"1", "product_id":"aniballoon_ruby_1", "transaction_id":"1000000726727134", "original_transaction_id":"1000000726727134", "purchase_date":"2020-10-06 12:16:26 Etc/GMT", "purchase_date_ms":"1601986586000", "purchase_date_pst":"2020-10-06 05:16:26 America/Los_Angeles", "original_purchase_date":"2020-10-06 12:16:26 Etc/GMT", "original_purchase_date_ms":"1601986586000", "original_purchase_date_pst":"2020-10-06 05:16:26 America/Los_Angeles", "is_trial_period":"false"}]}, "environment":"Sandbox", "status":0}
+//SessionIndex : 1 ObjectName : /verifyReceipt Total : 1254
+
+
+#elif true
+	// Google Receipt Check
+	string UserHeader("Content-Type: application/x-www-form-urlencoded\r\n");
+	string OAuthCode = "4/5AFz4WMPImAEwkSMGgP7oBim1uKoomP5sDkpt_XzLCNI9kraJnjzpro";
+	string PackageName = "com.stairgames.balloonstars";
+	string RedirectURI = "urn:ietf:wg:oauth:2.0:oob";
+	string ClientID = "215386719521-kqb0jpsi583ntf2g26fro0nav070p8ar.apps.googleusercontent.com";
+	string ClientSecret = "EPQ3rin6kVXtU6wydtMXoP00";
+
+
+	// 0. OAuth 사용자 인증정보 생성 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// 1. Get Auth Token
+	// https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=클라이언트id
+
+
+#if false // Get Access, Refresh Token
+	// 2. Get Access, Refresh Token //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 두번째 호출시 에러
+
+	string Params;
+	Params += ("code=" + OAuthCode);
+	Params += ("&client_id=" + ClientID);
+	Params += ("&client_secret=" + ClientSecret);
+	Params += ("&redirect_uri=" + RedirectURI);
+	Params += "&grant_type=authorization_code";
+
+	h.Push(SInObj(UserHeader, "accounts.google.com", 443, "", "", EMethod::Post, "/o/oauth2/token", Params, true));
+
+	// 실행 결과 =============================================================================================================
+//{
+//  "access_token": "ya29.Glt0B-KUH5XyvRt3An46Dn0SROXzWEfA17Rgff7ecKMTCfythQIcyQ6XLrwwJXqWMsOr0HmbKZQ5_vYkE0aHoNX8i_mxmG_AxVl9UZvroUabOx6gcJyU49npb9ys",
+//  "expires_in" : 3600,
+//  "refresh_token" : "1/ZTLi5RcFVJ5TcQgnE6F4ZJ59B7AkqiiXFD_PSCfADlw",
+//  "scope" : "https://www.googleapis.com/auth/androidpublisher",
+//  "token_type" : "Bearer"
+//}
+
+#elif true // Check Receipt
+	// 3. Check Receipt //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	string ProductID = "aniballoon_ruby_1";
+	string PurchaseToken = "ccnolmpnpbgmpamllceejnae.AO-J1Oz5DfKZmydvDm7E_AHalYz2zt-kX-zjIzsDiKHeYnbvRLOwWBZVx3HJwWg4M0MyRoa_5IxHqxUoGYf4xhMILVFfjYDdoYjQ_dol5jSNWQJ2mFJTtwXSG7gryRtZU7o-z5sygrM6";
+	string Object;
+	Object += "/androidpublisher/v3";
+	Object += ("/applications/" + PackageName);
+	Object += ("/purchases/products/" + ProductID);
+	Object += ("/tokens/" + PurchaseToken);
+
+	string AccessToken = "ya29.a0AfH6SMCkZ509JfrGenT1YYmAr4XrZOH0iP3ma99Izn3KyxBvoliHJVu491l3IJWz6lTBcippQc4qKnh7p7DfKlGOogr_1jdQSKCf9b9pGnd18UdA8Nbg83E7zyNWOiVD30y8ftxoDWtT-c-Zgkj-yoEWoCZ2aawLzeA";
+
+	string Params;
+	Params += ("access_token=" + AccessToken);
+
+	h.Push(SInObj(UserHeader, "www.googleapis.com", 443, "", "", EMethod::Get, Object, Params, true));
+
+	// 실행 결과 =============================================================================================================
+//{
+// "kind": "androidpublisher#inappPurchase",
+// "purchaseTime": "1566895297219",
+// "purchaseState": 0,
+// "consumptionState": 1,
+// "developerPayload": "{\"developerPayload\":\"\",\"is_free_trial\":false,\"has_introductory_price_trial\":false,\"is_updated\":false,\"accountId\":\"\"}",
+// "orderId": "GPA.3327-0176-6561-33555",
+// "purchaseType": 0
+//}
+
+#else
+
+	// consumptionState : 0 Yet to be consumed, 1 Consumed
+	// purchaseState : 0 Purchased, 1 Canceled, 2 Pending
+	// purchaseType : 0 Test, 1 Promo, 2 Rewarded
+
+
+	// 4. Refresh Access Token //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	string RefreshToken = "1//0eSKdYHoVUGtSCgYIARAAGA4SNwF-L9IrLQ3FDkbuE6bhO7l4fHYyt5_vHl4zMYB5Fp5semzXxdk03SNN_YcA7JJDrtRLBW7_Uto";
+	string Params;
+	Params += ("&client_id=" + ClientID);
+	Params += ("&client_secret=" + ClientSecret);
+	Params += ("&refresh_token=" + RefreshToken);
+	Params += "&grant_type=refresh_token";
+
+	h.Push(SInObj(UserHeader, "accounts.google.com", 443, "", "", EMethod::Post, "/o/oauth2/token", Params, true));
+
+	// 실행 결과 =============================================================================================================
+//{
+//  "access_token": "ya29.Glt1B0xJU30TUr2WkRZTtfT3G1_jo1Z46SWjG8G-Clbx2F6U01nbfXS3kXpCZlM4DGwkCQHnhgHGj6YtRotP9MjlfssXYC8xsir_X-yswE5ySsM70BIP7w_FjGAJ",
+//  "expires_in": 3600,
+//  "scope": "https://www.googleapis.com/auth/androidpublisher",
+//  "token_type": "Bearer"
+//}
+
+#endif
+
+#elif true
+
+
+
+	// APNS ///////////////////////////////////////////////////////////////////////////////////////////////
+	string UserHeader;
+	string Params;
+	//	Params += L"?1{\"aps\":{\"sound\":\"default\",\"alert\":\"My alert message\",\"badge\":45}}";
+	Params += "{\"aps\" : {\"alert\" : {\"body\" : \"Bob wants to play poker\",\"action-loc-key\" : \"PLAY\"},\"badge\" : 5,},\"acme1\" : \"bar\",\"acme2\" : [ \"bang\",  \"whiz\" ]}";
+
+	h.Push(SInObj(0, UserHeader, "gateway.sandbox.push.apple.com", 2195, "", "", EMethod::Post, "", Params, true));
+
+	//h.Push(SInObj(0, 0, UserHeader, "accounts.google.com", 443, "", "", EMethod::Post, "/o/oauth2/token", Params, true));
+
+	// 실제 주소 gateway.push.apple.com
+	/////////////////////////////////////////////////////////////////////////////////////////////
+
+#else
+	//// GCM
+	//fstream	f( "RID.txt", ios::in );
+	//string		rid;
+	//f >> rid;
+	//f.close();
+
+	//if( rid.size() == 0 )
+	//{
+	//	cout << "Input RID" << endl;
+	//	return 0;
+	//}
+
+	//CStream UserData;
+	//UserData << 2;
+	//wstring Params;
+	//wstring UserHeader(L"Content-Type: application/json\r\n");
+	//UserHeader += L"Authorization: key=AIzaSyB9Ei4i60Y0f2kLq-K2bOhLco4dI6iJUTA\r\n";
+
+	//Value Msg;
+	//Msg["data"]["Title"] = CUri::Encode( "스카이콩콩" );
+	//Msg["data"]["Msg"] = CUri::Encode( "메세지" );
+	//Msg["registration_ids"][0] = rid;
+
+	//MBSToWCS( Msg.toStyledString(), Params, "korean" );
+	//h.Push( SInObj(0, UserData, UserHeader, L"android.googleapis.com", 443, L"", L"", EMethod::Post, L"/gcm/send", Params, true) );
+
+#endif
+
+	while (true)
+	{
+		h.Proc();
+
+		this_thread::sleep_for(milliseconds(100));
+	}
+
+	return 0;
+}
+
+
+
+
+// 구글 샌드박스
+// 아래 결과 _type=error&error-message=No+seller+found+with+id+1234567890&serial-number=ab832ea3-c18d-4ff5-b042-08b00e37b824
+
+// Google sandbox
+//string MerchantID = "1234567890";
+//wstring wMerchantID;
+//MBSToWCS( MerchantID, wMerchantID, "korean" );
+//string MerchantKey = "HsYXFoZfHAqyLcCRYeH8qQ";
+//string Merchant = MerchantID + ":" + MerchantKey;
+
+//wstring Base64Code;
+//MBSToWCS( CBase64::Encode(Merchant ), Base64Code, "korean" );
+//wstring UserHeader(L"Authorization: Basic " + Base64Code + L"\r\n");
+//UserHeader += L"Content-Type: application/xml;charset=UTF-8\r\n";
+//UserHeader += L"Accept: application/xml;charset=UTF-8\r\n";
+//wstring Params;
+
+//CStream UserData;
+//UserData << 2;
+//// 08842883781783377521
+//h.Push( SInObj(1, UserData, UserHeader, L"sandbox.google.com", 443, L"", L"", EMethod::Post, L"/checkout/api/checkout/v2/checkoutForm/Merchant/" + wMerchantID + L"/diagnose", Params, true) );
+
+
+// Google CheckOut
+//string MerchantID = "1234567890";
+//wstring wMerchantID;
+//MBSToWCS( MerchantID, wMerchantID, "korean" );
+//string MerchantKey = "HsYXFoZfHAqyLcCRYeH8qQ";
+//string Merchant = MerchantID + ":" + MerchantKey;
+
+//wstring Base64Code;
+//MBSToWCS( CBase64::Encode(Merchant ), Base64Code, "korean" );
+//wstring UserHeader(L"Authorization: Basic " + Base64Code + L"\r\n");
+//UserHeader += L"Content-Type: application/xml;charset=UTF-8\r\n";
+//UserHeader += L"Accept: application/xml;charset=UTF-8\r\n";
+//wstring Params;
+
+//CStream UserData;
+//UserData << 2;
+//h.Push( SInObj(1, UserData, UserHeader, L"checkout.google.com", 443, L"", L"", EMethod::Post, L"/api/checkout/v2/checkoutForm/Merchant/" + wMerchantID + L"/diagnose", Params, true) );
+
+

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4ba22391-2616-48b9-802e-e3f9411f32d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{379ed920-cb6d-43b5-9991-9939fa9d5c7a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Auth.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Master.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Server.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Client.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClientConnectHistory.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Auth.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Master.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClientConnectHistory.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Server.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Client.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\Todo.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Ref.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Note.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Doc\SequenceDiagram.xlsx">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\ServerStructure.pptx">
+      <Filter>Doc</Filter>
+    </None>
+  </ItemGroup>
+</Project>

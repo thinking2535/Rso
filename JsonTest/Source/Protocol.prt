@@ -1,0 +1,28 @@
+using namespace std
+using namespace rso
+using namespace core
+using namespace json
+
+enum ETest : uint64
+{
+	a
+}
+struct STest
+{
+	bool b
+	int8 i8
+	int32 i32
+	int64 i64
+	uint64 ui64
+	string str
+	wstring wstr
+	time_point tp
+	datetime dt
+	ETest e
+	stream s
+}
+struct STest2 : STest
+{
+	string str2
+	STest test
+}

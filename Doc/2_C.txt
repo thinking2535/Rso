@@ -1,0 +1,30 @@
+* Visual studio 프로젝트 로딩시 삼각형 비활성화
+C:\Users\soyoo\AppData\Local\Microsoft\VisualStudio\16.0_9ad349cc\privateregistry.bin   파일 핫 로드 하여 수정함
+ - 절차
+Close Visual Studio 2017
+Open Registry Editor (regedit), select HKEY_USERS
+File → Load Hive → %localappdata%\Microsoft\VisualStudio\15.0_<id>\privateregistry.bin where <id> is some hexadecimal gibberish. Set Key Name to the one you like e.g. vs2017
+Go to HKEY_USERS\vs2017\Software\Microsoft\VisualStudio\15.0_<id>
+Create new key UseSolutionNavigatorGraphProvider of DWORD (32-bit) type, value 0
+Select HKEY_USERS\vs2017, File → Unload Hive
+
+
+* 언리얼 프로젝트 초기화
+	1. C:\Work\SR3\Dev\Client\SR3 에서 Code_Clear_Intermediates.bat 로 삭제
+	2. SR3.uproject 우클릭 재 생성
+
+
+
+
+<Perforce>
+* backout 은 선택한 리비전으로의 변화를 재 작성하기 위함으로 
+ 선택한 리비전의 전 상태로 로컬의 내용과, 리비전을 돌려놓고
+ 내용을 수정하거나, 혹은 그대로 Submit 을 하면 리비전 하나만 돌려놓은 것은 허용하므로 정상 Submit 되지만
+ 리비젼은 하나 더 증가하여 전송됨
+
+ 하지만 마지막 이전의 리비전을 선택하여 backout 한 경우 하나의 리비전만 돌아가는 것을 허용하기대문에
+ 상태는 Last 상태가 아닌것으로 나타나고, 이상태에서 그대로 혹은 수정하여 Submit 시도 할 경우
+ GetLatest 하지 않은 상태라며 Conflict 됨.
+
+ Backout 하고 Revert 하면 해당 리비전으로 로컬만 임시 돌아간 상태가 됨. (svn 의 update revision 과 동일)
+ 

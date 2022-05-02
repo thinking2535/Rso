@@ -1,0 +1,4 @@
+sc create MyTest binpath= D:\Work\Rso\Bin\Rso\Service\x64\Service_sMTd.exe
+sc delete MyTest
+sc start MyTest
+sc stop MyTest

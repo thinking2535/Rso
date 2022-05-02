@@ -1,0 +1,22 @@
+include <Rso/Net/Protocol>
+include <Rso/MSSQL/Protocol>
+include <Rso/GameUtil/Protocol>
+
+using namespace std
+using namespace rso
+using namespace core
+using namespace json
+using namespace net
+
+struct SServerOption
+{
+	TPort MonitorBindPort
+	SNamePort MasterNamePort
+	int32 NetCThreadCnt
+	TPort ClientBindPort
+	SNamePort ClientBindNamePortPub
+	TPort MessengerPort
+	string Title
+	int8 Debug
+	bool EndlessGame
+}

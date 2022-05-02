@@ -1,0 +1,27 @@
+include <Rso/Net/Protocol>
+include <Rso/GameUtil/Protocol>
+
+namespace rso
+{
+	namespace gamebill
+	{
+		using namespace net
+		using namespace gameutil
+
+		struct SPurchaseIn
+		{
+			TUID UID
+			string OrderID
+			EOS OS
+			string CountryCode
+			int64 PurchaseTime
+			int32 PurchaseType
+			string ProductID
+			stream Stream
+		}
+		struct SPurchaseOut
+		{
+			list<stream> Streams
+		}
+	}
+}

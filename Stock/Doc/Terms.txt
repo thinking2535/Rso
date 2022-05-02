@@ -1,0 +1,92 @@
+1. 차트-기술적 분석 관련용어
+기술적 반등/반락 technical rebound/weak
+조정 correction
+단기/장기파동 short/long wave
+저항선/지지선 resistance/support level
+단기/중기/장기 short/intermediate/long-term
+매수/매도 신호 buy/sell signal
+이동평균(MA) moving average
+(기술적 라인의) 수렴/분산 convergence/divergence
+쌍봉 double top
+쌍바닥 double bottom
+돌파갭 breakway gap
+소멸갭 exhaustion gap
+양봉 white candle
+음봉 black candle
+십자형 dodge
+일봉/주봉 daily candle/weekly candle
+상방/하방경직성 upward/downward rigidity
+추세반전 turnaround
+추세반전일 reversal day
+상승추세 uptrend
+하락추세 downtrend
+상승 rise
+하락 fall
+보합 no change, stationary(형용사)
+개폭등 jump, boom, soar(동사)
+개폭락 crash, plunge
+
+2.  선물옵션 이론 관련용어
+시간가치감소 time decay
+합성선물 synthetic options for futures
+내가옵션(ITM) in the money
+등가옵션(ATM) at the money
+외가옵션(OTM) out of the money
+내재변동성(IV) implied volatility
+역사적변동성(HV) historical volatility
+고평가 overvalued
+저평가 undervalued
+이론가 theoretical value, fair value
+괴리율(이론가와 현재가) disparate ratio
+차익거래 arbitrage
+
+3.  파생상품계좌 및 거래행위 관련용어
+증거금 margin
+유지증거금 maintenance margin
+추가증거금 variational margin
+추가증거금 청구 margin call
+수수료 commission
+잔고 balance
+매매손익 trading profit/loss
+실현손익 realized profit/loss
+확정손익(합성) locked-in gain/loss
+손익분기점 breakeven point
+손익구간 profit/loss range
+신규진입 open position
+청산(환매, 전매) close position, liquidation(명사), square(동사)
+초단기매매 scalping
+반대매매 covering
+몰빵 full bet
+깡통 be bankrupt
+대박 hit the jackpot
+
+4.  시장 제도 관련용어
+주가지수 stock price index
+시가 opening price
+종가 closing price(index value)
+현재가 spot price
+  * future price(선물가)에 대응하는 ‘현물가’의 개념으로도 쓰임
+장중 고가/저가 high/low price
+거래량 trading volume
+매수호가/매도호가 bid/ask quote
+시장가 주문 market order
+지정가 주문 limit order
+주문 취소 cancel an order
+주문 체결 fill an order
+호가공백손실 slippage
+전장동시호가 opening quote
+후장동시호가 closing quote
+호재/악재 good/bad news
+개미 individual investor
+기관 institutional investor
+외인 foreign investor
+당월물 spot month contract/current month contract
+차월물 nearby month contract
+만기일 expiration date
+행사가 strike price
+미결제약정 commitment/open interest
+결제지수 settlement index
+
+5.  기타
+주식워런트 증권(ELW) equity linked warrant
+유동성공급자(LP) liquid provider

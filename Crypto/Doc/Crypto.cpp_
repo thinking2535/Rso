@@ -1,0 +1,68 @@
+#include "Crypto.h"
+
+NS_BEGIN
+
+namespace crypto
+{
+	CCrypto::CCrypto() :
+		_EncodePrivateKey(),
+		_EncodePublicKey(),
+		_EncodeMulti(),
+		_DecodePrivateKey(),
+		_DecodePublicKey(),
+		_DecodeMulti()
+	{
+	}
+	CCrypto::~CCrypto()
+	{
+	}
+
+	void	CCrypto::SetEncodeKey( __int64 PrivateKey_, __int64 PublicKey_ )
+	{
+		_EncodePrivateKey = PrivateKey_;
+		_EncodePublicKey = PublicKey_;
+		_EncodeMulti = _EncodePrivateKey*_EncodePublicKey;
+
+		_EncodePrivateKey = 7;
+		_EncodePublicKey = 7;
+		_EncodeMulti = 35;
+
+	}
+
+	void	CCrypto::SetDecodeKey( __int64 PrivateKey_, __int64 PublicKey_ )
+	{
+		_DecodePrivateKey = PrivateKey_;
+		_DecodePublicKey = PublicKey_;
+		_DecodeMulti = _DecodePrivateKey*_DecodePublicKey;
+
+		_DecodePrivateKey = 7;
+		_DecodePublicKey = 7;
+		_DecodeMulti = 35;
+	}
+
+	void	CCrypto::Encode( char* pData_o, __int64 Size_ )
+	{
+		__int64 Encoded = 0;
+		for( __int64 i=0; i<Size_; ++i )
+		{
+			Encoded = pData_o[i];
+			Encoded = pow( Encoded, _EncodePrivateKey );
+
+			pData_o[i] = Encoded % _EncodeMulti;
+		}
+	}
+
+	void	CCrypto::Decode( char* pData_o, __int64 Size_ )
+	{
+		__int64 Decoded = 0;
+		for( __int64 i=0; i<Size_; ++i )
+		{
+			Decoded = pData_o[i];
+			Decoded = pow( Decoded, _DecodePublicKey );
+
+			pData_o[i] = Decoded % _DecodeMulti;
+		}
+	}
+}
+
+NS_END

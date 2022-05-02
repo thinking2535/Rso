@@ -1,0 +1,20 @@
+* Create Instance
+
+* Create VPC
+
+* Create Subnet
+
+* Create Internet Gateway
+	- Connect to VPC
+
+* Create Elastic IP
+	- Connect to Instance (or Network Interface)
+	
+* Create Network Interface
+	- Set IPv4 Prefix
+	- Connect to Instance
+
+* IPv6 추가
+	1. Subnet 에 CIDR 편집
+	2. Subnet 에 자동할당 적용
+	3. Instance 의 네트워킹 IP주소관리 메뉴에서 이더넷 선택 IPv6 새 주소 할당

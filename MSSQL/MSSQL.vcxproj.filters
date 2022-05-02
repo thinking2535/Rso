@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{a7078d9e-cafb-496e-b41a-3cbd8ab1daed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{6ea11530-14ba-43d6-9c17-d0746d1faa8c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\MSSQL.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\STMT.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ENV.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DBC.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Base.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Type.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Type.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MSSQL.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\STMT.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ENV.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DBC.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StoredProcedure.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BulkSelect.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BulkCopy.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BulkCopyType.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sql.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\DBIndex.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Ref.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Todo.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Working.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

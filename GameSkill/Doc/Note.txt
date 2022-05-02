@@ -1,0 +1,24 @@
+<Effect>
+* ValueType
+	Stat, Position
+
+* Value
+
+* Function
+	Add, Change, AddPawn
+
+* Target
+	Object, Area, 
+
+
+
+* Pawn
+
+<Note>
+* Pawn 은 Effect 외부(Pawn 생성 방법을 알고있는 Skill)에서 생성할것
+* AddStat() 
+
+<Qu>
+* 점진적 증감
+* Max Stat 은 모든 Stat 에 존재 할 수 있는가?
+* 

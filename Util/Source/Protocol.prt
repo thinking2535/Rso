@@ -1,0 +1,18 @@
+namespace rso
+{
+	namespace util
+	{
+		struct SData
+		{
+			wstring Key
+			wstring	Data
+			int32	Grade
+			int32	RemindCount
+		}
+
+		struct SDataTime : SData
+		{
+			int64	TimePoint
+		}
+	}
+}

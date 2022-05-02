@@ -1,0 +1,36 @@
+using namespace std
+using namespace rso
+using namespace core
+using namespace json
+
+struct _STest
+{
+	wstring Name
+	int32	Index
+}
+
+struct STest
+{
+	list<_STest>	Datas
+}
+struct SUserPreset
+{
+	int32 Ame
+	int32 Topaz
+}
+struct SUserPresets
+{
+	list<SUserPreset> Datas
+}
+struct SStartUserBuilding
+{
+	int32 id
+	wstring desc
+	int8 level
+	float col
+	double row
+}
+struct SStartUserBuildings
+{
+	list<SStartUserBuilding> Datas
+}

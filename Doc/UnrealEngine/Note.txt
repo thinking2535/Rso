@@ -1,0 +1,30 @@
+* 빌드 배치파일
+- 윈도우 빌드시
+C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\Build.bat 에서 
+	..\..\Engine\Binaries\DotNET\UnrealBuildTool.exe %*   를 아래와 같이 변경할것.
+	..\..\Engine\Binaries\DotNET\UnrealBuildTool.exe -CppStd=Cpp17 %*
+	-CppStd=Latest 는 오류나네....
+
+* 포함경로는 언리얼 프로젝트 폴더 (D:\Rso\Program\UnrealNewTest\MyProject\Source\MyProject)의 MyProject.Build.cs 에 다음 추가할것.
+		PrivateIncludePaths.Add(ModuleDirectory);
+		PublicIncludePaths.Add(ModuleDirectory);
+		CppStandard = CppStandardVersion.Cpp17;
+
+
+* Visual Studio 한글 로그 깨질 경우 언어팩은 영어로만
+
+< 아래는 그냥 참고 >
+
+* 언리얼 빌드 툴 프로젝트 파일
+C:\Program Files\Epic Games\UE_4.25\Engine\Source\Programs\UnrealBuildTool\UnrealBuildTool.csproj
+
+* c++17 버전 활성화 하기 위한 파일 (이 파일 수정 필요한가?)
+C:\Program Files\Epic Games\UE_4.25\Engine\Source\Programs\UnrealBuildTool\Platform\Windows\VCToolChain.cs
+
+* 타겟 룰
+C:\Program Files\Epic Games\UE_4.25\Engine\Source\Programs\UnrealBuildTool\Configuration\TargetRules.cs
+
+* 모바일 빌드시
+C:\Program Files\Epic Games\UE_4.25\Engine\Source\Programs\UnrealBuildTool\Platform\Android\AndroidToolChain.cs 에서
+	Result += " -std=c++14";	를 
+	Result += " -std=c++17";	이렇게 두군데 바꿔?

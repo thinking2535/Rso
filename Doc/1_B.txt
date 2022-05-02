@@ -1,0 +1,3 @@
+* TStatId UNetwork::GetStatId()  는 뭔가?
+
+* GarbageCollection 에러 나는데. 바탕화면 오류 파일 확인

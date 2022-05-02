@@ -1,0 +1,15 @@
+* duration 넣을것. (milliseconds, minutes 등, c# 용 TimeSpan 도)
+
+* 멤버 변수 이름 리스트를 외부에서 알 수 있도록하고 Excel Export 에 사용할것.
+* enum 을 배열 인자로 쓸 수 있도록
+* 주석 가능하도록
+* proto 생성기에 template 도 넣을것.... cs에는 어떻게 적용되나???
+* 컨테이너의 컨테이너 가능하도록
+  - C#이 불가하여 이건 보류
+
+* Enum  Null 은 어떻게 처리할까?
+ -   -1 값을 갖는게 추가 삭제시에도 Null값이 변하지 않음.
+ - 어떻게 명시적으로  Null을 넣을 수 있도록 할까?
+	- 마지막 값이 Null
+	- Null 이름이 무조건 Null, Null을 넣지 않으면 에러 또는 자동 생성 (초기값은 무조건 Null 로)
+ - 

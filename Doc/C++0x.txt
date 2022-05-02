@@ -1,0 +1,385 @@
+* if constexpr   // 컴파일 타임 비교
+* auto [a, b] 로 받기 // tuple, 가변인자, array 가능
+* if (;), switch (;) 구문  // ; 오른쪽의 값이 기존 사용되는 값이고, ; 왼쪽이 if, switch 범위에 속하는 변수 선언 및 기타 명령 가능
+* 템플릿 타입 추론 // tuple a(1, "ok"); tupla a = 99;  pair p("a", 3); auto p = pair("a", 3); 등 생성자를 정의하면 그것에 맞게 타입 추론함.
+
+* explicit deduction guides
+    template<typename T>
+    struct Thingy
+    {
+        T t;
+
+        Thingy(const T& t)
+        {
+        }
+    };
+
+    Thingy(const char*)->Thingy<std::string>; // const char* 파라미터를 갖는 생성자로 초기화 할 경우 
+
+* template<auto v> // template<typename TType, TType v> 와 동일한 표현
+
+* Fold Expressions
+template<typename... TArgs>
+auto sum(TArgs&&... Args_)
+{
+    return (Args_ + ... + 0);
+}
+
+* nested namespace
+namespace A::B::C {
+   struct Foo { };
+   //...
+}
+
+* single parameter static_assert
+static_assert(sizeof(short) == 2);
+
+* inline variables
+// static const 변수가 아니어도 inline 키워드를 이용하여 선언과 동시에 초기화 가능
+inline static int a = 100; // or static inline int a = 100;
+
+* std::visit() // std::visit(Op(), Variant 변수); 로 Op().operator() 에 오버로딩된 함수를 호출할 수 있음.
+
+Rule of Three
+소멸자, 이동 생성자, 이동 복사 연산자를 정의해두자.
+
+Rule of Five
+소멸자, 이동 생성자, 복사 생성자, 이동 대입 연산자, 복사 대입 연산자 다섯 가지 특수 멤버 함수들을 구현해놓자.
+
+Rule of Zero
+소멸자, 이동 생성자, 복사 생성자, 이동 대입 연산자, 복사 대입 연산자 다섯 가지 특수 멤버 함수들을 필요로 하지 않도록 디자인 하는 것이다.
+기본적인 방법으로는 구식 스타일의 메모리 할당을 피하는 것이다.
+A클래스를 2차원 배열로 동적할당 하기 위해 A**으로 선언하지 말고 vector<vector<A>> 이런식으로 사용하자. vector는 메모리 할당을 알아서 해주기 때문에 위에 상기된 5가지 멤버함수을 사용할 일이 없다.
+
+
+
+
+* noexception(표현식)    (표현식 : 생성자 포함 함수 호출 형식)  
+ -> 컴파일 타임에 표현식이 throw를 안하는지 여부를 bool 로 반환 ( true : throw 안함 )
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// 입력된 Variadic template 에 맞게 반환하는 방법  return { VariadicTemplates(Param)... };
+#include <tuple>
+#include <type_traits>
+
+using namespace std;
+
+template <typename lhs_t, typename rhs_t, typename... other_ts>
+constexpr void assert_decreasing_ratios()
+{
+	static_assert(std::ratio_greater_v<typename lhs_t::period, typename rhs_t::period>, "Periods are non-decreasing.");
+
+	if constexpr (sizeof...(other_ts))
+		assert_decreasing_ratios<rhs_t, other_ts...>();
+}
+
+template <typename return_duration_t, typename input_duration_t>
+return_duration_t chrono_extract(input_duration_t& value)
+{
+	auto extracted = std::chrono::duration_cast<return_duration_t>(value);
+	value -= extracted;
+	return extracted;
+}
+
+template <typename... return_ts, typename duration_t>
+std::tuple<return_ts...> chrono_components(duration_t value)
+{
+	assert_decreasing_ratios<return_ts...>();
+	using smallest_t = std::tuple_element_t<sizeof...(return_ts) - 1, std::tuple<return_ts...>>;
+	auto small_value = std::chrono::duration_cast<smallest_t>(value);
+	return { chrono_extract<return_ts>(small_value)... };
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+C++0x에서 Multi Thread 라이브러리에 대한 설명입니다.
+
+일본의 웹 사이트에 올라온 것을 번역하였습니다.
+
+VS 2008의 TR1은 아직 Thread 부분이 구현되어 있지 않아서 아래 내용에 있는 것을 직접
+
+테스트 해 보고 싶은 분들은 Boost 라이브러리를 사용하시면 됩니다.
+
+(확인은 해 보지 않았지만 VSTS 2010 CTP 판에서는 구현되어 있지 않을까 생각합니다.
+
+이 부분은 이후에 제가 확이해 보고 다시 관련 글을 올리겠습니다.)
+
+ 
+
+ 
+
+ 
+
+출처 : http://japan.internet.com/column/developer/20081209/26.html
+
+ 
+
+ 
+
+ 
+
+서두
+C++의 새로운 표준 규격인 「C++0x」의 큰 신기능 중 하나는 multi-thread 처리 지원입니다.
+
+종래의 C++에서는 multi-thread 기능은 표준 규격의 확장으로서 컴파일러 마다 제공되고 있었기 때문에 세세한 부분이 컴파일러나 플랫폼에 의해서 차이가 났습니다. 그러나 C++0x에서는 모든 컴파일러가 같은 메모리 모델에 준거하여 동일한 multi-thread 기능을 이용할 수 있게 됩니다(다만 종래와 같은 확장을 컴파일러가 독자적으로 제공하는 것도 가능합니다).
+
+개발자의 입장으로는 multi-thread 코드를 다른 컴파일러나 플랫폼에 이식할 때의 수고를 크게 생략할 수 있습니다. 복수의 플랫폼 전용의 개발을 실시하는 경우에서도 여러 가지 잡다한 API나 구문을 얼마든지 이해해 둘 필요가 없습니다.
+
+새로운 스레드 라이브러리의 중심을 담당하는 것은 실행 스레드를 제어하는 std::thread 클래스입니다. 우선은 이것부터 보기로 하죠.
+
+스레드 시작
+새로운 스레드를 시작하려면  std::thread의 인스턴스를 생성하고 함수를 인수로 건네줍니다. 이 함수는 새로운 스레드의 엔트리 포인트가 됩니다. 이 함수로부터 처리가 돌아오면 스레드도 종료합니다.
+
+          void do_work();
+          std::thread t(do_work);
+          이것만 보면 종래에 사용했던 스레드 생성용 AP와 별 차이 없습니다. 그러나 큰 차이가 하나 있습니다. C++에서는 건네줄 수 있는 것은 함수뿐만이 아니라는 점입니다. 표준 C++ 라이브러리의 각종 알고리즘과 같이 함수 호출 연산자(operator())를 구현한 클래스 오브젝트를 통상의 함수와 같게 std::thread에 건네줄 수 있습니다.
+
+          class do_work
+          {
+          public:
+              void operator()();
+          };
+          
+          do_work dw;
+          std::thread t(dw);
+          이 처리에서는 인수로 건네준 오브젝트가 스레드내에 실제로 복사된다고 하는 점이 요주의입니다.지정한 오브젝트 그 자체를 참조 인도로 사용하고 싶은 경우는 std::ref로 래핑 합니다(다만 그 경우 스레드의 완료 전에 그 오브젝트를 파기하지 않도록 주의가 필요합니다).
+
+          do_work dw;
+          std::thread t(std::ref(dw));
+          대체로 스레드 작성 API에서는 작성하는 스레드에 대해서 하나의 파라미터(통상은 long 값이나void* 값)을 건네줍니다. std::thread에도 인수를 건네줄 수 있습니다만 수의 제한은 없이 거의 모든 형태를 사용할 수 있습니다.「수의 제한이 없다」라고 하는 점이 큰 특징입니다. C++0x에서 새롭게 도입된 가변 인수 템플릿(Variadic Templates)기능을 constructor로 사용하는 것으로 가변 인수에 대응할 수 있습니다(링크는 PDF). 구문은 종래의 vararg(...)와 닮아 있습니다만  타입 세이프한 처리가 가능합니다.
+
+그럼 복사 가능한 임의의 형태의 오브젝트를 스레드 함수에 인수로서 건네주어 봅시다. 다음과 같이 됩니다.
+
+          void do_more_work(int i,std::string s,std::vector<double> v);
+          std::thread t(do_more_work,42,"hello",std::vector<double>(23,3.141));
+          함수 오브젝트 단독의 경우와 같게 각 인수는 함수의 호출 전에 스레드에 복사됩니다. 참조로 하고 싶은 경우는 std::ref로 래핑 합니다.
+
+          void foo(std::string&);
+          std::string s;
+          std::thread t(foo,std::ref(s));
+          스레드 시작에 대해서는 이 정도로 하고 다음은 스레드 종료의 대기입니다. C++ 표준에서는 이것을 POSIX 용어를 모방하여 스레드의 「조인(join)」이라고 부르고 있습니다. 사용하는 멤버 함수는 join()입니다.
+
+          void do_work();
+          std::thread t(do_work);
+          t.join();
+          스레드의 조인을 실시하지 않는 경우는 스레드 오브제크트를 단순히 파기하던가  detach()를 호출합니다.
+
+          void do_work();
+          std::thread t(do_work);
+          t.detach();
+          이렇게 하여 스레드 시작 및 종료를 할 수 있습니다만 스레드간에 데이터를 공유하는 경우 보호를 위한 처리도 필요하게 됩니다. 새로운 C++ 표준 라이브러리에는 그것을 위한 기능도 있습니다.
+
+ 
+
+ 
+
+ 
+
+데이터 보호
+C++0x의 스레드 라이브러리에서는 많은 스레드 처리 API와 같이 공유 데이터를 보호하기 위한 기본 기능으로서 뮤텍스를 사용합니다. C++0x의 뮤텍스에는 다음 4 종류가 있습니다.
+
+?비 재귀적 뮤텍스(std::mutex)
+?재귀적 뮤텍스(std::recursive_mutex)
+?락 함수로의 타임 아웃이 가능한 비 재귀적 뮤텍스(std::timed_mutex)
+?락 함수로의 타임 아웃이 가능한 재귀적 뮤텍스(std::recursive_timed_mutex)
+ 
+
+어느 종류의 뮤텍스에서도 하나의 스레드를 배타적으로 소유할 수 있습니다. 비재귀적 뮤텍스의 경우는 같은 스레드로부터 2회 계속하여(도중에 해방하지 않고 ) 잠그었을 때의 동작은 미정의입니다. 한편 재귀적 뮤텍스의 경우는 락 카운트가 증가할 뿐입니다. 그 경우 잠근 것과 같은 회수만큼 해방하지 않으면 다른 스레드가 그 뮤텍스를 잠글 수 없습니다.
+
+4종류의 뮤텍스에는 락과 해방을 행하기 위한 멤버 함수가 각각 준비되어 있습니다. 그러나 대체로의 경우는 std::unique_lock<>이나 std::lock_guard<>라고 하는 락 클래스 템플릿을 사용하는 것을 추천합니다. 이러한 클래스는 constructor로 뮤텍스를 잠그고 소멸자로 해방하게 되어 있습니다. 이것들을 로컬 변수로서 사용하면 스코프를 빠질 때 뮤텍스의 락은 자동적으로 해방됩니다.
+
+          std::mutex m;
+          my_class data;
+          void foo()
+          {
+              std::lock_guard<std::mutex> lk(m);
+              process(data);
+          }   // mutex unlocked here
+          std::lock_guard는 기본 기능만 있어 상기와 같은 사용법만이 가능합니다. 한편 std::unique_lock에는 지연 락(deferred locking), 락의 시행, 타임 아웃 첨부의 락 시행, 오브젝트의 파기 전의 락 해방 등의 기능이 있습니다. 락의 타임 아웃 기능이 목적으로std::timed_mutex를 이용하는 경우는 대체로 std::unique_lock를 사용하게 됩니다.
+
+          std::timed_mutex m;
+          my_class data;
+          void foo()
+          {
+              std::unique_lock<std::timed_mutex>
+              lk(m,std::chrono::milliseconds(3)); // wait up to 3ms
+              if(lk) // if we got the lock, access the data
+                  process(data);
+          }   // mutex unlocked here
+          이들 두 개의 락 클래스는 템플릿이므로 표준 뮤텍스형 모두에 대해서 이용할 수 있는 것 외에lock()함수와 unlock()함수를 가지는 다른 형태에도 이용할 수 있습니다.
+
+
+ 
+
+ 
+
+복수의 뮤텍스를 잠글 때 데드 락을 막는 기능
+경우에 따라서는 복수의 뮤텍스를 잠그는 처리가 필요하게 되는 일이 있습니다. 이 때 한치 잘못하면 꺼림칙한 데드 락이 발생하기 쉽습니다. 데드 락이란 두 개의 스레드가 두 개의 같은 뮤텍스를 서로 반대의 순서로 잠그려고 하여 각각 하나를 잠근 상태로 상대의 종료를 계속 기다린다고 하는 상황에 빠지는 것입니다.
+
+C++0x의 스레드 라이브러리에는 이 문제에의 대책으로서 복수의 락을 한 번에 요구하고 싶은 경우를 위해서 복수의 뮤텍스를 정리해 잠글 수 있는 std::lock이라고 하는 제네릭 함수가 준비되어 있습니다. 각 뮤텍스에 대해서 멤버 함수 lock()을 차례로 호출하는 것이 아니라 전부 정리해std::lock()에 건네주는 것으로 데드 락을 걱정하지 않고 모든 것을 잠글 수 있다고 하는 기능입니다. 이 함수에는 락 전의 std::unique_lock<>의 인스턴스를 건네줄 수도 있습니다.
+
+          struct X
+          {
+              std::mutex m;
+              int a;
+              std::string b;
+          };
+          
+          void foo(X& a,X& b)
+          {
+              std::unique_lock<std::mutex> lock_a(a.m,std::defer_lock);
+              std::unique_lock<std::mutex> lock_b(b.m,std::defer_lock);
+              std::lock(lock_a,lock_b);
+              // do something with the internals of a and b
+          }
+          위의 예에서 만일 std::lock를 사용하지 않았던 경우 데드 락이 생길 가능성이 있습니다. 예를 들면 X 형태의 두 개의 오브젝트 x와 y에 대해 한편의 스레드가 foo(x,y),  또 한편이 foo(y,x)를 호출했을 경우입니다. std::lock(을)를 사용하고 있으면 그 걱정은 없습니다.
+
+
+ 
+
+ 
+
+초기화시의 데이터 보호
+데이터를 초기화할 때에만 보호가 필요한 경우에는 뮤텍스에서는 잘 되지 않습니다. 초기화 완료 후도 쓸데 없는 동기를 해 버리기 때문입니다. C++0x의 표준에는 이것에 대처하는 방법이 몇개인가 준비되어 있습니다.
+
+첫 번째는  constructor를 C++0x의 새로운 constexpr 키워드()를 사용해 선언하고 한층 더 이 constructor에서 정수의 초기화 요건을 채우는 것입니다. 이 경우 constructor에서 초기화되는 정적 스토리지 기간의 오브젝트는 코드 실행이 진행되기 전에 정적 초기화 국면의 일환으로서 확실히 초기화되는 것이 보증됩니다. 이것은 std::mutex에서 이용하는 방법입니다. 이것에 의해 전역 스코프로의 뮤텍스의 초기화와 경합 할 가능성을 회피할 수 있습니다.
+
+          class my_class
+          {
+              int i;
+              public:
+                  constexpr my_class():i(0){}
+                  my_class(int i_):i(i_){}
+                  void do_stuff();
+              };
+          
+              my_class x; // static initialization with constexpr constructor
+              int foo();
+              my_class y(42+foo()); // dynamic initialization
+              void f()
+              {
+                  y.do_stuff(); // is y initialized?
+              }
+          
+
+
+두 번째는 블록 스코프로 정적 변수를 사용하는 것입니다. C++0x에서는 블록 스코프의 정적 변수의 초기화는 함수의 최초의 호출 시에 행해집니다. 초기화의 완료 전에 다른 스레드가 같은 함수를 호출했을 경우 두 번째의 스레드는 대기하지 않으면 안됩니다.
+
+          void bar()
+          {
+              static my_class z(42+foo()); // initialization is thread-safe
+              z.do_stuff();
+          }
+          어느 쪽의 방법도 사용할 수 없는 경우(오브젝트를 동적으로 생성하는 경우 등)는 std::call_once와 std::once_flag를 사용하는 것이 최적입니다. std::call_once를std::once_flag 형태의 특정의 인스턴스와 조합해 사용하면 call_once의 이름이 나타내 보이는 대로 지정한 함수는 1회만 불려 갑니다.
+
+          my_class* p=0;
+          std::once_flag p_flag;
+          void create_instance()
+          {
+              p=new my_class(42+foo());
+          }
+          void baz()
+          {
+              std::call_once(p_flag,create_instance);
+              p->do_stuff(); 
+          }
+          std::thread의 constructor와 같게 std::call_once는 함수 대신에 함수 오브젝트를 받을 수 있어 복수의 인수를 취할 수도 있습니다. 인수는 디폴트로 복사되어 std::ref로 래퍼하면 참조가 된다고 하는 점도 같습니다.
+
+ 
+
+ 
+
+ 
+
+이벤트의 대기
+스레드간에 데이터를 공유하는 경우에는 한편의 스레드가 어떠한 처리를 실시하는 동안  또 한편이 대기한다고 하는 상황이 많이 있습니다. 그 때 CPU 시간을 쓸데 없이 사용하는 것은 피하고 싶은 것입니다. 공유 데이터에 액세스 하는 차례가 오는 것을 각 스레드가 대기하는 것 뿐이면 뮤텍스 락으도 충분합니다. 그러나 그 방식으로는 반드시 이치에 필적하고 있다고는 말할 수 없습니다.
+
+대기 방법으로 제일 간단한 것은 스레드를 짧은 시간 sleeve 시키는 방식입니다. 스레드가  sleeve에서 복귀할 때 마다 목적의 처리가 끝났는지를 체크시킵니다. 소중한 것은 이벤트 발생을 나타내는 데이터의 보호에 사용하는 뮤텍스를 스레드의 sleeve 중은 락 해제해 두는 것입니다.
+
+          std::mutex m;
+          bool data_ready;
+          void process_data();
+          void foo()
+          {
+              std::unique_lock<std::mutex> lk(m);
+              while(!data_ready)
+              {
+                  lk.unlock();
+                  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                  lk.lock();
+              }
+              process_data();
+          }
+          이 방법은 매우 간단합니다만 두 개의 이유로 이상적이다고는 말할 수 없습니다. 하나는 데이터 처리가 완료한 후 대기 스레드가 sleeve으로부터 복귀하여 체크하기까지 평균 5 밀리 세컨드(10밀리 세컨드의 반)의 간격이 빈다고 하는 점입니다. 경우에 따라서는 분명한 지연이 생겨 버릴 가능성도 있습니다.
+
+이 문제 자체는 대기 시간을 짧게 하면 개선할 수 있습니다만 다음 두 번째 문제를 악화시키게 됩니다. 즉 데이터의 처리가 완료할 때까지 사이에도 대기 스레드는 10 밀리 세컨드 마다 sleeve으로부터 복귀하여 뮤텍스를 취득하고 플래그를 체크한다고 하는 처리를 반복하지 않으면 안 된다고 하는 문제입니다. CPU 시간의 낭비가 되고 뮤텍스의 경합이 증가하게 됩니다. 대기 스레드로부터 빨리 끝나면 좋아야 할 처리 스레드의 동작을 반대로 늦게 하게 될 수도 있는 것입니다.
+
+이러한 처리 방법은 피하고 조건 변수를 사용합시다. 스레드를 일정 시간 sleeve 시키는 것이 아니라 다른 스레드로부터 통지가 있을 때까지 sleeve 시킨다고 하는 방식입니다. 그러면 통지를 받고 나서로부터 스렛드가 복귀할 때까지의 시간차이를 OS 처리하기 나름으로 최단으로 억제되고 대기 스레드에 의한 CPU의 낭비를 전체에서 거의 제로로 할 수 있습니다. 방금 전의 foo()를 조건 변수로 고쳐 쓰면 다음과 같이 됩니다.
+
+          std::mutex m;
+          std::condition_variable cond;
+          bool data_ready;
+          void process_data();
+          void foo()
+          {
+              std::unique_lock<std::mutex> lk(m);
+              while(!data_ready)
+              {
+                  cond.wait(lk);
+              }
+              process_data();
+          }
+          이 코드에서는 락 오브젝트 lk를 wait()에 파라미터로서 건네주고 있습니다. 조건 변수의 구현에서는 wait()에 들어가는 시점에서 뮤텍스의 락을 해방하여 빠지는 시점에서 재차 잠급니다. 이것에 의해 이 스레드의 대기 중에 다른 스레드가 보호 대상의 데이터를 변경할 수 있습니다. data_ready플래그를 설정하는 코드는 다음과 같이 됩니다.
+
+          void set_data_ready()
+          {
+              std::lock_guard<std::mutex> lk(m);
+              data_ready=true;
+              cond.notify_one();
+          }
+          다만 데이터의 준비가 정말로 완료했는지의 체크는 역시 필요합니다. 조건 변수로 가짜 복귀가 발생해 버리는 것이 있기 때문입니다. 즉, 다른 스레드로부터의 통지는 없는데 wait()의 호출로부터 제어가 돌아와 버리는 일이 있습니다. 이러한 오동작이 걱정이면 그 처리를 표준 라이브러리에 맡겨 버릴 수도 있습니다. 그 경우 대기의 대상을 프레디케이트로 지정합니다. C++0x에서는 새로운 Lambda식의 기능을 사용해 간단하게 기술할 수 있습니다.
+
+          void foo()
+          {
+              std::unique_lock<std::mutex> lk(m);
+              cond.wait(lk,[]{return data_ready;});
+              process_data();
+          }
+          여기까지는 스레드간에 데이터를 공유하는 경우를 봐 왔습니다. 그럼 그 역이 필요한 경우 즉, 각 스레드에 데이터의 복사를 각각 별개로 갖게하고 싶은 경우에는 어떻게 하면 좋은 것일까요. 거기에는 thread_local이라고 하는 새로운 스토리지 기간 키워드를 사용합니다.
+
+
+ 
+
+ 
+
+스레드 로칼 데이터
+thread_local이라고 하는 키워드는 로컬 스코프의 이름 공간 스코프의 임의의 오브젝트의 선언으로 사용할 수 있으며 변수가 스레드 로칼인 것을 나타냅니다. 이 키워드를 지정한 변수는 각 스레드가 각각 별개의 복사를 가져 그 스레드의 생존 기간 내에는 보관 유지됩니다. 간단하게 말하면 스레드 마다의 정적 변수입니다. 각 스레드가 가지는 복사 변수는 그 스레드가 처음으로 로컬 스코프의 변수 선언부를 통과할 경우에 초기화되어 그 스레드가 종료할 때까지 값이 보관 유지됩니다.
+
+          std::string foo(std::string const& s2)
+          {
+              thread_local std::string s="hello";
+              s+=s2;
+              return s;
+          }
+          이 함수에서는 변수 s의 각 스레드용의 복사를 "hello"라고 하는 값으로 초기화합니다. 그리고 함수가 불려 갈 때 마다 인수로 건네받은 문자열을 그 스레드의 변수 s에 부가해 갈 것입니다. 이 예로부터 알 수 있듯이 constructor와 소멸자를 가진 std::string와 같은 클래스형의 변수에서도 문제는 없습니다. 이 점은 C++0x 이전의 컴파일러의 확장 기능보다 개량되고 있습니다.
+
+concurrent processing의 지원에 관해서 언어의 코어 부분에 추가된 신 기능은 스레드 로칼 기억역만이 아닙니다. multi-thread 대응으로 아토믹 처리를 지원하는 새로운 메모리 모델도 있습니다.
+
+
+ 
+
+ 
+
+새로운 메모리 모델과 아토믹 처리
+데이터 보호에 락이나 조건 변수를 사용하고 있는 만큼 메모리 모델을 의식할 필요는 없습니다. 락을 올바르게 이용하고 있으면 경합 상태로부터 데이터가 보호되는 것이 메모리 모델에 의해서 보증됩니다. 락이 잘못하고 있으면 동작은 미정의입니다.
+
+한편 매우 저레벨로 처리를 실시하는 경우나 높은 퍼포먼스 라이브러리 기능을 제공하는 경우는 상세를 눌러 두는 것이 중요하게 됩니다. 매우 세세한 이야기가 되기 때문에 여기에서는 채택하지 않습니다. 간단하게 말하면 C++0x에는 내장 정수형이나 void 포인터에 대응하는 아토믹형과 템플릿 std::atomic<>이 있어 기본적인 유저 정의형의 아토믹판을 작성할 수 있는 것입니다. 상세한 것에 대하여는 관련 문서를 참조해 주십시오.
+
+
+정리
+이상 C++0x의 새로운 multi-thread 기능에 대하여 봐 왔습니다. 이번 채택한 것은 극히 기본적인 부분에 지나지 않습니다. 그 밖에도 스레드 ID나 비동기 future값 등 다양한 기능이 추가되고 있습니다.

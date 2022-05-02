@@ -1,0 +1,32 @@
+	//template< typename _TData >
+	//_TData GetGCD(_TData Num1_, _TData Num2_)
+	//{
+	//	if (Num2_ == 0)
+	//		return Num1_;
+
+	//	for (;;)
+	//	{
+	//		auto R = Num1_ % Num2_;
+	//		if (R == 0)
+	//		{
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			Num1_ = Num2_;
+	//			Num2_ = R;
+	//		}
+	//	}
+
+	//	return Num2_;
+	//}
+
+	//template< typename _TData >
+	//_TData GetLCM(_TData Num1_, _TData Num2_)
+	//{
+	//	auto GCD = GetGCD(Num1_, Num2_);
+	//	if (GCD == 0)
+	//		return 0;
+
+	//	return Num1_ * Num2_ / GCD;
+	//}

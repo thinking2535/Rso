@@ -1,0 +1,5 @@
+struct NamePort
+{
+	string name
+	int64 port
+}

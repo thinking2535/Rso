@@ -1,0 +1,45 @@
+<AddressFamily>
+* 주소이름으로 호출된 Dns.GetHostAddresses(Name) 로 얻어진 주소들의 AddressFamily 는 접속하게될 원격지의 Binding 된 AddressFamily 로, 로컬의 Connect 할 소켓의 그것과 별개.
+  로컬이 WiFi로 연결된 경우라도 new Socket(V6) 로 하더라도 원격지의 Family 만 맞으면 접속 성공함.
+
+<C++>
+closesocket() 직전에 수신된 것이 있으나 아직 GetIOCP 처리되지 않은 상황에서 
+closesocket() 해버리면 그 데이터(쓰레기 데이터) 가 올 수 있음.
+
+
+<C#>
+ConnecAsync 이후 Connect 오고
+ReceiveAsync 이전에 끊어졌으면 ReceiveAsync 시에 SocketError
+ReceiveAsync 이후에 끊어졌으면 Disconnect 통보
+Socket.Close() 이후 Worker.Disconnect 오지 않음.
+
+
+
+
+
+
+<KeepAlive>
+이때 사용되는 구조체는 tcp_keepalive이다.
+struct tcp_keepalive
+{
+    u_long onoff;
+    u_long keepalivetime;
+    u_long keeoaliveinterval;
+}
+
+SO_KEEPALIVE나 SIO_KEEPALIVE_VALS 옵션에 의해 keepalive옵션이 설정된 소켓에서 랜케이블을 강제로 언플러그하거나 기타 네트웍장애로 인해 겉으로 보기엔 연결상태지만 실제적으로 비연결된 상태가 되었을 때 keepalive message의 송수신으로 상태를 체크할 수 있는데 tcp_keepalivetime마다 한번씩 message를 보내며 keepaliveinterval시간동안 응답이 없으면 message를 재전송한다.
+
+DWORD dwError = 0L ;
+tcp_keepalive sKA_Settings = {0}, sReturned = {0} ;
+sKA_Settings.onoff = 1 ;
+sKA_Settings.keepalivetime = 5500 ;        // Keep Alive in 5.5 sec.
+sKA_Settings.keepaliveinterval = 3000 ;        // Resend if No-Reply
+
+DWORD dwBytes;
+if (WSAIoctl(hSocket, SIO_KEEPALIVE_VALS, &sKA_Settings, sizeof(sKA_Settings), &sReturned, sizeof(sReturned), &dwBytes, NULL, NULL) != 0 )
+{
+    dwError = WSAGetLastError() ;
+    TRACE( _T("SIO_KEEPALIVE_VALS result : %dn"), WSAGetLastError() );
+} 
+
+ 

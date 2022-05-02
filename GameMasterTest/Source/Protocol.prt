@@ -1,0 +1,53 @@
+include <Rso/Net/Protocol>
+
+using namespace std
+using namespace rso
+using namespace core
+using namespace json
+using namespace net
+
+struct SOption
+{
+	TPort MonitorBindPort
+	SRangeUID RangeUID
+	SNamePort AuthNamePort
+	TPort ServerBindPort
+	int32 NetCThreadCnt
+	TPort ClientBindPort
+	SNamePort ClientBindNamePortPub
+	TPort MasterBindPort
+	string Title
+	bool EnableReceipt
+}
+
+enum class EProtoNetSm
+{
+	GameProto
+	Max
+}
+enum class EProtoNetMs
+{
+	GameProto
+	Max
+}
+
+struct SGameProtoNetSm
+{
+	bool b
+	int16 i16
+	int32 i32
+	int64 i64
+	wstring w
+	datetime dt
+	time_point tp
+}
+struct SGameProtoNetMs
+{
+	bool b
+	int16 i16
+	int32 i32
+	int64 i64
+	wstring w
+	datetime dt
+	time_point tp
+}

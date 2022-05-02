@@ -1,0 +1,69 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	using namespace net
+
+	namespace patch
+	{
+		enum class EProto
+		{
+			UdData
+			UdUpdate
+			CsLogin
+			ScPatchData
+			AmLogin
+			MaPatchData
+			AmUpdate
+			Max
+			Null
+		}
+		struct SHeader
+		{
+			EProto Proto
+		}
+		typedef int32 TVersion
+
+		typedef map<wstring,bool> TUpdateFiles
+		struct SFile
+		{
+			bool IsAdded
+			TVersion SubVersion
+		}
+		typedef map<wstring,SFile> TFiles
+		struct SFiles
+		{
+			TFiles Files
+		}
+		struct SServerData
+		{
+			TVersion MainVersion
+			vector<SFiles> Patches
+		}
+		struct SVersion
+		{
+			TVersion Main
+			TVersion Sub
+		}
+		struct SUpdateData
+		{
+			bool IsReset
+			TUpdateFiles Files
+		}
+		struct SPatchData
+		{
+			SVersion Version
+			TFiles Files
+		}
+		struct SCsLogin
+		{
+			SVersion Version
+		}
+		struct SAmLogin
+		{
+			wstring ID
+			wstring PW
+			SVersion Version
+		}
+	}
+}

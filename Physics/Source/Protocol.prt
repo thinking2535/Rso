@@ -1,0 +1,100 @@
+namespace rso
+{
+	namespace physics
+	{
+		using namespace core
+		using namespace json
+
+		struct SPoint
+		{
+			float X
+			float Y
+		}
+		struct SVector
+		{
+			SPoint Pos
+			SPoint Dir
+		}
+		struct SCollisionInfo
+		{
+			float Time
+			SPoint Point
+			SPoint Normal
+		}
+
+		struct SVLine
+		{
+			float X
+		}
+		struct SHLine
+		{
+			float Y
+		}
+		struct SLine
+		{
+			SPoint Point0
+			SPoint Point1
+		}
+
+		struct SVSegment : SVLine
+		{
+			float Bottom
+			float Top
+		}
+		struct SHSegment : SHLine
+		{
+			float Left
+			float Right
+		}
+		struct SSegment
+		{
+			SPoint Point0
+			SPoint Point1
+		}
+		struct SCircle : SPoint
+		{
+			float	Radius
+		}
+		struct SRect
+		{
+			float Left
+			float Right
+			float Bottom
+			float Top
+		}
+		struct SRectTheta : SRect
+		{
+			float Theta
+		}
+		struct SSector : SCircle
+		{
+			float LeftTheta
+			float RightTheta
+		}
+		struct SPointRect
+		{
+			SPoint TopRight
+			SPoint TopLeft
+			SPoint BottomLeft
+			SPoint BottomRight
+		}
+		struct SPosTheta
+		{
+			SPoint Pos
+			float Theta
+		}
+		struct SObjectStraight
+		{
+			float Time
+			SPosTheta PosTheta
+			float Speed
+			float Dist
+		}
+		struct SEngineRect
+		{
+			SPoint Size
+			SPoint Offset
+			SPoint Scale
+		}
+	}
+}

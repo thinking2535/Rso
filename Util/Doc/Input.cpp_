@@ -1,0 +1,258 @@
+#include "Input.h"
+
+
+
+NS_BEGIN
+
+namespace util
+{
+	void		CInput::Worker( int ThreadNum_ )
+	{
+		HHOOK MouseHook = 0;
+		HHOOK KeyHook = 0;
+
+		// 메시지 Get할 위치에서 SetWindowsHookEx를 호출해야 함.
+		MouseHook = SetWindowsHookEx( WH_MOUSE_LL, MouseHookProc, 0, 0 );
+		if( MouseHook == 0 ) goto LABEL_EXIT;
+
+		KeyHook = SetWindowsHookEx( WH_KEYBOARD_LL, KeyHookProc, 0, 0 );
+		if( KeyHook == 0 ) goto LABEL_EXIT;
+
+		MSG		Msg;
+		while( m_Worker._GetWillExit(ThreadNum_) == false )
+		{
+			//PeekMessage( &Msg, NULL, WM_INPUT, WM_INPUT, PM_REMOVE );
+			GetMessage( &Msg, NULL, WM_INPUT, WM_INPUT );
+		}
+
+
+LABEL_EXIT:
+		if( KeyHook != 0 )
+			UnhookWindowsHookEx( KeyHook );
+
+		if( MouseHook != 0 )
+			UnhookWindowsHookEx( MouseHook );
+
+
+// 결론
+//아래 원인은 핸들러를 잘못 가져온 탓인지 , 콘솔의 문제인지는 모르겠으나
+//CInput 에서
+//	1. GetMessage는 한번 호출하면 리턴되지 않는대신 윈도우 메시지를 계속 처리하여 쾌적하게 인풋처리됨
+//	2. PeekMessage는 호출1회 마다 메시지1건을 처리하는 듯, 즉 호출이 더디면 마우스 키보드도 더디게 반응함.
+
+
+
+
+////////////// No Hooking /////////////////////////////
+		// 메시지를 받아오지 않음. GetMessge 를 호출할경우 계속 블럭
+		//m_hWnd = GetConsoleWindow();
+		//MSG		Msg;
+		//DWORD	Ret = 0;
+		//while( m_Worker._GetWillExit(ThreadNum_) == false )
+		//{
+		//	Ret = PeekMessage( &Msg, m_hWnd, WM_INPUT, WM_INPUT, PM_NOREMOVE );
+		//	if( Ret != 0 )
+		//	{
+		//		TranslateMessage (&Msg);
+		//		DispatchMessage (&Msg);
+		//	}
+		//}
+
+//====================== 테스트 코드 =======================================//
+		//HHOOK MouseHook = 0; 
+		//HHOOK KeyHook = 0; 
+		////m_hWnd = GetConsoleWindow();
+		////HINSTANCE hInstance = (HINSTANCE)GetWindowLong( m_hWnd, GWL_HINSTANCE );
+
+		////MouseHook = SetWindowsHookEx( WH_MOUSE_LL, MouseHookProc, hInstance, m_Worker.GetInfo(ThreadNum_)->ThreadID ); 
+		////KeyHook = SetWindowsHookEx( WH_KEYBOARD_LL, KeyHookProc, hInstance, m_Worker.GetInfo(ThreadNum_)->ThreadID );
+		////MouseHook = SetWindowsHookEx( WH_MOUSE, MouseHookProc, 0, m_Worker.GetInfo(ThreadNum_)->ThreadID ); 
+		////KeyHook = SetWindowsHookEx( WH_KEYBOARD, KeyHookProc, 0, m_Worker.GetInfo(ThreadNum_)->ThreadID );
+		//MouseHook = SetWindowsHookEx( WH_MOUSE_LL, MouseHookProc, 0, 0 ); 
+		//KeyHook = SetWindowsHookEx( WH_KEYBOARD_LL, KeyHookProc, 0, 0 );
+
+		//MSG		Msg;
+		//DWORD	Ret = 0;
+
+		//while( m_Worker._GetWillExit(ThreadNum_) == false )
+		//{
+		//	Ret = PeekMessage( &Msg, m_hWnd, WM_INPUT, WM_INPUT, PM_REMOVE );
+
+// GetMessage 는 매뉴얼과 다르게 메시지를 받아도 리턴되지 않는다. PostQuitMessage 도 소용없고
+// GetMessage 시에 콘솔에서 스크롤바를 건드리면 OS완전 먹통되는데 이것과 관련있나? 코드가 잘못되었나? 통 모르겠구만.
+//   1. 윈도우 핸들, 인스턴스를 안받아서? ( 핸들은 소용없고, 인스턴스는 안받아짐
+// 반면 PeekMessage 는 반환되나 아래 코드 호출 하지 않아도 됨. 왜? 콘솔이라 다른가? 반환값도 항상 0이고
+//			if( Ret != 0 )
+//			{
+//				TranslateMessage (&Msg);
+//				DispatchMessage (&Msg);
+//			}
+//		}
+
+		//UnhookWindowsHookEx( KeyHook );
+		//UnhookWindowsHookEx( MouseHook );
+	}
+
+	LRESULT CALLBACK CInput::MouseHookProc( int Code_, WPARAM wParam_, LPARAM lParam_ )
+	{
+		PKBDLLHOOKSTRUCT pHookStruct = (PKBDLLHOOKSTRUCT)(lParam_);
+		
+		switch( wParam_ )
+		{
+		case WM_MOUSEMOVE:
+			printf( "Move	Y%x	Tck%d	X%x\n", pHookStruct->scanCode, pHookStruct->dwExtraInfo, pHookStruct->vkCode );
+			break;
+
+		case WM_LBUTTONDOWN:
+			printf( "LDown\n" );
+			break;
+
+		case WM_LBUTTONUP:
+			printf( "LUp\n" );
+			break;
+
+		case WM_LBUTTONDBLCLK:
+			printf( "LDClk\n" );
+			break;
+
+		case WM_RBUTTONDOWN:
+			printf( "RDown\n" );
+			break;
+
+		case WM_RBUTTONUP:
+			printf( "RUp\n" );
+			break;
+
+		case WM_RBUTTONDBLCLK:
+			printf( "RDClk\n" );
+			break;
+
+		case WM_MBUTTONDOWN:
+			printf( "MDown\n" );
+			break;
+
+		case WM_MBUTTONUP:
+			printf( "MUp\n" );
+			break;
+
+		case WM_MBUTTONDBLCLK:
+			printf( "MDClk\n" );
+			break;
+
+#if (_WIN32_WINNT >= 0x0400) || (_WIN32_WINDOWS > 0x0400)
+		case WM_MOUSEWHEEL:
+			printf( "Wheel\n" );
+			break;
+#endif
+
+#if (_WIN32_WINNT >= 0x0500)
+		case WM_XBUTTONDOWN:
+			printf( "XDown\n" );
+			break;
+
+		case WM_XBUTTONUP:
+			printf( "XUp\n" );
+			break;
+
+		case WM_XBUTTONDBLCLK:
+			printf( "XDClk\n" );
+			break;
+
+#endif
+#if (_WIN32_WINNT >= 0x0600)
+		case WM_MOUSEHWHEEL:
+			printf( "HWheel\n" );
+			break;
+#endif
+		}
+
+		return CallNextHookEx( NULL, Code_, wParam_, lParam_ );
+	}
+
+	LRESULT CALLBACK CInput::KeyHookProc( int Code_, WPARAM wParam_, LPARAM lParam_ )
+	{
+		PKBDLLHOOKSTRUCT HookStruct = (PKBDLLHOOKSTRUCT)lParam_;
+
+		switch( wParam_ )
+		{
+		case WM_KEYDOWN:
+			printf( "KEYDOWN		Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_KEYUP:
+			printf( "KEYUP		Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_CHAR:
+			printf( "CHAR		Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_DEADCHAR:
+			printf( "DEADCHAR	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_SYSKEYDOWN:
+			printf( "SYSKEYDOWN	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_SYSKEYUP:
+			printf( "SYSKEYUP	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_SYSCHAR:
+			printf( "SYSCHAR	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case WM_SYSDEADCHAR:
+			printf( "SYSDEADCHA	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+#if(_WIN32_WINNT >= 0x0501)
+		case WM_UNICHAR:
+			printf( "UNICHAR	Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+
+		case UNICODE_NOCHAR:
+			printf( "NOCHAR		Ex[%x]	f[%x]	scn[%x]	tm[%d]	vk[%x]\n", HookStruct->dwExtraInfo, HookStruct->flags, HookStruct->scanCode, HookStruct->time, HookStruct->vkCode );
+			break;
+#endif
+		}
+
+		return CallNextHookEx( NULL, Code_, wParam_, lParam_ );
+	}
+
+	bool	CInput::Initialize( void )
+	{
+		goto LABEL_ERROR;
+
+		if( m_Worker.Initialize( this, 1 ) == false ) goto LABEL_ERROR;
+
+		return true;
+
+LABEL_ERROR:
+
+		Finalize();
+
+		return false;
+	}
+
+	void	CInput::Finalize( void )
+	{
+		//if( KeyHook != 0 )
+		//	UnhookWindowsHookEx( KeyHook );
+
+		//if( MouseHook != 0 )
+		//	UnhookWindowsHookEx( MouseHook );
+
+		//PostQuitMessage(0);
+
+		// temp GetMessage가 호출된 이후 당최 나오질 않으니 m_Worker.Finalize() 스레드를 종료 시킬 수가 없음. 임시로 스레드 킬.
+		CWorker::SInfo* pInfo = m_Worker.GetInfo(0);
+		if( pInfo != 0 )
+			TerminateThread( pInfo->hThread, 0 );
+
+		m_Worker.Finalize();
+	}
+};
+
+NS_END

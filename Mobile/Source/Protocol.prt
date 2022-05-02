@@ -1,0 +1,65 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	using namespace net
+
+	namespace mobile
+	{
+		typedef uint64 TProtoSeq
+
+		enum class EProtoCs
+		{
+			Link
+			ReLink
+			UnLink
+			Ack
+			ReSend
+			UserProto
+			Max
+			Null
+		}
+		enum class EProtoSc
+		{
+			Link
+			ReLink
+			UnLink
+			Ack
+			ReSend
+			UserProto
+			Max
+			Null
+		}
+		struct SHeaderCs
+		{
+			EProtoCs Proto
+		}
+		struct SHeaderSc
+		{
+			EProtoSc Proto
+		}
+
+		struct SLinkCs
+		{
+		}
+		struct SLinkSc
+		{
+			SKey ServerExtKey
+		}
+		struct SReLinkCs
+		{
+			SKey ServerExtKey
+			TProtoSeq ClientProtoSeqMustRecv
+		}
+		struct SReLinkSc
+		{
+			TProtoSeq ServerProtoSeqMustRecv
+		}
+		struct SUnLinkCs
+		{
+		}
+		struct SUnLinkSc
+		{
+		}
+	}
+}

@@ -1,0 +1,10 @@
+struct SBase
+{
+	string Name
+	int32 Age
+}
+struct STest<TType>
+{
+	TType ty
+	SBase base
+}

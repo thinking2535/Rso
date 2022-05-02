@@ -1,0 +1,6 @@
+include <Rso/Net/Protocol>
+
+struct SOption
+{
+	wstring Title
+}

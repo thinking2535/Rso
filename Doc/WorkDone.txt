@@ -1,0 +1,16 @@
+// DONE
+ - UDP - Link, UnLink 콜백 추가
+ - 각 서버 Start, Stop 에 따른 유저 상태 통보 처리
+
+ - Messenger 모듈화 (서버 그룹에 통합)
+ - Hole Punching
+ - ENDIAN 작업
+
+
+// TODO
+* Allocator (UID, LC, RR) 모듈 통합
+
+* 프로토콜 생성기에 템플릿 가능하도록 적용
+ - Is, Have 관계
+
+* Ranking Project 추가

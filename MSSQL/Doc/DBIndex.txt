@@ -1,0 +1,21 @@
+{
+ "UserDB" :
+ {
+ "ServerName" : "192.168.0.151", "UserName" : "gameserver", "PassWord" : "logiworksgameserver", "DataBase" : "ILUser", "ConnCnt" : 1, "Port" : 1433
+ },
+ "GameDBs" :
+ [
+ { "ServerName" : "192.168.0.151", "UserName" : "gameserver", "PassWord" : "logiworksgameserver", "DataBase" : "ILGame", "ConnCnt" : 1, "Port" : 1433 },
+ { "ServerName" : "192.168.0.151", "UserName" : "gameserver", "PassWord" : "logiworksgameserver", "DataBase" : "ILGame2", "ConnCnt" : 1, "Port" : 1433 },
+ { "ServerName" : "192.168.0.151", "UserName" : "gameserver", "PassWord" : "logiworksgameserver", "DataBase" : "ILGame3", "ConnCnt" : 1, "Port" : 1433 }
+ ],
+ "GameDBIndexes":
+ [
+ { "MaxUID" : 10, "Index" : 0 },
+ { "MaxUID" : 20, "Index" : 1 }
+ ],
+ "LogDB" :
+ {
+ "ServerName" : "192.168.0.151", "UserName" : "gameserver", "PassWord" : "logiworksgameserver", "DataBase" : "ILLog", "Port" : 1433
+ }
+}

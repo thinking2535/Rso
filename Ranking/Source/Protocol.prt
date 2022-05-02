@@ -1,0 +1,129 @@
+include <Rso/Net/Protocol>
+
+namespace rso
+{
+	namespace ranking
+	{
+		using namespace net
+
+		enum class EProtoDB
+		{
+			ConfigLoad
+			Refresh
+			Update
+		}
+
+		struct SOption
+		{
+			SNamePort MasterNamePort
+			int32 NetCThreadCnt
+			TPort ChildBindPort
+			TPort ClientBindPort
+			SNamePort ClientBindNamePortPub
+		}
+		struct SMasterOption
+		{
+			TPort AgentBindPort
+			int64 MaxRankingPoint
+			int32 MaxDataCount
+			string PeriodBaseTime
+			int32 PeriodMinutes
+		}
+
+		enum class EProto
+		{
+			InfoSa
+			UserMinPointSa
+			UpdateAs
+			RequestCs
+			RequestSc
+		}
+
+		typedef map<TUID,int64> TRewards
+
+		struct SUserMinPointSa
+		{
+			int64 Point
+		}
+		struct SInfoSa
+		{
+			int64 Counter
+			SUserMinPointSa UserMinPoint
+			TRewards Rewards
+		}
+
+		struct SUserCore
+		{
+			wstring Nick
+			int32 CharCode
+			wstring CountryCode
+		}
+		struct SUser : SUserCore
+		{
+			TUID UID
+			int32 Point
+		}
+
+		typedef list<SUser> TUsers
+
+		struct SUpdateAs
+		{
+			TUsers Changed
+		}
+
+		struct SRequestCs
+		{
+			TUID UID
+		}
+		struct SRanking
+		{
+			TUsers Users
+			int32 RewardedRanking
+		}
+
+		struct SDummyDBOut
+		{
+		}
+		struct SConfigLoadDBIn
+		{
+			time_point StartTimePoint
+		}
+		struct SConfigDB
+		{
+			int64 Counter
+			time_point ExpireTimePoint
+		}
+		struct SConfigLoadDBOut
+		{
+			list<SConfigDB> Configs
+		}
+
+		struct SLoadDBIn
+		{
+		}
+		struct SLoadDBOut
+		{
+			list<SUser> Users
+		}
+
+		struct SRefreshDBIn
+		{
+			SConfigDB Config
+			TRewards Rewards
+		}
+
+		struct SRewardLoadDBIn
+		{
+		}
+		struct SRewardLoadDBOut
+		{
+			TRewards Rewards
+		}
+
+		struct SUpdateDBIn
+		{
+			TUsers Merged
+			list<TUID> Deleted
+		}
+	}
+}

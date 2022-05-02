@@ -1,0 +1,83 @@
+namespace rso
+{
+	namespace net
+	{
+		using namespace std
+		using namespace core
+		using namespace json
+
+		typedef int32 TSize
+		typedef uint64 TCheckSum
+		typedef int64 TUID
+		typedef uint32 TPeerCnt
+		typedef uint32 TLongIP
+		typedef uint16 TPort
+		typedef uint64 TPacketSeq
+		typedef int64 TSessionCode
+
+		enum class ENetRet
+		{
+			Ok
+			UserClose
+			HeartBeatFail
+			KeepConnectTimeOut
+			RecvError
+			ConnectFail
+			CertifyFail
+			SystemError
+			SocketError
+			InvalidPacket
+			Max
+			Null
+		}
+		enum class EPacketType : int8
+		{
+			Ping
+			Pong
+			User
+			Max
+			Null
+		}
+		enum class ERecvState
+		{
+			NoData
+			PingPong
+			UserData
+			Error
+			Max
+			Null
+		}
+		struct SKey
+		{
+			TPeerCnt PeerNum
+			TPeerCnt PeerCounter
+		}
+		struct SHeader
+		{
+			TSize Size
+			TCheckSum CheckSum
+			TPacketSeq SendPacketSeq
+		}
+		struct SHeader2
+		{
+			EPacketType PacketType
+			TPacketSeq RecvPacketSeq
+		}
+		struct SNamePort
+		{
+			u16string Name
+			TPort Port
+		}
+		struct SCountryCodeMinuteCountOffset
+		{
+			string CountryCode
+			int32 MinuteCountOffset
+		}
+		struct SRangeKey<TType>
+		{
+			TType MinValue
+			TType MaxValue
+		}
+		typedef SRangeKey<TUID> SRangeUID
+	}
+}

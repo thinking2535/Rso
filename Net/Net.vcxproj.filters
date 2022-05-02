@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{dcfc3cca-f16d-4876-a1ba-86b80faec99e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{dcebcb24-bbc8-493d-a8c8-22cfbc6f5390}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Peer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Net.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Client.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Server.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IOCP.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binder.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WSA.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Socket.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClientKeepConnect.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IPInfo.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BinderServer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IPEndPointV4.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IPEndPointV6.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UDP.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Net.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Base.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Peer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Client.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Server.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.prt">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Protocol.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IOCP.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Binder.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WSA.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Socket.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClientKeepConnect.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IPInfo.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BinderServer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IPEndPointV4.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IPEndPointV6.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UDP.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\Todo.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\Note.txt">
+      <Filter>Doc</Filter>
+    </Text>
+    <Text Include="Doc\IPFinder.txt">
+      <Filter>Doc</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Doc\IPFinderClient.cpp_">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\IPFinderClient.h_">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\IPFinderServer.cpp_">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\IPFinderServer.h_">
+      <Filter>Doc</Filter>
+    </None>
+  </ItemGroup>
+</Project>
