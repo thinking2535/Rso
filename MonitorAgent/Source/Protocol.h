@@ -16,54 +16,54 @@ struct SOption : public SProto
 {
 	wstring LogDir{};
 	wstring ServiceName{};
-	SNamePort ServerNamePort{};
+	SNamePort MonitorServerNamePort{};
 	wstring WorkingRelativePath{};
-	wstring AppFile{};
-	SNamePort AppNamePort{};
+	wstring MonitorProcFile{};
+	TPort MonitorProcPort{};
 	SOption()
 	{
 	}
-	SOption(const wstring& LogDir_, const wstring& ServiceName_, const SNamePort& ServerNamePort_, const wstring& WorkingRelativePath_, const wstring& AppFile_, const SNamePort& AppNamePort_) : LogDir(LogDir_), ServiceName(ServiceName_), ServerNamePort(ServerNamePort_), WorkingRelativePath(WorkingRelativePath_), AppFile(AppFile_), AppNamePort(AppNamePort_)
+	SOption(const wstring& LogDir_, const wstring& ServiceName_, const SNamePort& MonitorServerNamePort_, const wstring& WorkingRelativePath_, const wstring& MonitorProcFile_, const TPort& MonitorProcPort_) : LogDir(LogDir_), ServiceName(ServiceName_), MonitorServerNamePort(MonitorServerNamePort_), WorkingRelativePath(WorkingRelativePath_), MonitorProcFile(MonitorProcFile_), MonitorProcPort(MonitorProcPort_)
 	{
 	}
-	SOption(wstring&& LogDir_, wstring&& ServiceName_, SNamePort&& ServerNamePort_, wstring&& WorkingRelativePath_, wstring&& AppFile_, SNamePort&& AppNamePort_) : LogDir(std::move(LogDir_)), ServiceName(std::move(ServiceName_)), ServerNamePort(std::move(ServerNamePort_)), WorkingRelativePath(std::move(WorkingRelativePath_)), AppFile(std::move(AppFile_)), AppNamePort(std::move(AppNamePort_))
+	SOption(wstring&& LogDir_, wstring&& ServiceName_, SNamePort&& MonitorServerNamePort_, wstring&& WorkingRelativePath_, wstring&& MonitorProcFile_, TPort&& MonitorProcPort_) : LogDir(std::move(LogDir_)), ServiceName(std::move(ServiceName_)), MonitorServerNamePort(std::move(MonitorServerNamePort_)), WorkingRelativePath(std::move(WorkingRelativePath_)), MonitorProcFile(std::move(MonitorProcFile_)), MonitorProcPort(std::move(MonitorProcPort_))
 	{
 	}
 	void operator << (CStream& Stream_) override
 	{
 		Stream_ >> LogDir;
 		Stream_ >> ServiceName;
-		Stream_ >> ServerNamePort;
+		Stream_ >> MonitorServerNamePort;
 		Stream_ >> WorkingRelativePath;
-		Stream_ >> AppFile;
-		Stream_ >> AppNamePort;
+		Stream_ >> MonitorProcFile;
+		Stream_ >> MonitorProcPort;
 	}
 	void operator << (const Value& Value_) override
 	{
 		Value_["LogDir"] >> LogDir;
 		Value_["ServiceName"] >> ServiceName;
-		Value_["ServerNamePort"] >> ServerNamePort;
+		Value_["MonitorServerNamePort"] >> MonitorServerNamePort;
 		Value_["WorkingRelativePath"] >> WorkingRelativePath;
-		Value_["AppFile"] >> AppFile;
-		Value_["AppNamePort"] >> AppNamePort;
+		Value_["MonitorProcFile"] >> MonitorProcFile;
+		Value_["MonitorProcPort"] >> MonitorProcPort;
 	}
 	void operator >> (CStream& Stream_) const override
 	{
 		Stream_ << LogDir;
 		Stream_ << ServiceName;
-		Stream_ << ServerNamePort;
+		Stream_ << MonitorServerNamePort;
 		Stream_ << WorkingRelativePath;
-		Stream_ << AppFile;
-		Stream_ << AppNamePort;
+		Stream_ << MonitorProcFile;
+		Stream_ << MonitorProcPort;
 	}
 	void operator >> (Value& Value_) const override
 	{
 		Value_["LogDir"] = LogDir;
 		Value_["ServiceName"] = ServiceName;
-		Value_["ServerNamePort"] = ServerNamePort;
+		Value_["MonitorServerNamePort"] = MonitorServerNamePort;
 		Value_["WorkingRelativePath"] = WorkingRelativePath;
-		Value_["AppFile"] = AppFile;
-		Value_["AppNamePort"] = AppNamePort;
+		Value_["MonitorProcFile"] = MonitorProcFile;
+		Value_["MonitorProcPort"] = MonitorProcPort;
 	}
 	static wstring StdName(void)
 	{
@@ -73,16 +73,16 @@ struct SOption : public SProto
 			GetStdName(SNamePort()) + L"," + 
 			GetStdName(wstring()) + L"," + 
 			GetStdName(wstring()) + L"," + 
-			GetStdName(SNamePort());
+			GetStdName(TPort());
 	}
 	static wstring MemberName(void)
 	{
 		return 
 			GetMemberName(wstring(), L"LogDir") + L"," + 
 			GetMemberName(wstring(), L"ServiceName") + L"," + 
-			GetMemberName(SNamePort(), L"ServerNamePort") + L"," + 
+			GetMemberName(SNamePort(), L"MonitorServerNamePort") + L"," + 
 			GetMemberName(wstring(), L"WorkingRelativePath") + L"," + 
-			GetMemberName(wstring(), L"AppFile") + L"," + 
-			GetMemberName(SNamePort(), L"AppNamePort");
+			GetMemberName(wstring(), L"MonitorProcFile") + L"," + 
+			GetMemberName(TPort(), L"MonitorProcPort");
 	}
 };

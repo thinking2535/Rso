@@ -66,60 +66,60 @@ namespace rso
 		{
 			string Title{};
 			vector<SAccount> Accounts{};
-			SNamePort AgentBindNamePort{};
-			SNamePort ClientBindNamePort{};
+			TPort MonitorAgentBindPort{};
+			TPort MonitorClientBindPort{};
 			SOption()
 			{
 			}
-			SOption(const string& Title_, const vector<SAccount>& Accounts_, const SNamePort& AgentBindNamePort_, const SNamePort& ClientBindNamePort_) : Title(Title_), Accounts(Accounts_), AgentBindNamePort(AgentBindNamePort_), ClientBindNamePort(ClientBindNamePort_)
+			SOption(const string& Title_, const vector<SAccount>& Accounts_, const TPort& MonitorAgentBindPort_, const TPort& MonitorClientBindPort_) : Title(Title_), Accounts(Accounts_), MonitorAgentBindPort(MonitorAgentBindPort_), MonitorClientBindPort(MonitorClientBindPort_)
 			{
 			}
-			SOption(string&& Title_, vector<SAccount>&& Accounts_, SNamePort&& AgentBindNamePort_, SNamePort&& ClientBindNamePort_) : Title(std::move(Title_)), Accounts(std::move(Accounts_)), AgentBindNamePort(std::move(AgentBindNamePort_)), ClientBindNamePort(std::move(ClientBindNamePort_))
+			SOption(string&& Title_, vector<SAccount>&& Accounts_, TPort&& MonitorAgentBindPort_, TPort&& MonitorClientBindPort_) : Title(std::move(Title_)), Accounts(std::move(Accounts_)), MonitorAgentBindPort(std::move(MonitorAgentBindPort_)), MonitorClientBindPort(std::move(MonitorClientBindPort_))
 			{
 			}
 			void operator << (CStream& Stream_) override
 			{
 				Stream_ >> Title;
 				Stream_ >> Accounts;
-				Stream_ >> AgentBindNamePort;
-				Stream_ >> ClientBindNamePort;
+				Stream_ >> MonitorAgentBindPort;
+				Stream_ >> MonitorClientBindPort;
 			}
 			void operator << (const Value& Value_) override
 			{
 				Value_["Title"] >> Title;
 				Value_["Accounts"] >> Accounts;
-				Value_["AgentBindNamePort"] >> AgentBindNamePort;
-				Value_["ClientBindNamePort"] >> ClientBindNamePort;
+				Value_["MonitorAgentBindPort"] >> MonitorAgentBindPort;
+				Value_["MonitorClientBindPort"] >> MonitorClientBindPort;
 			}
 			void operator >> (CStream& Stream_) const override
 			{
 				Stream_ << Title;
 				Stream_ << Accounts;
-				Stream_ << AgentBindNamePort;
-				Stream_ << ClientBindNamePort;
+				Stream_ << MonitorAgentBindPort;
+				Stream_ << MonitorClientBindPort;
 			}
 			void operator >> (Value& Value_) const override
 			{
 				Value_["Title"] = Title;
 				Value_["Accounts"] = Accounts;
-				Value_["AgentBindNamePort"] = AgentBindNamePort;
-				Value_["ClientBindNamePort"] = ClientBindNamePort;
+				Value_["MonitorAgentBindPort"] = MonitorAgentBindPort;
+				Value_["MonitorClientBindPort"] = MonitorClientBindPort;
 			}
 			static wstring StdName(void)
 			{
 				return 
 					GetStdName(string()) + L"," + 
 					GetStdName(vector<SAccount>()) + L"," + 
-					GetStdName(SNamePort()) + L"," + 
-					GetStdName(SNamePort());
+					GetStdName(TPort()) + L"," + 
+					GetStdName(TPort());
 			}
 			static wstring MemberName(void)
 			{
 				return 
 					GetMemberName(string(), L"Title") + L"," + 
 					GetMemberName(vector<SAccount>(), L"Accounts") + L"," + 
-					GetMemberName(SNamePort(), L"AgentBindNamePort") + L"," + 
-					GetMemberName(SNamePort(), L"ClientBindNamePort");
+					GetMemberName(TPort(), L"MonitorAgentBindPort") + L"," + 
+					GetMemberName(TPort(), L"MonitorClientBindPort");
 			}
 		};
 	}

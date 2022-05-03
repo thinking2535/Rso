@@ -13,6 +13,8 @@ namespace rso::monitor
 		using TCallbackMessage = function<void(const wstring& Message_)>;
 
 	private:
+		TLinkFunc _LinkAFunc;
+		TUnLinkFunc _UnLinkAFunc;
 		TCallbackUserProto _CallbackUserProto;
 		TCallbackStop _CallbackStop;
 		TCallbackMessage _CallbackMessage;
@@ -27,6 +29,7 @@ namespace rso::monitor
 	public:
 		CProc(
 			EAddressFamily AddressFamily_,
+			TLinkFunc LinkAFunc_, TUnLinkFunc UnLinkAFunc_,
 			TCallbackUserProto CallbackUserProto_, TCallbackStop CallbackStop_, TCallbackMessage CallbackMessage_,
 			const wstring& ProcName_, const CNamePort& BindNamePort_, const wstring& Stat_);
 

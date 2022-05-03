@@ -40,7 +40,13 @@ void _tmain(int argc, WCHAR *argv[])
 		g_Agent.reset(
 			new CAgent(
 				CallbackUserProto,
-				g_ServiceName, g_AppWorkPath, Option->AppFile, g_WorkPath + g_DynamicOptionFileName, CNamePort(Option->ServerNamePort), CNamePort(Option->AppNamePort), wstring(L"{}")
+				g_ServiceName,
+				g_AppWorkPath,
+				Option->MonitorProcFile,
+				g_WorkPath + g_DynamicOptionFileName,
+				CNamePort(Option->MonitorServerNamePort),
+				CNamePort("127.0.0.1", Option->MonitorProcPort),
+				wstring(L"{}")
 			)
 		);
 

@@ -53,6 +53,10 @@ namespace rso::net
 		_ReceivThread(std::bind(&CUDP::_Receiver, this, _1))
 	{
 	}
+	CUDP::~CUDP()
+	{
+		CSocket::Clear();
+	}
 	void CUDP::InsertPeer(const CNamePort& NamePort_)
 	{
 		auto ibPeer = _Peers.emplace(NamePort_, _SPeer(GetIPEndPoint(GetAddressFamily(), NamePort_, false)));

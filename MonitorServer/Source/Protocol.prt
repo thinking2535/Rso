@@ -16,8 +16,8 @@ namespace rso
 		{
 			string Title
 			vector<SAccount> Accounts
-			SNamePort AgentBindNamePort
-			SNamePort ClientBindNamePort
+			TPort MonitorAgentBindPort
+			TPort MonitorClientBindPort
 		}
 	}
 }

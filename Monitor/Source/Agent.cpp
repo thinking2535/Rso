@@ -37,9 +37,9 @@ namespace rso::monitor
 	}
 	void CAgent::_LinkS(const CKey& Key_)
 	{
-		_Net->Send(Key_.PeerNum, SAsHeader(EAsProto::AgentOn), SAsAgentOn(_Agent.GetSAgent()));
+		_NetS->Send(Key_.PeerNum, SAsHeader(EAsProto::AgentOn), SAsAgentOn(_Agent.GetSAgent()));
 		if (_Proc)
-			_Net->SendAll(SAsHeader(EAsProto::ProcOn), SAsProcOn(_Proc->GetSProc()));
+			_NetS->SendAll(SAsHeader(EAsProto::ProcOn), SAsProcOn(_Proc->GetSProc()));
 	}
 	void CAgent::_LinkFailS(TPeerCnt /*PeerNum_*/, ENetRet /*NetRet_*/)
 	{
@@ -89,7 +89,7 @@ namespace rso::monitor
 		_Agent.Option.KeepAlive = Proto.On;
 		COptionJson<SAgentOption>(_DynamicOptionFilePath, _Agent.Option);
 
-		_Net->SendAll(SAsHeader(EAsProto::AgentOption), SAsAgentOption(_Agent.Option));
+		_NetS->SendAll(SAsHeader(EAsProto::AgentOption), SAsAgentOption(_Agent.Option));
 	}
 	void CAgent::_RecvSaRunProcess(const CKey& /*ClientKey_*/, CStream& /*Stream_*/)
 	{
@@ -117,7 +117,7 @@ namespace rso::monitor
 		CStream Stream;
 		Stream_ >> Stream;
 
-		_NetProc->SendAll(Stream, ClientKey_);
+		_NetP->SendAll(Stream, ClientKey_);
 	}
 	void CAgent::_LinkP(const CKey& /*Key_*/)
 	{
@@ -130,7 +130,7 @@ namespace rso::monitor
 		if (_Proc)
 		{
 			_Proc.reset();
-			_Net->SendAll(SAsHeader(EAsProto::ProcOff), SAsProcOff());
+			_NetS->SendAll(SAsHeader(EAsProto::ProcOff), SAsProcOff());
 		}
 	}
 	void CAgent::_RecvP(const CKey& Key_, CStream& Stream_)
@@ -152,7 +152,7 @@ namespace rso::monitor
 		Stream_ >> Proto;
 
 		_Proc.reset(new SProcValue(Proto));
-		_Net->SendAll(SAsHeader(EAsProto::ProcOn), SAsProcOn(Proto));
+		_NetS->SendAll(SAsHeader(EAsProto::ProcOn), SAsProcOn(Proto));
 	}
 	void CAgent::_RecvPaStat(const CKey& /*Key_*/, CStream& Stream_)
 	{
@@ -161,13 +161,13 @@ namespace rso::monitor
 
 		_Proc->Stat[Proto.Key] = Proto.Data;
 
-		_Net->SendAll(SAsHeader(EAsProto::ProcStat), SAsProcStat(Proto));
+		_NetS->SendAll(SAsHeader(EAsProto::ProcStat), SAsProcStat(Proto));
 	}
 	void CAgent::_RecvPaNotifyToClient(const CKey& /*Key_*/, CStream& Stream_)
 	{
 		SNotifyToClient Proto;
 		Stream_ >> Proto;
-		_Net->SendAll(SAsHeader(EAsProto::NotifyToClient), Proto);
+		_NetS->SendAll(SAsHeader(EAsProto::NotifyToClient), Proto);
 	}
 	CAgent::CAgent(
 		TCallbackUserProto CallbackUserProto_,
@@ -187,7 +187,7 @@ namespace rso::monitor
 		_ShellCmd(std::bind(&CAgent::_ShellOutputCallback, this, _1)),
 		_Agent(SAgent(Name_, *COptionJson<SAgentOption>(DynamicOptionFilePath_, false), Stat_))
 	{
-		_Net.reset(new CClientKeepConnect(
+		_NetS.reset(new CClientKeepConnect(
 			std::bind(&CAgent::_LinkS, this, _1),
 			std::bind(&CAgent::_LinkFailS, this, _1, _2),
 			std::bind(&CAgent::_UnLinkS, this, _1, _2),
@@ -197,9 +197,9 @@ namespace rso::monitor
 			milliseconds(3000)));
 
 		if (_ServerNamePort)
-			_Net->Connect(_ServerNamePort);
+			_NetS->Connect(_ServerNamePort);
 
-		_NetProc.reset(new CClientKeepConnect(
+		_NetP.reset(new CClientKeepConnect(
 			std::bind(&CAgent::_LinkP, this, _1),
 			std::bind(&CAgent::_LinkFailP, this, _1, _2),
 			std::bind(&CAgent::_UnLinkP, this, _1, _2),
@@ -209,25 +209,25 @@ namespace rso::monitor
 			milliseconds(3000)));
 
 		if (_ProcNamePort)
-			_NetProc->Connect(_ProcNamePort);
+			_NetP->Connect(_ProcNamePort);
 	}
 	void CAgent::SetStat(const SKeyData& KeyData_)
 	{
 		_Agent.Stat[KeyData_.Key] = KeyData_.Data;
 
-		_Net->SendAll(SAsHeader(EAsProto::AgentStat), SAsAgentStat(KeyData_));
+		_NetS->SendAll(SAsHeader(EAsProto::AgentStat), SAsAgentStat(KeyData_));
 	}
 	void CAgent::SendNotifyToClient(const CKey& Key_, const wstring& Msg_)
 	{
-		_Net->SendAll(SAsHeader(EAsProto::NotifyToClient), SNotifyToClient(Key_, Msg_));
+		_NetS->SendAll(SAsHeader(EAsProto::NotifyToClient), SNotifyToClient(Key_, Msg_));
 	}
 	void CAgent::Proc(void)
 	{
-		_Net->Proc();
-		_NetProc->Proc();
+		_NetS->Proc();
+		_NetP->Proc();
 		_ShellCmd.Proc();
 
-		if (_KeepalivePeriod.CheckAndNextLoose() && !_NetProc->IsConnecting(0))
+		if (_KeepalivePeriod.CheckAndNextLoose() && !_NetP->IsConnecting(0))
 		{
 			if (_Agent.Option.KeepAlive)
 				_RunProcess();

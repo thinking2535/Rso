@@ -6,9 +6,11 @@ namespace rso::monitor
 	{
 		Certify(Key_.PeerNum);
 		SendAll(SPaHeader(EPaProto::ProcOn), SPaProcOn(_Proc.GetSProc()));
+		_LinkAFunc(Key_);
 	}
-	void CProc::_UnLinkA(const CKey& /*Key_*/, ENetRet /*NetRet_*/)
+	void CProc::_UnLinkA(const CKey& Key_, ENetRet NetRet_)
 	{
+		_UnLinkAFunc(Key_, NetRet_);
 	}
 	void CProc::_RecvA(const CKey& /*Key_*/, CStream& Stream_)
 	{
@@ -45,6 +47,7 @@ namespace rso::monitor
 	}
 	CProc::CProc(
 		EAddressFamily AddressFamily_,
+		TLinkFunc LinkAFunc_, TUnLinkFunc UnLinkAFunc_,
 		TCallbackUserProto CallbackUserProto_, TCallbackStop CallbackStop_, TCallbackMessage CallbackMessage_,
 		const wstring& ProcName_, const CNamePort& BindNamePort_, const wstring& Stat_) :
 		CServer(
@@ -55,6 +58,8 @@ namespace rso::monitor
 			false, 10240000, 10240000,
 			milliseconds(20000), milliseconds(9000), 1, 0,
 			BindNamePort_, SOMAXCONN),
+		_LinkAFunc(LinkAFunc_),
+		_UnLinkAFunc(UnLinkAFunc_),
 		_CallbackUserProto(CallbackUserProto_),
 		_CallbackStop(CallbackStop_),
 		_CallbackMessage(CallbackMessage_),

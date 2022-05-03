@@ -25,5 +25,6 @@ namespace rso::net
 		CSocket operator = (const CSocket& Var_) = delete;
 		CSocket& operator = (CSocket&& Var_);
 		SOCKET Socket(void) const { return _Socket; }
+		void Clear(void);
 	};
 }

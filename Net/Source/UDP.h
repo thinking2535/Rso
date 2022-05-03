@@ -88,6 +88,7 @@ namespace rso::net
 			EAddressFamily AddressFamily_, const CNamePort& BindNamePort_,
 			TLinkFunc LinkFunc_, TUnLinkFunc UnLinkFunc_, TRecvFunc RecvFunc_,
 			bool NoDelay_, TSize SocketBuffSize_, TSize BlockSize_);
+		virtual ~CUDP();
 		void InsertPeer(const CNamePort& NamePort_);
 		void ErasePeer(const CNamePort& NamePort_);
 		void ClearPeer(void);

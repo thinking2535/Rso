@@ -79,7 +79,7 @@ int _tmain(int argc, _TCHAR* argv[])
 #if UTF_Test
 
 	{
-		auto Converted = to_utf32(u8"•°♻☺☆«"s);
+		auto Converted = u8string_to_u32string(u8"•°♻☺☆«"s);
 		cout << Converted.find(U"•") << endl;
 		cout << Converted.find(U"°") << endl;
 		cout << Converted.find(U"♻") << endl;
@@ -87,7 +87,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << Converted.find(U"☆") << endl;
 		cout << Converted.find(U"«") << endl;
 
-		auto ReConverted = to_utf8(Converted);
+		auto ReConverted = u32string_to_u8string(Converted);
 		cout << ReConverted.find(u8"•") << endl;
 		cout << ReConverted.find(u8"°") << endl;
 		cout << ReConverted.find(u8"♻") << endl;
@@ -97,7 +97,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	{
-		auto Converted = to_utf16(u8"•°♻☺☆«"s);
+		auto Converted = u8string_to_u16string(u8"•°♻☺☆«"s);
 		cout << Converted.find(u"•") << endl;
 		cout << Converted.find(u"°") << endl;
 		cout << Converted.find(u"♻") << endl;
@@ -105,7 +105,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << Converted.find(u"☆") << endl;
 		cout << Converted.find(u"«") << endl;
 
-		auto ReConverted = to_utf8(Converted);
+		auto ReConverted = u16string_to_u8string(Converted);
 		cout << ReConverted.find(u8"•") << endl;
 		cout << ReConverted.find(u8"°") << endl;
 		cout << ReConverted.find(u8"♻") << endl;

@@ -40,6 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		g_Proc.reset(new CProc(
 			EAddressFamily::INET,
+			[](SKey Key_) {}, [](SKey Key_, ENetRet NetRet_) {},
 			CallbackUserProto, CallbackClose, CallbackMessage,
 			MBSToWCS(Setup["Name"].asString()), CNamePort(Setup["BindIP"].asString(), Setup["BindPort"].asInt()),wstring()));
 

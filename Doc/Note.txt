@@ -212,6 +212,12 @@ unique_copy
 ------------------------------------------------------------------------------
 
 < Char set >
+    char8_t
+    char16_t
+    char32_t
+    char
+    wchar_t
+
     // Character literals
     auto c0 =   'A'; // char
     auto c1 = u8'A'; // char

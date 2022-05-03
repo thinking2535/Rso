@@ -223,15 +223,7 @@ namespace rso::core
 		Hours_ *= 10000000;
 		return Hours_;
 	}
-	std::wstring u16string_to_wstring(const std::u16string& Str_)
-	{
-		std::wstring_convert< std::codecvt_utf16<wchar_t, 0x10ffff, std::little_endian>, wchar_t> conv;
 
-		return conv.from_bytes(
-			reinterpret_cast<const char*> (&Str_[0]),
-			reinterpret_cast<const char*> (&Str_[0] + Str_.size())
-		);
-	}
 	bool compare_files(const std::string& file0_, const std::string& file1_)
 	{
 		std::ifstream fs0(file0_, std::ifstream::binary | std::ifstream::ate);

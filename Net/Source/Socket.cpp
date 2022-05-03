@@ -13,7 +13,7 @@ namespace rso::net
 		if (Passive_)
 			Hints.ai_flags |= AI_PASSIVE;
 
-		auto Ret = getaddrinfo(NamePort_.Name.empty() ? NULL : to_utf8(NamePort_.Name).c_str(), to_string(NamePort_.Port).c_str(), &Hints, &AddrInfo);
+		auto Ret = getaddrinfo(NamePort_.Name.empty() ? NULL : u16string_to_u8string(NamePort_.Name).c_str(), to_string(NamePort_.Port).c_str(), &Hints, &AddrInfo);
 		ASSERTIONA(Ret == 0 || AddrInfo, L"getaddrinfo fail [%d]", Ret);
 
 		TIPEndPoints IPEndPoints;
@@ -104,13 +104,17 @@ namespace rso::net
 	}
 	CSocket::~CSocket()
 	{
-		if (_Socket != INVALID_SOCKET)
-			closesocket(_Socket);
+		Clear();
 	}
 	CSocket& CSocket::operator = (CSocket&& Var_)
 	{
 		this->~CSocket();
 		new (this) CSocket(std::move(Var_));
 		return *this;
+	}
+	void CSocket::Clear(void)
+	{
+		if (_Socket != INVALID_SOCKET)
+			closesocket(_Socket);
 	}
 }

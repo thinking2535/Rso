@@ -28,6 +28,8 @@ namespace rso::monitor
 		CNamePort _ClientNamePort;
 		unique_ptr<net::CServer> _NetC;
 		unique_ptr<net::CServer> _NetA;
+		TLinkFunc _LinkAFunc;
+		TUnLinkFunc _UnLinkAFunc;
 		TCallbackFunc _TryLoginFunc;
 		TCallbackUserProto _CallbackUserProto;
 		TAgents _Agents;
@@ -50,6 +52,7 @@ namespace rso::monitor
 	public:
 		CServer(
 			EAddressFamily AddressFamily_,
+			TLinkFunc LinkAFunc_, TUnLinkFunc UnLinkAFunc_,
 			TLinkFunc LinkCFunc_, TUnLinkFunc UnLinkCFunc_, TCallbackFunc TryLoginFunc_, TCallbackUserProto CallbackUserProto_,
 			const CNamePort& ClientNamePort_, const CNamePort& AgentNamePort_);
 	private:

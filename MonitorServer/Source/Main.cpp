@@ -3,13 +3,21 @@
 void CallbackUserProto(const CKey& ClientKey_, CStream& Stream_)
 {
 }
-void Link(const CKey& Key_)
+void LinkAgent(const CKey& Key_)
 {
-	LOG(L"Link Key[%d]", Key_.PeerNum);
+	LOG(L"LinkAgent Key[%d]", Key_.PeerNum);
 }
-void Unlink(const CKey& Key_, ENetRet NetRet_)
+void UnlinkAgent(const CKey& Key_, ENetRet NetRet_)
 {
-	LOG(L"Unlink Key[%d]", Key_.PeerNum);
+	LOG(L"UnlinkAgent Key[%d]", Key_.PeerNum);
+}
+void LinkC(const CKey& Key_)
+{
+	LOG(L"LinkC Key[%d]", Key_.PeerNum);
+}
+void UnlinkC(const CKey& Key_, ENetRet NetRet_)
+{
+	LOG(L"UnlinkC Key[%d]", Key_.PeerNum);
 }
 void TryLogin(const CKey& Key_, CStream& Stream_)
 {
@@ -50,8 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		wstring ProcName(MBSToWCS(
 			Option->Title) +
-			L" ClientBindName:" + MBSToWCS(to_utf8(Option->ClientBindNamePort.Name)) +
-			L" ClientBindPort:" + to_wstring(Option->ClientBindNamePort.Port));
+			L" MonitorClientBindPort:" + to_wstring(Option->MonitorClientBindPort));
 		SetConsoleTitle(ProcName.c_str());
 
 		for (auto& i : Option->Accounts)
@@ -59,8 +66,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		g_Server.reset(new monitor::CServer(
 			EAddressFamily::INET,
-			Link, Unlink, TryLogin, CallbackUserProto,
-			CNamePort(Option->ClientBindNamePort), CNamePort(Option->AgentBindNamePort)));
+			LinkAgent, UnlinkAgent,
+			LinkC, UnlinkC, TryLogin, CallbackUserProto,
+			CNamePort(Option->MonitorClientBindPort), CNamePort(Option->MonitorAgentBindPort)));
 
 		LOG(L"Started");
 

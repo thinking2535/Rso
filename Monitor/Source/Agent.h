@@ -35,8 +35,8 @@ namespace rso::monitor
 		wstring _DynamicOptionFilePath;
 		CNamePort _ServerNamePort;
 		CNamePort _ProcNamePort;
-		unique_ptr<CClientKeepConnect> _Net;
-		unique_ptr<CClientKeepConnect> _NetProc;
+		unique_ptr<CClientKeepConnect> _NetS;
+		unique_ptr<CClientKeepConnect> _NetP;
 		SAgentValue _Agent;
 		unique_ptr<SProcValue> _Proc;
 		CCmd _ShellCmd;

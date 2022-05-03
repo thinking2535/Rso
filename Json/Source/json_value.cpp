@@ -296,12 +296,12 @@ namespace rso
 		}
 		Value::Value(const u16string& value) :
 			type_(stringValue),
-			string_(to_utf8(value))
+			string_(u16string_to_u8string(value))
 		{
 		}
 		Value::Value(const u32string& value) :
 			type_(stringValue),
-			string_(to_utf8(value))
+			string_(u32string_to_u8string(value))
 		{
 		}
 		Value::Value(const wstring& value) :

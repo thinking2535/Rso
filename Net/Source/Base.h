@@ -188,7 +188,7 @@ namespace rso::net
 		{
 		}
 		CNamePort(const string& Name_, TPort Port_) :
-			SNamePort(to_utf16(Name_), Port_)
+			SNamePort(u8string_to_u16string(Name_), Port_)
 		{
 		}
 		CNamePort(TPort Port_) :

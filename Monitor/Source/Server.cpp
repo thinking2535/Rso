@@ -2,13 +2,16 @@
 
 namespace rso::monitor
 {
-	void CServer::_LinkA(const CKey& /*Key_*/)
+	void CServer::_LinkA(const CKey& Key_)
 	{
+		_LinkAFunc(Key_);
 	}
-	void CServer::_UnLinkA(const CKey& Key_, ENetRet /*NetRet_*/)
+	void CServer::_UnLinkA(const CKey& Key_, ENetRet NetRet_)
 	{
 		if (_Agents.erase(Key_) > 0)
 			_NetC->SendAll(SScHeader(EScProto::AgentOff), SScAgentOff(Key_));
+
+		_UnLinkAFunc(Key_, NetRet_);
 	}
 	void CServer::_RecvA(const CKey& Key_, CStream& Stream_)
 	{
@@ -142,9 +145,12 @@ namespace rso::monitor
 	}
 	CServer::CServer(
 		EAddressFamily AddressFamily_,
+		TLinkFunc LinkAFunc_, TUnLinkFunc UnLinkAFunc_,
 		TLinkFunc LinkCFunc_, TUnLinkFunc UnLinkCFunc_, TCallbackFunc TryLoginFunc_, TCallbackUserProto CallbackUserProto_,
 		const CNamePort& ClientNamePort_, const CNamePort& AgentNamePort_) :
 		_ClientNamePort(ClientNamePort_),
+		_LinkAFunc(LinkAFunc_),
+		_UnLinkAFunc(UnLinkAFunc_),
 		_TryLoginFunc(TryLoginFunc_),
 		_CallbackUserProto(CallbackUserProto_)
 	{

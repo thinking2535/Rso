@@ -382,8 +382,8 @@ namespace rso
 			void operator >> (double& Value_) const { Value_ = asDouble(); }
 			void operator >> (long double& Value_) const { Value_ = long double(asDouble()); }
 			void operator >> (string& Value_) const { Value_ = asString(); }
-			void operator >> (u16string& Value_) const { Value_ = to_utf16(asString()); }
-			void operator >> (u32string& Value_) const { Value_ = to_utf32(asString()); }
+			void operator >> (u16string& Value_) const { Value_ = u8string_to_u16string(asString()); }
+			void operator >> (u32string& Value_) const { Value_ = u8string_to_u32string(asString()); }
 			void operator >> (wstring& Value_) const { Value_ = MBSToWCS(asString()); }
 			void operator >> (system_clock::time_point& Value_) const { Value_ = system_clock::time_point(t_duration(asInt64())); }
 			void operator >> (SDateTime& Value_) const { Value_ = CDateTime(system_clock::time_point(t_duration(asInt64()))); }
