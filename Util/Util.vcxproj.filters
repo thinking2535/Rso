@@ -9,20 +9,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Doc\Input.h_">
-      <Filter>Doc</Filter>
-    </None>
-    <None Include="Doc\Input.cpp_">
-      <Filter>Doc</Filter>
-    </None>
     <None Include="Doc\SetCurserPosition.txt">
       <Filter>Doc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Space.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Base.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -65,9 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Dice.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Space.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Task.cpp">

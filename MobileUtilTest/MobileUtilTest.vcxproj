@@ -187,7 +187,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMDd|Win32'">
@@ -204,7 +205,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMTd|x64'">
@@ -223,7 +225,8 @@
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMDd|x64'">
@@ -242,7 +245,8 @@
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMT|Win32'">
@@ -263,7 +267,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMD|Win32'">
@@ -284,7 +289,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMT|x64'">
@@ -305,7 +311,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMD|x64'">
@@ -326,7 +333,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

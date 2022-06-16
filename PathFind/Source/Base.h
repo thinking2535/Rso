@@ -28,7 +28,7 @@ namespace rso
 			}
 			inline double GetDistance(const SCoord& Coord_) const
 			{
-				return Distance(SPoint(X, Y), SPoint(Coord_.X, Coord_.Y));
+				return Distance(SPoint(static_cast<float>(X), static_cast<float>(Y)), SPoint(static_cast<float>(Coord_.X), static_cast<float>(Coord_.Y)));
 			}
 			inline bool operator == (const SCoord& Coord_) const
 			{

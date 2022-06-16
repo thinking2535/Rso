@@ -1,0 +1,16 @@
+include <Rso/Physics/Protocol>
+
+namespace rso
+{
+	namespace unity
+	{
+		using namespace core
+		using namespace json
+		using namespace physics
+
+		struct SBoxCollider2D : STransform
+		{
+			SRectCollider2D RectCollider2D
+		}
+	}
+}

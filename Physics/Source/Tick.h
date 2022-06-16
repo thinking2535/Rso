@@ -3,7 +3,7 @@
 #include "Base.h"
 #include <chrono>
 
-namespace rso::gameutil
+namespace rso::physics
 {
     using namespace std;
 
@@ -39,6 +39,10 @@ namespace rso::gameutil
                 return (system_clock::now() - _StartTime).count();
             else
                 return (_StopTime - _StartTime).count();
+        }
+        inline bool IsStarted(void) const
+        {
+            return _StopTime == TTime();
         }
 	};
 }

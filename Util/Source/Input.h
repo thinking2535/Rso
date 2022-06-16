@@ -10,7 +10,6 @@ namespace rso
 {
 	namespace util
 	{
-		using namespace base;
 		using namespace win;
 
 		class CInput

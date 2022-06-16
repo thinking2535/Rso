@@ -10,6 +10,18 @@ namespace rso
 			float X
 			float Y
 		}
+		struct SPoint3
+		{
+			float X
+			float Y
+			float Z
+		}
+		struct STransform
+		{
+			SPoint LocalPosition
+			SPoint3 LocalRotation
+			SPoint LocalScale
+		}
 		struct SVector
 		{
 			SPoint Pos
@@ -90,11 +102,20 @@ namespace rso
 			float Speed
 			float Dist
 		}
-		struct SEngineRect
+		struct SRectCollider2D
 		{
 			SPoint Size
 			SPoint Offset
-			SPoint Scale
+		}
+		struct SStructMove
+		{
+			bool IsMoving
+			int32 Direction
+			float StoppedDuration
+		}
+		struct SStructMovePosition : SStructMove
+		{
+			SPoint LocalPosition
 		}
 	}
 }

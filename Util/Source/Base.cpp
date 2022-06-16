@@ -7,11 +7,11 @@ namespace rso
 	{
 		bool IsEmail(const wstring& Str_)
 		{
-			auto AtIndex = Str_.find_first_of(L"@");
+			const auto AtIndex = Str_.find_first_of(L"@");
 			if (AtIndex == wstring::npos)
 				return false;
 
-			auto DotIndex = Str_.find_last_of(L".");
+			const auto DotIndex = Str_.find_last_of(L".");
 			if (DotIndex == wstring::npos)
 				return false;
 

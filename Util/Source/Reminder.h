@@ -15,8 +15,6 @@ namespace rso
 	{
 		using namespace std;
 		using namespace chrono;
-		using namespace rso;
-		using namespace base;
 
 		class CReminder
 		{

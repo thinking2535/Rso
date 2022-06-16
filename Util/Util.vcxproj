@@ -184,7 +184,8 @@
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMDd|Win32'">
@@ -206,7 +207,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMTd|x64'">
@@ -230,7 +232,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMDd|x64'">
@@ -254,7 +257,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMT|Win32'">
@@ -273,7 +277,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMD|Win32'">
@@ -292,7 +297,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMT|x64'">
@@ -310,7 +316,8 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='sMD|x64'">
@@ -328,12 +335,11 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
 xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s /y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)</Command>
+      <Command>if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CPP ..\..\Include\$(Platform)\)
+if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Configuration).exe Source\Protocol CS ..\..\Include\$(Platform)\)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Doc\Input.cpp_" />
-    <None Include="Doc\Input.h_" />
     <None Include="Doc\SetCurserPosition.txt" />
     <ClInclude Include="Source\NumberToKorean.h" />
     <ClInclude Include="Source\Protocol.prt">
@@ -351,7 +357,6 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
     <ClInclude Include="Source\RandomGeometry.h" />
     <ClInclude Include="Source\Reminder.h" />
     <ClInclude Include="Source\SAnalyzer.h" />
-    <ClInclude Include="Source\Space.h" />
     <ClInclude Include="Source\Task.h" />
   </ItemGroup>
   <ItemGroup>
@@ -361,7 +366,6 @@ xcopy Source\*.prt ..\..\Include\$(Platform)\$(SolutionName)\$(ProjectName)\ /s 
     <ClCompile Include="Source\NumberToKorean.cpp" />
     <ClCompile Include="Source\Rand.cpp" />
     <ClCompile Include="Source\Reminder.cpp" />
-    <ClCompile Include="Source\Space.cpp" />
     <ClCompile Include="Source\Task.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

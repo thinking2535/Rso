@@ -63,9 +63,6 @@
     <ClInclude Include="Source\OptionJson.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SimpleRandom.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Command.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -78,13 +75,10 @@
     <ClInclude Include="Source\RandomBox.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Tick.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TickScale.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Boost.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FixedRandom.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,13 +95,13 @@
     <ClCompile Include="Source\PeriodCounter.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SimpleRandom.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Latency.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Boost.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FixedRandom.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

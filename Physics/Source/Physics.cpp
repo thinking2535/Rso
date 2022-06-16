@@ -138,13 +138,6 @@ namespace rso::physics
 			return ObjectStraight_.PosTheta.Pos + (Vector(ObjectStraight_.PosTheta.Theta, CurDist));
 		}
 	}
-	SRect GetRect(const SEngineRect& EngineRect_)
-	{
-		auto Rect = GetRect(EngineRect_.Size);
-		Rect += EngineRect_.Offset;
-		Rect *= EngineRect_.Scale;
-		return Rect;
-	}
 
 	bool IsOverlappedPointRect(const SPoint& Point_, const SRect& Rect_)
 	{
@@ -1028,4 +1021,7 @@ namespace rso::physics
 			return true;
 		}
 	}
+
+	const SPoint UnitPoint = SPoint(1.0f, 1.0f);
+	const STransform ZeroTransform = STransform(SPoint(), SPoint3(), UnitPoint);
 }

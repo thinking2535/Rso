@@ -61,6 +61,112 @@ namespace rso
 					GetMemberName(float(), L"Y");
 			}
 		};
+		struct SPoint3 : public SProto
+		{
+			float X{};
+			float Y{};
+			float Z{};
+			SPoint3()
+			{
+			}
+			SPoint3(const float& X_, const float& Y_, const float& Z_) : X(X_), Y(Y_), Z(Z_)
+			{
+			}
+			SPoint3(float&& X_, float&& Y_, float&& Z_) : X(std::move(X_)), Y(std::move(Y_)), Z(std::move(Z_))
+			{
+			}
+			void operator << (CStream& Stream_) override
+			{
+				Stream_ >> X;
+				Stream_ >> Y;
+				Stream_ >> Z;
+			}
+			void operator << (const Value& Value_) override
+			{
+				Value_["X"] >> X;
+				Value_["Y"] >> Y;
+				Value_["Z"] >> Z;
+			}
+			void operator >> (CStream& Stream_) const override
+			{
+				Stream_ << X;
+				Stream_ << Y;
+				Stream_ << Z;
+			}
+			void operator >> (Value& Value_) const override
+			{
+				Value_["X"] = X;
+				Value_["Y"] = Y;
+				Value_["Z"] = Z;
+			}
+			static wstring StdName(void)
+			{
+				return 
+					GetStdName(float()) + L"," + 
+					GetStdName(float()) + L"," + 
+					GetStdName(float());
+			}
+			static wstring MemberName(void)
+			{
+				return 
+					GetMemberName(float(), L"X") + L"," + 
+					GetMemberName(float(), L"Y") + L"," + 
+					GetMemberName(float(), L"Z");
+			}
+		};
+		struct STransform : public SProto
+		{
+			SPoint LocalPosition{};
+			SPoint3 LocalRotation{};
+			SPoint LocalScale{};
+			STransform()
+			{
+			}
+			STransform(const SPoint& LocalPosition_, const SPoint3& LocalRotation_, const SPoint& LocalScale_) : LocalPosition(LocalPosition_), LocalRotation(LocalRotation_), LocalScale(LocalScale_)
+			{
+			}
+			STransform(SPoint&& LocalPosition_, SPoint3&& LocalRotation_, SPoint&& LocalScale_) : LocalPosition(std::move(LocalPosition_)), LocalRotation(std::move(LocalRotation_)), LocalScale(std::move(LocalScale_))
+			{
+			}
+			void operator << (CStream& Stream_) override
+			{
+				Stream_ >> LocalPosition;
+				Stream_ >> LocalRotation;
+				Stream_ >> LocalScale;
+			}
+			void operator << (const Value& Value_) override
+			{
+				Value_["LocalPosition"] >> LocalPosition;
+				Value_["LocalRotation"] >> LocalRotation;
+				Value_["LocalScale"] >> LocalScale;
+			}
+			void operator >> (CStream& Stream_) const override
+			{
+				Stream_ << LocalPosition;
+				Stream_ << LocalRotation;
+				Stream_ << LocalScale;
+			}
+			void operator >> (Value& Value_) const override
+			{
+				Value_["LocalPosition"] = LocalPosition;
+				Value_["LocalRotation"] = LocalRotation;
+				Value_["LocalScale"] = LocalScale;
+			}
+			static wstring StdName(void)
+			{
+				return 
+					GetStdName(SPoint()) + L"," + 
+					GetStdName(SPoint3()) + L"," + 
+					GetStdName(SPoint());
+			}
+			static wstring MemberName(void)
+			{
+				return 
+					GetMemberName(SPoint(), L"LocalPosition") + L"," + 
+					GetMemberName(SPoint3(), L"LocalRotation") + L"," + 
+					GetMemberName(SPoint(), L"LocalScale");
+			}
+		};
 		struct SVector : public SProto
 		{
 			SPoint Pos{};
@@ -802,48 +908,42 @@ namespace rso
 					GetMemberName(float(), L"Dist");
 			}
 		};
-		struct SEngineRect : public SProto
+		struct SRectCollider2D : public SProto
 		{
 			SPoint Size{};
 			SPoint Offset{};
-			SPoint Scale{};
-			SEngineRect()
+			SRectCollider2D()
 			{
 			}
-			SEngineRect(const SPoint& Size_, const SPoint& Offset_, const SPoint& Scale_) : Size(Size_), Offset(Offset_), Scale(Scale_)
+			SRectCollider2D(const SPoint& Size_, const SPoint& Offset_) : Size(Size_), Offset(Offset_)
 			{
 			}
-			SEngineRect(SPoint&& Size_, SPoint&& Offset_, SPoint&& Scale_) : Size(std::move(Size_)), Offset(std::move(Offset_)), Scale(std::move(Scale_))
+			SRectCollider2D(SPoint&& Size_, SPoint&& Offset_) : Size(std::move(Size_)), Offset(std::move(Offset_))
 			{
 			}
 			void operator << (CStream& Stream_) override
 			{
 				Stream_ >> Size;
 				Stream_ >> Offset;
-				Stream_ >> Scale;
 			}
 			void operator << (const Value& Value_) override
 			{
 				Value_["Size"] >> Size;
 				Value_["Offset"] >> Offset;
-				Value_["Scale"] >> Scale;
 			}
 			void operator >> (CStream& Stream_) const override
 			{
 				Stream_ << Size;
 				Stream_ << Offset;
-				Stream_ << Scale;
 			}
 			void operator >> (Value& Value_) const override
 			{
 				Value_["Size"] = Size;
 				Value_["Offset"] = Offset;
-				Value_["Scale"] = Scale;
 			}
 			static wstring StdName(void)
 			{
 				return 
-					GetStdName(SPoint()) + L"," + 
 					GetStdName(SPoint()) + L"," + 
 					GetStdName(SPoint());
 			}
@@ -851,8 +951,105 @@ namespace rso
 			{
 				return 
 					GetMemberName(SPoint(), L"Size") + L"," + 
-					GetMemberName(SPoint(), L"Offset") + L"," + 
-					GetMemberName(SPoint(), L"Scale");
+					GetMemberName(SPoint(), L"Offset");
+			}
+		};
+		struct SStructMove : public SProto
+		{
+			bool IsMoving{};
+			int32 Direction{};
+			float StoppedDuration{};
+			SStructMove()
+			{
+			}
+			SStructMove(const bool& IsMoving_, const int32& Direction_, const float& StoppedDuration_) : IsMoving(IsMoving_), Direction(Direction_), StoppedDuration(StoppedDuration_)
+			{
+			}
+			SStructMove(bool&& IsMoving_, int32&& Direction_, float&& StoppedDuration_) : IsMoving(std::move(IsMoving_)), Direction(std::move(Direction_)), StoppedDuration(std::move(StoppedDuration_))
+			{
+			}
+			void operator << (CStream& Stream_) override
+			{
+				Stream_ >> IsMoving;
+				Stream_ >> Direction;
+				Stream_ >> StoppedDuration;
+			}
+			void operator << (const Value& Value_) override
+			{
+				Value_["IsMoving"] >> IsMoving;
+				Value_["Direction"] >> Direction;
+				Value_["StoppedDuration"] >> StoppedDuration;
+			}
+			void operator >> (CStream& Stream_) const override
+			{
+				Stream_ << IsMoving;
+				Stream_ << Direction;
+				Stream_ << StoppedDuration;
+			}
+			void operator >> (Value& Value_) const override
+			{
+				Value_["IsMoving"] = IsMoving;
+				Value_["Direction"] = Direction;
+				Value_["StoppedDuration"] = StoppedDuration;
+			}
+			static wstring StdName(void)
+			{
+				return 
+					GetStdName(bool()) + L"," + 
+					GetStdName(int32()) + L"," + 
+					GetStdName(float());
+			}
+			static wstring MemberName(void)
+			{
+				return 
+					GetMemberName(bool(), L"IsMoving") + L"," + 
+					GetMemberName(int32(), L"Direction") + L"," + 
+					GetMemberName(float(), L"StoppedDuration");
+			}
+		};
+		struct SStructMovePosition : public SStructMove
+		{
+			SPoint LocalPosition{};
+			SStructMovePosition()
+			{
+			}
+			SStructMovePosition(const SStructMove& Super_, const SPoint& LocalPosition_) : SStructMove(Super_), LocalPosition(LocalPosition_)
+			{
+			}
+			SStructMovePosition(SStructMove&& Super_, SPoint&& LocalPosition_) : SStructMove(std::move(Super_)), LocalPosition(std::move(LocalPosition_))
+			{
+			}
+			void operator << (CStream& Stream_) override
+			{
+				SStructMove::operator << (Stream_);
+				Stream_ >> LocalPosition;
+			}
+			void operator << (const Value& Value_) override
+			{
+				SStructMove::operator << (Value_);
+				Value_["LocalPosition"] >> LocalPosition;
+			}
+			void operator >> (CStream& Stream_) const override
+			{
+				SStructMove::operator >> (Stream_);
+				Stream_ << LocalPosition;
+			}
+			void operator >> (Value& Value_) const override
+			{
+				SStructMove::operator >> (Value_);
+				Value_["LocalPosition"] = LocalPosition;
+			}
+			static wstring StdName(void)
+			{
+				return 
+					GetStdName(SStructMove()) + L"," + 
+					GetStdName(SPoint());
+			}
+			static wstring MemberName(void)
+			{
+				return 
+					GetMemberName(SStructMove(), L"") + L"," + 
+					GetMemberName(SPoint(), L"LocalPosition");
 			}
 		};
 	}

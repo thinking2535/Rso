@@ -412,10 +412,10 @@ namespace rso
             }
 
         private:
-            void _erase(_SNode* Node_)
+            bool _erase(_SNode* Node_)
             {
                 if (!Node_->Newed)
-                    return;
+                    return false;
 
                 _Detach(Node_);
 
@@ -428,20 +428,22 @@ namespace rso
                 // AttachToDeleted ////////////////////
                 _AttachToDeleted(Node_);
                 --_Size;
+
+                return true;
             }
 
         public:
-			inline void erase(const_iterator Iterator_)
+			inline bool erase(const_iterator Iterator_)
             {
-                _erase(Iterator_.Node());
+                return _erase(Iterator_.Node());
             }
-            void erase(size_t Index_)
+            bool erase(size_t Index_)
             {
                 if (Index_ < 0 ||
                     Index_ >= _Nodes.size())
-                    return;
+                    return false;
 
-                _erase(_Nodes[Index_]);
+                return _erase(_Nodes[Index_]);
             }
 			inline void pop_front(void)
 			{

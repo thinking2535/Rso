@@ -2,7 +2,7 @@
 
 #include "Tick.h"
 
-namespace rso::gameutil
+namespace rso::physics
 {
     using namespace std;
 
