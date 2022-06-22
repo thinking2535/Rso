@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define	Test_OptionJson
+#define	Test_Rank
 
 
 #if defined( Test_Match )
@@ -314,12 +314,10 @@ using namespace gameutil;
 void main(void)
 {
 	CRank<int, int> r;
-	r.emplace(0, 0);
-	r.emplace(1, 1);
-	r.emplace(3, 3);
-	r.emplace(5, 5);
+	r.emplace(2, 0);
+	r.emplace(4, 1);
 
-	for (int i = -1; i < 7; ++i)
+	for (int i = -1; i < 5; ++i)
 	{
 		auto t = r.get(i);
 		if (t == r.end())
@@ -327,6 +325,8 @@ void main(void)
 		else
 			cout << i << " " << t->first << " " << t->second << endl;
 	}
+
+	return;
 
 
 	cout << "-------------------------------" << endl;

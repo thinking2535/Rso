@@ -78,7 +78,10 @@
     <ClInclude Include="Source\Boost.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\FixedRandom.h">
+    <ClInclude Include="Source\FixedRandom32.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FixedRandom64.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,7 +104,7 @@
     <ClCompile Include="Source\Boost.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FixedRandom.cpp">
+    <ClCompile Include="Source\FixedRandom32.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -21,22 +21,18 @@ namespace rso
 			const_iterator get(_TKey Key_) const
 			{
 				auto it = upper_bound(Key_); // 실수를 키로 갖는 경우 0 부터 시작하기 때문에 1.0 일경우 0 <= Key < 1 이 되어야하므로, upper_bound 로 처리
-				if (it == begin())
-					return end();
-				else if (it == end())
-					return --rbegin().base();
-				else
-					return --it;
+				if (it == end() && !empty())
+					--it;
+
+				return it;
 			}
 			iterator get(_TKey Key_)
 			{
 				auto it = upper_bound(Key_); // 실수를 키로 갖는 경우 0 부터 시작하기 때문에 1.0 일경우 0 <= Key < 1 이 되어야하므로, upper_bound 로 처리
-				if (it == begin())
-					return end();
-				else if (it == end())
-					return --rbegin().base();
-				else
-					return --it;
+				if (it == end() && !empty())
+					--it;
+
+				return it;
 			}
 		};
 	}
