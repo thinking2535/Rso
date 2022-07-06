@@ -391,7 +391,7 @@ END)";
 	bool CMaster::_RowCallbackReward(SQLLEN /*RowNum_*/, CStream& Row_)
 	{
 		TUID UID;
-		int32 Ranking;
+		TRanking Ranking;
 		Row_ >> UID;
 		Row_ >> Ranking;
 

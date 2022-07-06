@@ -3,7 +3,7 @@
 #include "WSA.h"
 #include "Binder.h"
 #include <Rso/Base/Thread.h>
-#include <Rso/Base/LFQueueB.h>
+#include <Rso/Base/LFQueue.h>
 #include <Rso/Base/Period.h>
 
 namespace rso::net

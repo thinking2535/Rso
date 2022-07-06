@@ -13,6 +13,9 @@ namespace rso
 			Update
 		}
 
+		typedef int64 TPoint
+		typedef int32 TRanking
+
 		struct SOption
 		{
 			SNamePort MasterNamePort
@@ -24,7 +27,7 @@ namespace rso
 		struct SMasterOption
 		{
 			TPort AgentBindPort
-			int64 MaxRankingPoint
+			TPoint MaxRankingPoint
 			int32 MaxDataCount
 			string PeriodBaseTime
 			int32 PeriodMinutes
@@ -39,11 +42,11 @@ namespace rso
 			RequestSc
 		}
 
-		typedef map<TUID,int64> TRewards
+		typedef map<TUID,TRanking> TRewards
 
 		struct SUserMinPointSa
 		{
-			int64 Point
+			TPoint Point
 		}
 		struct SInfoSa
 		{
@@ -61,7 +64,7 @@ namespace rso
 		struct SUser : SUserCore
 		{
 			TUID UID
-			int32 Point
+			TPoint Point
 		}
 
 		typedef list<SUser> TUsers
@@ -78,7 +81,7 @@ namespace rso
 		struct SRanking
 		{
 			TUsers Users
-			int32 RewardedRanking
+			TRanking RewardedRanking
 		}
 
 		struct SDummyDBOut

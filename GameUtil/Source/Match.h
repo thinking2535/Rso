@@ -22,40 +22,36 @@ namespace rso::gameutil
 		using _TMatchedUsers = vector<iterator>;
 	public:
 		using TMatchedUsers = vector<TKey>;
-		using FMatching = function<void(const TKey& Key_, size_t MatchingCount_)>;
+		using FCanMatch = function<bool(t_duration ElapsedDuration_, double MyGrade_, double OppGrade_)>;
 		using FMatched = function<void(const TMatchedUsers& Users_, const TArgs&... Args_)>;
 
 	private:
 		_TUsers _Users;
 		_TMatchedUsers _MatchedUsers;
-		FMatching _fMatching;
+		FCanMatch _fCanMatch;
 		FMatched _fMatched;
-		double _Factor = 0.0;
 		tuple<TArgs...> _Args;
 
-		bool _CanMatch(TTime MyStartTime_, double MyGrade_, double OppGrade_)
+		bool _CanMatch(t_duration MyElapsedDuration_, double MyGrade_, t_duration OppElapsedDuration_, double OppGrade_)
 		{
-			auto Elapsed = duration_cast<seconds>(system_clock::now() - MyStartTime_);
-			auto MatchableGradeGap = _Factor * double(Elapsed.count() * Elapsed.count());
-			return (OppGrade_ >= MyGrade_ - MatchableGradeGap && OppGrade_ <= MyGrade_ + MatchableGradeGap);
+			return (_fCanMatch(MyElapsedDuration_, MyGrade_, OppGrade_) && _fCanMatch(OppElapsedDuration_, OppGrade_, MyGrade_));
 		}
-		bool _CanMatch(TTime MyStartTime_, double MyGrade_, TTime OppStartTime_, double OppGrade_)
+		bool _Match(_TTimeIterator itMe_, _TTimeIterator itOpp_)
 		{
-			return (_CanMatch(MyStartTime_, MyGrade_, OppGrade_) && _CanMatch(OppStartTime_, OppGrade_, MyGrade_));
-		}
-		void _Match(_TTimeIterator itMe_, _TTimeIterator itOpp_)
-		{
+			auto Now = system_clock::now();
 			double OppGrade = _Users.get(itOpp_->second)->second;
 
-			if (!_CanMatch(itMe_->first, _Users.get(itMe_->second)->second, itOpp_->first, OppGrade))
-				return;
+			if (!_CanMatch(Now - itMe_->first, _Users.get(itMe_->second)->second, Now - itOpp_->first, OppGrade))
+				return false;
 
 			// 지금껏 모인 유저들이 이 유저와 매칭 가능하면
 			for (auto& i : _MatchedUsers)
-				if (!_CanMatch(std::get<1>(i->first)->first, i->second, itOpp_->first, OppGrade))
-					return;
+				if (!_CanMatch(Now - std::get<1>(i->first)->first, i->second, Now - itOpp_->first, OppGrade))
+					return false;
 
 			_MatchedUsers.emplace_back(_Users.get(itOpp_->second));
+
+			return _MatchedUsers.size() == _MatchedUsers.capacity();
 		}
 		template<size_t... Indices_>
 		void _Matched(const TMatchedUsers& MatchedUsers_, index_sequence<Indices_...>)
@@ -64,10 +60,10 @@ namespace rso::gameutil
 		}
 
 	public:
-		CMatch(size_t MatchUserCount_, FMatching fMatching_, FMatched fMatched_, seconds TimeOutSeconds_, double GradeRange_, const TArgs&... Args_) :
-			_fMatching(fMatching_), _fMatched(fMatched_), _Factor(double(GradeRange_) / double(TimeOutSeconds_.count() * TimeOutSeconds_.count())), _Args(Args_...)
+		CMatch(size_t MatchUserCount_, FCanMatch fCanMatch_, FMatched fMatched_, const TArgs&... Args_) :
+			_fCanMatch(fCanMatch_), _fMatched(fMatched_), _Args(Args_...)
 		{
-			_MatchedUsers.reserve(MatchUserCount_);
+			_MatchedUsers.reserve(MatchUserCount_ - 1);
 		}
 		inline size_t size(void) const
 		{
@@ -101,21 +97,23 @@ namespace rso::gameutil
 		{
 			for (auto itUser = _Users.begin<1>(); itUser != _Users.end<1>();)
 			{
-				for (auto itOpp = _Users.begin<1>(); itOpp != _Users.end<1>(); ++itOpp)
+				auto itOpp = itUser;
+				bool IsMatched = false;
+
+				for (++itOpp; itOpp != _Users.end<1>(); ++itOpp)
 				{
-					if (itOpp == itUser)
-						continue;
-
-					_Match(itUser, itOpp);
-
-					if (_MatchedUsers.size() == _MatchedUsers.capacity() - 1)
+					if (_Match(itUser, itOpp))
+					{
+						IsMatched = true;
 						break;
+					}
 				}
 
-				if (_MatchedUsers.size() == _MatchedUsers.capacity() - 1)
+				if (IsMatched)
 				{
 					// ++itUser 을 먼저 하면 _MatchedUsers 를 _Users 에서 지울때 ++itUser 된 유저도 지워진 유저일 수 있기 때문에 itUser은 가장 나중에 ++ 하고 삭제
 					TMatchedUsers MatchedUsers;
+					MatchedUsers.reserve(_MatchedUsers.capacity());
 					MatchedUsers.emplace_back(std::get<0>(_Users.get(itUser->second)->first)->first);
 
 					for (auto& i : _MatchedUsers)
@@ -135,7 +133,6 @@ namespace rso::gameutil
 				}
 				else
 				{
-					_fMatching(std::get<0>(_Users.get(itUser->second)->first)->first, _MatchedUsers.size());
 					_MatchedUsers.clear();
 					++itUser;
 				}

@@ -9,9 +9,9 @@
 #include "Protocol.h"
 #include <WinSock2.h>
 #include <functional>
-#include <Rso/Base/ListB.h>
+#include <Rso/Base/List.h>
 #include <Rso/Base/Thread.h>
-#include <Rso/Base/LFQueueB.h>
+#include <Rso/Base/LFQueue.h>
 
 
 namespace rso

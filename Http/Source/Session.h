@@ -2,7 +2,7 @@
 
 #include "Base.h"
 #include "InternetHandle.h"
-#include <Rso/Base/LFQueueB.h>
+#include <Rso/Base/LFQueue.h>
 #include <sstream>
 #include <deque>
 

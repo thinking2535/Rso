@@ -19,90 +19,89 @@ namespace rso
             struct _SNode
             {
                 size_t Index;
-                _SNode* Next;
-                _SNode* Prev;
+                _SNode* pNext;
+                _SNode* pPrev;
                 bool Newed; // for emplace_at
             };
 
             using _TNodes = vector<_SNode*>;
 
             _TNodes _Nodes;
-            _SNode* _DeletedHead = nullptr;
-            _SNode* _DeletedTail = nullptr;
-            _SNode* _NewedHead = nullptr;
-            _SNode* _NewedTail = nullptr;
+            _SNode* _pDeletedHead = nullptr;
+            _SNode* _pDeletedTail = nullptr;
+            _SNode* _pNewedHead = nullptr;
+            _SNode* _pNewedTail = nullptr;
             size_t _Size = 0;
 
-            void _AttachToNewed(_SNode* Node_)
+            void _AttachToNewed(_SNode* pNode_)
             {
-                Node_->Next = 0;
-                Node_->Newed = true;
+                pNode_->pNext = nullptr;
+                pNode_->Newed = true;
 
-                if (_NewedTail == 0)
+                if (_pNewedTail == 0)
                 {
-                    Node_->Prev = 0;
-                    _NewedHead = _NewedTail = Node_;
+                    pNode_->pPrev = nullptr;
+                    _pNewedHead = _pNewedTail = pNode_;
                 }
                 else
                 {
-                    Node_->Prev = _NewedTail;
-                    _NewedTail->Next = Node_;
-                    _NewedTail = Node_;
+                    pNode_->pPrev = _pNewedTail;
+                    _pNewedTail->pNext = pNode_;
+                    _pNewedTail = pNode_;
                 }
             }
-            void _AttachToDeleted(_SNode* Node_)
+            void _AttachToDeleted(_SNode* pNode_)
             {
-                Node_->Next = 0;
-                Node_->Newed = false;
+                pNode_->pNext = nullptr;
+                pNode_->Newed = false;
 
-                if (_DeletedTail == 0)
+                if (_pDeletedTail == 0)
                 {
-                    Node_->Prev = 0;
-                    _DeletedHead = _DeletedTail = Node_;
+                    pNode_->pPrev = nullptr;
+                    _pDeletedHead = _pDeletedTail = pNode_;
                 }
                 else
                 {
-                    Node_->Prev = _DeletedTail;
-                    _DeletedTail->Next = Node_;
-                    _DeletedTail = Node_;
+                    pNode_->pPrev = _pDeletedTail;
+                    _pDeletedTail->pNext = pNode_;
+                    _pDeletedTail = pNode_;
                 }
             }
-            void _Detach(_SNode* Node_)
+            void _Detach(_SNode* pNode_)
             {
-                if (Node_->Prev)
-                    Node_->Prev->Next = Node_->Next;
-                if (Node_->Next)
-                    Node_->Next->Prev = Node_->Prev;
+                if (pNode_->pPrev)
+                    pNode_->pPrev->pNext = pNode_->pNext;
+                if (pNode_->pNext)
+                    pNode_->pNext->pPrev = pNode_->pPrev;
             }
-            void _DetachFromDeleted(_SNode* Node_)
+            void _DetachFromDeleted(_SNode* pNode_)
             {
-                _Detach(Node_);
+                _Detach(pNode_);
 
-                if (!Node_->Prev)
-                    _DeletedHead = Node_->Next;
-                if (!Node_->Next)
-                    _DeletedTail = Node_->Prev;
+                if (!pNode_->pPrev)
+                    _pDeletedHead = pNode_->pNext;
+                if (!pNode_->pNext)
+                    _pDeletedTail = pNode_->pPrev;
             }
 
         public:
             struct const_iterator
             {
-            protected:
-                _SNode* _Node{ nullptr };
-
             public:
+                _SNode* pNode{ nullptr };
+
                 const_iterator() {}
-                const_iterator(_SNode* Node_) :
-                    _Node(Node_)
+                const_iterator(_SNode* pNode_) :
+                    pNode(pNode_)
                 {
                 }
 				inline explicit operator bool() const
                 {
-                    return (_Node != 0 && _Node->Newed);
+                    return (pNode != 0 && pNode->Newed);
                 }
                 const_iterator& operator++()
                 {
-                    _Node = _Node->Next;
+                    pNode = pNode->pNext;
                     return *this;
                 }
                 const_iterator operator++(int)
@@ -111,17 +110,13 @@ namespace rso
                     ++(*this);
                     return Ret;
                 }
-				inline _SNode* Node(void)
-                {
-                    return _Node;
-                }
 				inline size_t Index(void) const
                 {
-                    return _Node->Index;
+                    return pNode->Index;
                 }
 				inline bool operator == (const const_iterator& Iterator_) const
                 {
-                    return (_Node == Iterator_._Node);
+                    return (pNode == Iterator_.pNode);
                 }
 				inline bool operator != (const const_iterator& Iterator_) const
                 {
@@ -129,7 +124,7 @@ namespace rso
                 }
 				inline bool operator < (const const_iterator& Iterator_) const
                 {
-                    return (_Node->Index < Iterator_._Node->Index);
+                    return (pNode->Index < Iterator_.pNode->Index);
                 }
             };
             struct iterator : public const_iterator
@@ -137,8 +132,8 @@ namespace rso
                 iterator()
                 {
 				}
-                iterator(_SNode* Node_) :
-                    const_iterator(Node_)
+                iterator(_SNode* pNode_) :
+                    const_iterator(pNode_)
                 {
 				}
 				iterator& operator++()
@@ -167,24 +162,24 @@ namespace rso
             }
             CListVoid(CListVoid&& Var_) :
                 _Nodes(std::move(Var_._Nodes)),
-                _DeletedHead(Var_._DeletedHead),
-                _DeletedTail(Var_._DeletedTail),
-                _NewedHead(Var_._NewedHead),
-                _NewedTail(Var_._NewedTail),
+                _pDeletedHead(Var_._pDeletedHead),
+                _pDeletedTail(Var_._pDeletedTail),
+                _pNewedHead(Var_._pNewedHead),
+                _pNewedTail(Var_._pNewedTail),
                 _Size(Var_._Size)
             {
-                Var_._DeletedHead = nullptr;
-                Var_._DeletedTail = nullptr;
-                Var_._NewedHead = nullptr;
-                Var_._NewedTail = nullptr;
+                Var_._pDeletedHead = nullptr;
+                Var_._pDeletedTail = nullptr;
+                Var_._pNewedHead = nullptr;
+                Var_._pNewedTail = nullptr;
                 Var_._Size = 0;
             }
             virtual ~CListVoid()
             {
                 clear();
 
-                for (auto& Node : _Nodes)
-                    operator delete(Node);
+                for (auto& pNode : _Nodes)
+                    operator delete(pNode);
             }
             void reserve(size_t Size_)
             {
@@ -243,7 +238,7 @@ namespace rso
             }
 			inline const_iterator begin(void) const // for just iterate
             {
-                return const_iterator(_NewedHead);
+                return const_iterator(_pNewedHead);
             }
 			inline const_iterator end(void) const // for just iterate
             {
@@ -251,11 +246,11 @@ namespace rso
             }
 			inline const_iterator last(void) const
 			{
-				return const_iterator(_NewedTail);
+				return const_iterator(_pNewedTail);
 			}
 			inline iterator begin(void)
             {
-                return iterator(_NewedHead);
+                return iterator(_pNewedHead);
             }
 			inline iterator end(void)
             {
@@ -263,26 +258,26 @@ namespace rso
             }
 			inline iterator last(void)
 			{
-				return iterator(_NewedTail);
+				return iterator(_pNewedTail);
 			}
 			inline size_t capacity(void) const { return _Nodes.size(); }
 			inline size_t size(void) const { return _Size; }
             size_t new_index(void) const
             {
-                if (_DeletedHead)
-                    return _DeletedHead->Index;
+                if (_pDeletedHead)
+                    return _pDeletedHead->Index;
                 else
                     return _Nodes.size();
             }
 			iterator emplace(void)
             {
-                _SNode* Node = nullptr;
+                _SNode* pNode;
 
                 // DetachFromDeleted ////////////////////////////////////
-                if (_DeletedHead)
+                if (_pDeletedHead)
                 {
-                    Node = _DeletedHead;
-                    _DetachFromDeleted(Node);
+                    pNode = _pDeletedHead;
+                    _DetachFromDeleted(pNode);
                 }
                 else
                 {
@@ -298,19 +293,19 @@ namespace rso
 						throw;
                     }
 
-                    Node = _Nodes.back();
-                    Node->Index = _Nodes.size() - 1;
+                    pNode = _Nodes.back();
+                    pNode->Index = _Nodes.size() - 1;
                 }
 
-                _AttachToNewed(Node);
+                _AttachToNewed(pNode);
 
                 ++_Size;
 
-                return iterator(Node);
+                return iterator(pNode);
             }
 			iterator emplace_at(size_t Index_)
             {
-                _SNode* Node = nullptr;
+                _SNode* pNode;
 
                 // _Nodes 범위 이내 이면
                 if (Index_ < _Nodes.size())
@@ -318,7 +313,7 @@ namespace rso
 					if (_Nodes[Index_]->Newed)
 						THROWEX();
 
-                    Node = _Nodes[Index_];
+                    pNode = _Nodes[Index_];
                 }
                 else
                 {
@@ -342,33 +337,33 @@ namespace rso
                         _AttachToDeleted(_Nodes.back());
                     }
 
-                    Node = _Nodes.back();
+                    pNode = _Nodes.back();
                 }
 
-                _DetachFromDeleted(Node);
-                _AttachToNewed(Node);
+                _DetachFromDeleted(pNode);
+                _AttachToNewed(pNode);
 
                 ++_Size;
 
-                return iterator(Node);
+                return iterator(pNode);
             }
 
         private:
-            bool _erase(_SNode* Node_)
+            bool _erase(_SNode* pNode_)
             {
-                if (!Node_->Newed)
+                if (!pNode_->Newed)
                     return false;
 
-                _Detach(Node_);
+                _Detach(pNode_);
 
-                if (!Node_->Prev)
-                    _NewedHead = Node_->Next;
-                if (!Node_->Next)
-                    _NewedTail = Node_->Prev;
+                if (!pNode_->pPrev)
+                    _pNewedHead = pNode_->pNext;
+                if (!pNode_->pNext)
+                    _pNewedTail = pNode_->pPrev;
 
 
                 // AttachToDeleted ////////////////////
-                _AttachToDeleted(Node_);
+                _AttachToDeleted(pNode_);
 
                 --_Size;
 
@@ -378,7 +373,7 @@ namespace rso
         public:
 			inline bool erase(const_iterator Iterator_)
             {
-                return _erase(Iterator_.Node());
+                return _erase(Iterator_.pNode);
             }
             bool erase(size_t Index_)
             {
@@ -390,11 +385,11 @@ namespace rso
             }
 			inline void pop_front(void)
 			{
-				_erase(_NewedHead);
+				_erase(_pNewedHead);
 			}
 			inline void pop_back(void)
 			{
-				_erase(_NewedTail);
+				_erase(_pNewedTail);
 			}
 			void clear(void) // no thread safe
             {

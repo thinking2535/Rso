@@ -99,7 +99,7 @@ namespace rso
                     {
 						try
 						{
-							ibProto.first->second = _ProtosPool.new_buf();
+							ibProto.first->second = _ProtosPool.emplace();
 
 							try
 							{

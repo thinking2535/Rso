@@ -16,12 +16,9 @@ namespace rso::physics
 	public:
 		int32 Number = 0;
 		bool LocalEnabled = true;
-	private:
-		bool _Enabled = true;
-	public:
 		inline bool GetEnabled(void) const
 		{
-			return LocalEnabled && (_pParentCollider == nullptr || _pParentCollider->_Enabled);
+			return LocalEnabled && (_pParentCollider == nullptr || _pParentCollider->GetEnabled());
 		}
 		shared_ptr<CCollider2D> _pParentCollider;
 		inline void SetParentCollider(const shared_ptr<CCollider2D>& pParentCollider_)

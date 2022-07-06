@@ -2,29 +2,22 @@
 
 #include <Rso/Core/Core.h>
 #include <atomic>
+#include "ConstructDestruct.h"
 
 namespace rso::base
 {
 	using namespace core;
 	using namespace std;
 
-	template< typename TData >
-	class CLFQueue final
+	template<typename TData, typename TConstructDestruct = SFullConstructDestruct<TData>>
+	class _CLFQueue
 	{
 	private:
 		struct _SNode
 		{
-			atomic<bool> EndNode = true;
-			unique_ptr<TData, void(*)(TData*)> pData{ static_cast<TData*>(operator new (sizeof(TData))), [](TData* pData_) { operator delete(pData_); } };
-			_SNode* pNext = nullptr;
-
-			_SNode()
-			{
-			}
-			_SNode(_SNode* pNext_) :
-				pNext(pNext_)
-			{
-			}
+			atomic<bool> EndNode;
+			TData Data;
+			_SNode* pNext;
 		};
 
 		// 헤드와 테일 사이에 데이터가 있는 노드가 자리하게 됨. ( 헤드와 테일은 데이터 포인터가 0 )
@@ -36,7 +29,7 @@ namespace rso::base
 		_SNode* _pPoppedTail = nullptr;
 
 	public:
-		CLFQueue(CLFQueue&& Var_) :
+		_CLFQueue(_CLFQueue&& Var_) :
 			_pPushedHead(Var_._pPushedHead),
 			_pPushedTail(Var_._pPushedTail),
 			_pPoppedHead(Var_._pPoppedHead),
@@ -47,26 +40,37 @@ namespace rso::base
 			Var_._pPoppedHead = nullptr;
 			Var_._pPoppedTail = nullptr;
 		}
-		CLFQueue()
+		_CLFQueue()
 		{
 			// LF 로 수행하기 위해 맨 처음과 맨 끝 임시 노드가 필요
-			_pPushedHead = new _SNode();
+			_pPushedHead = (_SNode*) operator new(sizeof(_SNode));
 
 			try
 			{
-				_pPushedTail = new _SNode();
+				_pPushedTail = (_SNode*) operator new(sizeof(_SNode));
 
 				try
 				{
-					_pPoppedHead = new _SNode();
+					_pPoppedHead = (_SNode*) operator new(sizeof(_SNode));
 
 					try
 					{
-						_pPoppedTail = new _SNode();
+						_pPoppedTail = (_SNode*) operator new(sizeof(_SNode));
+
+						_pPushedHead->EndNode = true;
+						_pPushedTail->EndNode = true;
+						_pPoppedHead->EndNode = true;
+						_pPoppedTail->EndNode = true;
+
 						_pPushedHead->pNext = _pPushedTail;
 						_pPushedTail->pNext = _pPoppedHead;
 						_pPoppedHead->pNext = _pPoppedTail;
 						_pPoppedTail->pNext = _pPushedHead;
+
+						TConstructDestruct::FirstConstruct(&_pPushedHead->Data);
+						TConstructDestruct::FirstConstruct(&_pPushedTail->Data);
+						TConstructDestruct::FirstConstruct(&_pPoppedHead->Data);
+						TConstructDestruct::FirstConstruct(&_pPoppedTail->Data);
 					}
 					catch (...)
 					{
@@ -86,35 +90,46 @@ namespace rso::base
 				throw;
 			}
 		}
-		virtual ~CLFQueue()
+		virtual ~_CLFQueue()
 		{
 			clear(); // for call destructor
 
-			for (auto* pNode = _pPoppedHead->pNext;
-				!pNode->EndNode;)
-			{
-				auto* pDelNode = pNode;
-				pNode = pNode->pNext;
-				delete pDelNode;
-			}
+			auto pNode = _pPushedHead;
 
-			delete _pPoppedTail;
-			delete _pPoppedHead;
-			delete _pPushedTail;
-			delete _pPushedHead;
+			do
+			{
+				auto pDelNode = pNode;
+				pNode = pNode->pNext;
+				TConstructDestruct::LastDestruct(&pDelNode->Data);
+				operator delete(pDelNode);
+
+			} while (pNode != _pPushedHead);
 		}
-		CLFQueue& operator = (CLFQueue&& Var_)
+		_CLFQueue& operator = (_CLFQueue&& Var_)
 		{
-			this->~CLFQueue();
-			new (this) CLFQueue(std::move(Var_));
+			this->~_CLFQueue();
+			new (this) _CLFQueue(std::move(Var_));
 			return *this;
 		}
 		template<typename... TArgsEmplace>
 		void emplace(TArgsEmplace&&... Args_)
 		{
+			TConstructDestruct::Construct(&_pPushedTail->Data, forward<TArgsEmplace>(Args_)...);
+			push(forward<TArgsEmplace>(Args_)...);
+		}
+		TData* new_buf(void)
+		{
+			return &_pPushedTail->Data;
+		}
+		template<typename... TArgsEmplace>
+		void push(TArgsEmplace&&... Args_)
+		{
 			if (_pPoppedHead->pNext->EndNode)
 			{
-				_pPushedTail->pNext = new _SNode(_pPoppedHead);
+				_pPushedTail->pNext = (_SNode*) operator new(sizeof(_SNode));
+				_pPushedTail->pNext->EndNode = true;
+				_pPushedTail->pNext->pNext = _pPoppedHead;
+				TConstructDestruct::FirstConstruct(&_pPushedTail->pNext->Data, forward<TArgsEmplace>(Args_)...);
 			}
 			else
 			{
@@ -122,7 +137,6 @@ namespace rso::base
 				_pPoppedHead = _pPoppedHead->pNext;
 			}
 
-			new(_pPushedTail->pData.operator->()) TData(forward<TArgsEmplace>(Args_)...);
 			_pPushedTail->EndNode = false;
 			_pPushedTail = _pPushedTail->pNext;
 		}
@@ -131,14 +145,14 @@ namespace rso::base
 			if (_pPushedHead->pNext->EndNode)
 				return nullptr;
 
-			return _pPushedHead->pNext->pData.operator->();
+			return &_pPushedHead->pNext->Data;
 		}
 		void pop(void)
 		{
 			if (_pPushedHead->pNext->EndNode)
 				return;
 
-			_pPushedHead->pNext->pData.operator->()->~TData();
+			TConstructDestruct::Destruct(&_pPushedHead->pNext->Data);
 			_pPushedHead->pNext->EndNode = true;
 			_pPushedHead = _pPushedHead->pNext;
 			_pPoppedTail->EndNode = false;
@@ -149,5 +163,19 @@ namespace rso::base
 			for (auto pBuf = get(); pBuf; pBuf = get())
 				pop();
 		}
+	};
+
+	template<typename TData>
+	class CLFQueue : public _CLFQueue<TData, SFullConstructDestruct<TData>>
+	{
+		TData* new_buf(void) = delete;
+		void push(void) = delete;
+	};
+
+	template<typename TData>
+	class CLFQueueB : public _CLFQueue<TData, SLazyConstructDestruct<TData>>
+	{
+		template<typename... TArgsEmplace>
+		void emplace(TArgsEmplace&&... Args_) = delete;
 	};
 }

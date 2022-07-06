@@ -11,7 +11,7 @@ namespace rso::ranking
 	class CServer
 	{
 	protected:
-		using _TRanking = CMultiIndexMap<SUserCore, unique_index<TUID>, non_unique_index<int64, greater<int64>>>; // UID, Point
+		using _TRanking = CMultiIndexMap<SUserCore, unique_index<TUID>, non_unique_index<TPoint, greater<TPoint>>>; // UID, Point
 
 		TLinkFunc _LinkFuncU;
 		TLinkFailFunc _LinkFailFuncU;

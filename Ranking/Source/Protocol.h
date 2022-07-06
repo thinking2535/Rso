@@ -21,6 +21,8 @@ namespace rso
 			Refresh,
 			Update,
 		};
+		using TPoint = int64;
+		using TRanking = int32;
 		struct SOption : public SProto
 		{
 			SNamePort MasterNamePort{};
@@ -91,17 +93,17 @@ namespace rso
 		struct SMasterOption : public SProto
 		{
 			TPort AgentBindPort{};
-			int64 MaxRankingPoint{};
+			TPoint MaxRankingPoint{};
 			int32 MaxDataCount{};
 			string PeriodBaseTime{};
 			int32 PeriodMinutes{};
 			SMasterOption()
 			{
 			}
-			SMasterOption(const TPort& AgentBindPort_, const int64& MaxRankingPoint_, const int32& MaxDataCount_, const string& PeriodBaseTime_, const int32& PeriodMinutes_) : AgentBindPort(AgentBindPort_), MaxRankingPoint(MaxRankingPoint_), MaxDataCount(MaxDataCount_), PeriodBaseTime(PeriodBaseTime_), PeriodMinutes(PeriodMinutes_)
+			SMasterOption(const TPort& AgentBindPort_, const TPoint& MaxRankingPoint_, const int32& MaxDataCount_, const string& PeriodBaseTime_, const int32& PeriodMinutes_) : AgentBindPort(AgentBindPort_), MaxRankingPoint(MaxRankingPoint_), MaxDataCount(MaxDataCount_), PeriodBaseTime(PeriodBaseTime_), PeriodMinutes(PeriodMinutes_)
 			{
 			}
-			SMasterOption(TPort&& AgentBindPort_, int64&& MaxRankingPoint_, int32&& MaxDataCount_, string&& PeriodBaseTime_, int32&& PeriodMinutes_) : AgentBindPort(std::move(AgentBindPort_)), MaxRankingPoint(std::move(MaxRankingPoint_)), MaxDataCount(std::move(MaxDataCount_)), PeriodBaseTime(std::move(PeriodBaseTime_)), PeriodMinutes(std::move(PeriodMinutes_))
+			SMasterOption(TPort&& AgentBindPort_, TPoint&& MaxRankingPoint_, int32&& MaxDataCount_, string&& PeriodBaseTime_, int32&& PeriodMinutes_) : AgentBindPort(std::move(AgentBindPort_)), MaxRankingPoint(std::move(MaxRankingPoint_)), MaxDataCount(std::move(MaxDataCount_)), PeriodBaseTime(std::move(PeriodBaseTime_)), PeriodMinutes(std::move(PeriodMinutes_))
 			{
 			}
 			void operator << (CStream& Stream_) override
@@ -140,7 +142,7 @@ namespace rso
 			{
 				return 
 					GetStdName(TPort()) + L"," + 
-					GetStdName(int64()) + L"," + 
+					GetStdName(TPoint()) + L"," + 
 					GetStdName(int32()) + L"," + 
 					GetStdName(string()) + L"," + 
 					GetStdName(int32());
@@ -149,7 +151,7 @@ namespace rso
 			{
 				return 
 					GetMemberName(TPort(), L"AgentBindPort") + L"," + 
-					GetMemberName(int64(), L"MaxRankingPoint") + L"," + 
+					GetMemberName(TPoint(), L"MaxRankingPoint") + L"," + 
 					GetMemberName(int32(), L"MaxDataCount") + L"," + 
 					GetMemberName(string(), L"PeriodBaseTime") + L"," + 
 					GetMemberName(int32(), L"PeriodMinutes");
@@ -163,17 +165,17 @@ namespace rso
 			RequestCs,
 			RequestSc,
 		};
-		using TRewards = map<TUID,int64>;
+		using TRewards = map<TUID,TRanking>;
 		struct SUserMinPointSa : public SProto
 		{
-			int64 Point{};
+			TPoint Point{};
 			SUserMinPointSa()
 			{
 			}
-			SUserMinPointSa(const int64& Point_) : Point(Point_)
+			SUserMinPointSa(const TPoint& Point_) : Point(Point_)
 			{
 			}
-			SUserMinPointSa(int64&& Point_) : Point(std::move(Point_))
+			SUserMinPointSa(TPoint&& Point_) : Point(std::move(Point_))
 			{
 			}
 			void operator << (CStream& Stream_) override
@@ -195,12 +197,12 @@ namespace rso
 			static wstring StdName(void)
 			{
 				return 
-					GetStdName(int64());
+					GetStdName(TPoint());
 			}
 			static wstring MemberName(void)
 			{
 				return 
-					GetMemberName(int64(), L"Point");
+					GetMemberName(TPoint(), L"Point");
 			}
 		};
 		struct SInfoSa : public SProto
@@ -312,14 +314,14 @@ namespace rso
 		struct SUser : public SUserCore
 		{
 			TUID UID{};
-			int32 Point{};
+			TPoint Point{};
 			SUser()
 			{
 			}
-			SUser(const SUserCore& Super_, const TUID& UID_, const int32& Point_) : SUserCore(Super_), UID(UID_), Point(Point_)
+			SUser(const SUserCore& Super_, const TUID& UID_, const TPoint& Point_) : SUserCore(Super_), UID(UID_), Point(Point_)
 			{
 			}
-			SUser(SUserCore&& Super_, TUID&& UID_, int32&& Point_) : SUserCore(std::move(Super_)), UID(std::move(UID_)), Point(std::move(Point_))
+			SUser(SUserCore&& Super_, TUID&& UID_, TPoint&& Point_) : SUserCore(std::move(Super_)), UID(std::move(UID_)), Point(std::move(Point_))
 			{
 			}
 			void operator << (CStream& Stream_) override
@@ -351,14 +353,14 @@ namespace rso
 				return 
 					GetStdName(SUserCore()) + L"," + 
 					GetStdName(TUID()) + L"," + 
-					GetStdName(int32());
+					GetStdName(TPoint());
 			}
 			static wstring MemberName(void)
 			{
 				return 
 					GetMemberName(SUserCore(), L"") + L"," + 
 					GetMemberName(TUID(), L"UID") + L"," + 
-					GetMemberName(int32(), L"Point");
+					GetMemberName(TPoint(), L"Point");
 			}
 		};
 		using TUsers = list<SUser>;
@@ -443,14 +445,14 @@ namespace rso
 		struct SRanking : public SProto
 		{
 			TUsers Users{};
-			int32 RewardedRanking{};
+			TRanking RewardedRanking{};
 			SRanking()
 			{
 			}
-			SRanking(const TUsers& Users_, const int32& RewardedRanking_) : Users(Users_), RewardedRanking(RewardedRanking_)
+			SRanking(const TUsers& Users_, const TRanking& RewardedRanking_) : Users(Users_), RewardedRanking(RewardedRanking_)
 			{
 			}
-			SRanking(TUsers&& Users_, int32&& RewardedRanking_) : Users(std::move(Users_)), RewardedRanking(std::move(RewardedRanking_))
+			SRanking(TUsers&& Users_, TRanking&& RewardedRanking_) : Users(std::move(Users_)), RewardedRanking(std::move(RewardedRanking_))
 			{
 			}
 			void operator << (CStream& Stream_) override
@@ -477,13 +479,13 @@ namespace rso
 			{
 				return 
 					GetStdName(TUsers()) + L"," + 
-					GetStdName(int32());
+					GetStdName(TRanking());
 			}
 			static wstring MemberName(void)
 			{
 				return 
 					GetMemberName(TUsers(), L"Users") + L"," + 
-					GetMemberName(int32(), L"RewardedRanking");
+					GetMemberName(TRanking(), L"RewardedRanking");
 			}
 		};
 		struct SDummyDBOut : public SProto

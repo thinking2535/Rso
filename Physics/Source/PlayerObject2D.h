@@ -19,17 +19,6 @@ namespace rso::physics
 			return pCollider == Value_.pCollider && pOtherCollider == Value_.pOtherCollider;
 		}
 	};
-	struct SNormalOtherMovingObject
-	{
-		SPoint Normal;
-		shared_ptr<CMovingObject2D> pOtherMovingObject;
-
-		SNormalOtherMovingObject(const SPoint& Normal_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_) :
-			Normal(Normal_),
-			pOtherMovingObject(pOtherMovingObject_)
-		{
-		}
-	};
 	class SContactPoint2DHasher
 	{
 	public:
@@ -42,13 +31,12 @@ namespace rso::physics
 	class CPlayerObject2D : public CMovingObject2D
 	{
 	public:
-		using TContactPoint2Ds = unordered_map<SContactPoint2D, SNormalOtherMovingObject, SContactPoint2DHasher>;
-		using FCollisionEnter = function<void(int64 Tick_, const SPoint& Normal_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_)>;
-		using FCollisionStay = function<void(int64 Tick_, const TContactPoint2Ds& ContactPoint2Ds_)>;
-		using FCollisionExit = function<void(int64 Tick_, const SPoint& Normal_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_)>;
+		using TContactPoint2Ds = unordered_map<SContactPoint2D, shared_ptr<CMovingObject2D>, SContactPoint2DHasher>;
+		using FCollision = function<void(int64 Tick_, const SPoint& Normal_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_)>;
+		using FCollisionExit = function<void(int64 Tick_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_)>;
 
-		FCollisionEnter fCollisionEnter;
-		FCollisionStay fCollisionStay;
+		FCollision fCollisionEnter;
+		FCollision fCollisionStay;
 		FCollisionExit fCollisionExit;
 
 		// key를 SContactPoint2D으로 쓰는 이유는 여러개의 Collider를 가지는 객체의 OnCollisionStay 에서
@@ -61,10 +49,8 @@ namespace rso::physics
 		CPlayerObject2D* GetPlayerObject2D(void) override;
 
 		void Overlapped(int64 Tick_, const SPoint& Normal_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_);
-		void CollisionEnterCheck(int64 Tick_, const shared_ptr<CMovingObject2D>& pThisMovingObject_, const shared_ptr<CCollider2D>& pOtherCollider_);
-		void CollisionEnterCheck(int64 Tick_, const shared_ptr<CMovingObject2D>& pThisMovingObject_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_);
-		// Stay 에 대한 콜백함수 호출회수를 FixedUpdate 호출회수와 같게 하기위해 CollisionEnter시에 _ContactPoint2Ds에 이미 존재하면 Stay 콜백을 호출하는 방식을 사용하지 않음
-		void CollisionStayCheck(int64 Tick_);
-		void CollisionExitCheck(int64 Tick_);
+		void NotOverlapped(int64 Tick_, const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CCollider2D>& pOtherCollider_);
+		void OverlappedCheck(int64 Tick_, const shared_ptr<CMovingObject2D>& pThisMovingObject_, const shared_ptr<CCollider2D>& pOtherCollider_);
+		void OverlappedCheck(int64 Tick_, const shared_ptr<CMovingObject2D>& pThisMovingObject_, const shared_ptr<CMovingObject2D>& pOtherMovingObject_);
 	};
 }

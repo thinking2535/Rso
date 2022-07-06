@@ -3,7 +3,7 @@
 #include "Handler.h"
 #include <Rso/Core/Core.h>
 #include <Rso/Core/Stream.h>
-#include <Rso/Base/LFQueueB.h>
+#include <Rso/Base/LFQueue.h>
 #include <functional>
 #include <Rso/Base/Thread.h>
 

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define	Test_Rank
+#define	Test_Match
 
 
 #if defined( Test_Match )
@@ -18,10 +18,6 @@ using namespace gameutil;
 
 using TMatch = CMatch<int>;
 
-void Matching(int Key_, size_t Count_)
-{
-	cout << "matching ------------------------------- " << Key_ << " " << Count_ << endl;
-}
 void Matched(const TMatch::TMatchedUsers& Users_)
 {
 	cout << "matched ------------------------------- " << Users_.size() << endl;
@@ -34,7 +30,11 @@ void Matched(const TMatch::TMatchedUsers& Users_)
 
 void main(void)
 {
-	TMatch m(7, Matching, Matched, seconds(5), 10);
+	TMatch m(
+		7,
+		[](t_duration e, double m, double o) {
+			return true; },
+		Matched);
 
 	if (!m.insert(0, 10))
 		THROWEX();

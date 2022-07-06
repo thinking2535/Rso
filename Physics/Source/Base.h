@@ -374,4 +374,12 @@ namespace rso::physics
 	{
 		return SRectCollider2D(SPoint(Self_.Size.Y, Self_.Size.X), SPoint(Self_.Offset.Y, -Self_.Offset.X));
 	}
+	inline float TickToFloatTime(int64 Tick_)
+	{
+		return (float)Tick_ / 10000000.0f;
+	}
+	inline int64 FloatTimeToTick(float Time_)
+	{
+		return (Int64)(Time_ * 10000000.0f);
+	}
 }

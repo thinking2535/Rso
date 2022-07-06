@@ -21,9 +21,6 @@ namespace rso::physics
     {
         for (; _Tick < ToTick_; _Tick += _UnitTick)
         {
-            if (fFixedUpdate)
-                fFixedUpdate(_Tick);
-
             for (auto& i : _MovingObjects)
             {
                 if (i->fFixedUpdate)
@@ -39,20 +36,20 @@ namespace rso::physics
             for (size_t pi = 0; pi < _Players.size() - 1; ++pi)
             {
                 for (size_t ti = pi + 1; ti < _Players.size(); ++ti)
-                    _Players[pi]->CollisionEnterCheck(_Tick, _Players[pi], _Players[ti]);
+                    _Players[pi]->OverlappedCheck(_Tick, _Players[pi], _Players[ti]);
             }
 
             for (auto& p : _Players)
             {
                 for (auto& m : _MovingObjects)
-                    p->CollisionEnterCheck(_Tick, p, m);
+                    p->OverlappedCheck(_Tick, p, m);
 
                 for (auto& s : _Objects)
-                    p->CollisionEnterCheck(_Tick, p, s);
-
-                p->CollisionStayCheck(_Tick);
-                p->CollisionExitCheck(_Tick);
+                    p->OverlappedCheck(_Tick, p, s);
             }
+
+            if (fFixedUpdate)
+                fFixedUpdate(_Tick);
         }
     }
     CEngine::TObjectsIt CEngine::AddObject(const shared_ptr<CCollider2D>& Object_)
@@ -61,6 +58,7 @@ namespace rso::physics
     }
     void CEngine::RemoveObject(TObjectsIt Iterator_)
     {
+        (*Iterator_)->LocalEnabled = false;
         _Objects.erase(Iterator_);
     }
     CEngine::TMovingObjectsIt CEngine::AddMovingObject(const shared_ptr<CMovingObject2D>& Object_)
@@ -69,6 +67,7 @@ namespace rso::physics
     }
     void CEngine::RemoveMovingObject(TMovingObjectsIt Iterator_)
     {
+        (*Iterator_)->pCollider->LocalEnabled = false;
         _MovingObjects.erase(Iterator_);
     }
     void CEngine::AddPlayer(const shared_ptr<CPlayerObject2D>& Player_)

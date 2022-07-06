@@ -5,7 +5,7 @@
 #include "ENV.h"
 #include "Type.h"
 #include <Rso/Base/List.h>
-#include <Rso/Base/LFQueueB.h>
+#include <Rso/Base/LFQueue.h>
 #include <Rso/Proto/Parser.h>
 
 namespace rso::mssql

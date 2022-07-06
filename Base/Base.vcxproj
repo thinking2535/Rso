@@ -359,11 +359,10 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
     <ClInclude Include="Doc\MultiIndex.h" />
     <ClInclude Include="Doc\MultiKeyMap.h" />
     <ClInclude Include="Source\Bidirection.h" />
+    <ClInclude Include="Source\ConstructDestruct.h" />
     <ClInclude Include="Source\CycleCList.h" />
     <ClInclude Include="Source\CycleMap.h" />
     <ClInclude Include="Source\CycleSet.h" />
-    <ClInclude Include="Source\LFQueueB.h" />
-    <ClInclude Include="Source\ListB.h" />
     <ClInclude Include="Source\ListVoid.h" />
     <ClInclude Include="Source\MapCount.h" />
     <ClInclude Include="Source\MultiIndex.h" />
@@ -371,7 +370,6 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
     <ClInclude Include="Source\MultiIndexSet.h" />
     <ClInclude Include="Source\Option.h" />
     <ClInclude Include="Source\OptionStream.h" />
-    <ClInclude Include="Source\QueueB.h" />
     <ClInclude Include="Source\Ring.h" />
     <ClInclude Include="Source\RingEx.h" />
     <ClInclude Include="Source\Timer.h" />

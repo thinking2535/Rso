@@ -62,15 +62,6 @@
     <ClInclude Include="Source\MapCount.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LFQueueB.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ListB.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\QueueB.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Option.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -111,6 +102,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\MultiIndexSet.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ConstructDestruct.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

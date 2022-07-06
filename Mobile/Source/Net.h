@@ -30,7 +30,7 @@ namespace rso::mobile
 			template<typename... TTypes>
 			void Send(const TTypes&... Args_)
 			{
-				SendProtos.new_buf()->Send(Args_...);
+				SendProtos.emplace()->Send(Args_...);
 			}
 			void RecvAck(void)
 			{
