@@ -84,6 +84,9 @@
     <ClInclude Include="Source\FixedRandom64.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ClosedRank.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Quest.cpp">

@@ -49,6 +49,7 @@ namespace rso::physics
 		// 외부에서 등록한 Collision 콜백을 호출하는데 거기에서 RemovePlayer 할 경우 OtherPlayer에 대한 CollisionCallback을 호출 할 수 없음
 		void AddPlayer(const shared_ptr<CPlayerObject2D>& Player_);
 		void Start(void);
+		void Stop(void);
 		bool IsStarted(void) const;
 		function<void(int64 Tick_)> fFixedUpdate;
 	};

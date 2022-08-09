@@ -10,7 +10,7 @@ namespace rso::gameutil
 	using namespace std;
 
 	template<typename _TKey, typename _TValue, typename _TOp = less<_TKey>>
-	class CRank : public map<_TKey, _TValue, _TOp>
+	class CClosedRank : public map<_TKey, _TValue, _TOp>
 	{
 	public:
 		using typename map<_TKey, _TValue, _TOp>::const_iterator;
@@ -18,11 +18,19 @@ namespace rso::gameutil
 
 		const_iterator get(_TKey Key_) const
 		{
-			return lower_bound(Key_);
+			auto it = lower_bound(Key_);
+			if (it == end() && !empty())
+				--it;
+
+			return it;
 		}
 		iterator get(_TKey Key_)
 		{
-			return lower_bound(Key_);
+			auto it = lower_bound(Key_);
+			if (it == end() && !empty())
+				--it;
+
+			return it;
 		}
 	};
 }

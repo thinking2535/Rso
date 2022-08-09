@@ -117,5 +117,10 @@ namespace rso
 		{
 			SPoint LocalPosition
 		}
+
+		struct SBoxCollider2D : STransform
+		{
+			SRectCollider2D RectCollider2D
+		}
 	}
 }

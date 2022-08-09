@@ -9,13 +9,14 @@ namespace rso::physics
     {
         SPoint _BeginPos;
         SPoint _EndPos;
-        float _Velocity = 0.0f;
+        float _ScalarVelocity = 0.0f;
         float _Delay = 0.0f;
         SStructMove _StructMove;
 
     public:
-        CShuttleObject2D(const STransform& Transform_, const SPoint& BeginPos_, const SPoint& EndPos_, float Velocity_, float Delay_, const SStructMove& StructMove_);
+        CShuttleObject2D(const STransform& Transform_, const SPoint& BeginPos_, const SPoint& EndPos_, float ScalarVelocity_, float Delay_, const SStructMove& StructMove_);
         SStructMovePosition GetStructMovePosition(void) const { return SStructMovePosition(_StructMove, LocalPosition); }
+        void _SetMovingVelocity(void);
         void _FixedUpdate(int64 Tick_);
     };
 }

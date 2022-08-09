@@ -26,10 +26,16 @@ namespace rso::physics
         }
         inline void Stop(void) noexcept
         {
+            if (!IsStarted())
+                return;
+
             _StopTime = system_clock::now();
         }
         inline void Start(void) noexcept
         {
+            if (IsStarted())
+                return;
+
             _StartTime = system_clock::now() - _StopTime + _StartTime;
             _StopTime = TTime();
         }

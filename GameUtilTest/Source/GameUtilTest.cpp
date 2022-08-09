@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define	Test_Match
+#define	Test_Rank
 
 
 #if defined( Test_Match )
@@ -317,7 +317,7 @@ void main(void)
 	r.emplace(2, 0);
 	r.emplace(4, 1);
 
-	for (int i = -1; i < 5; ++i)
+	for (int i = -1; i < 6; ++i)
 	{
 		auto t = r.get(i);
 		if (t == r.end())

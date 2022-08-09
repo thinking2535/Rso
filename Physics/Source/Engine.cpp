@@ -78,6 +78,10 @@ namespace rso::physics
     {
         _CurTick.Start();
     }
+    void CEngine::Stop(void)
+    {
+        _CurTick.Stop();
+    }
     bool CEngine::IsStarted(void) const
     {
         return _CurTick.IsStarted();

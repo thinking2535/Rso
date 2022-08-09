@@ -343,6 +343,7 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
     <ClInclude Include="Source\Base.h" />
     <ClInclude Include="Source\Boost.h" />
     <ClInclude Include="Source\Buffs.h" />
+    <ClInclude Include="Source\ClosedRank.h" />
     <ClInclude Include="Source\Command.h" />
     <ClInclude Include="Source\Devider.h" />
     <ClInclude Include="Source\Equip.h" />
