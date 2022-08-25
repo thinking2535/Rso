@@ -1342,8 +1342,8 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[)"
 BEGIN
 CREATE TABLE [dbo].[)" + UserTableName + LR"(](
 	[UID] [bigint] NOT NULL,
-	[ID] [varbinary]()" + to_wstring(c_BinaryIDLengthMax) + LR"() NOT NULL,
-	[Nick] [nvarchar]()" + to_wstring(c_NickLengthMax) + LR"() NOT NULL,
+	[ID] [varbinary](MAX) NOT NULL,
+	[Nick] [nvarchar](MAX) NOT NULL,
 	[State] [tinyint] NOT NULL,
 	[PunishEndTime] [bigint] NOT NULL,
 	[InsertedTime] [datetime] NOT NULL,
@@ -1382,7 +1382,7 @@ BEGIN
 CREATE TABLE [dbo].[)" + FriendTableName + LR"(](
 	[UID] [bigint] NOT NULL,
 	[FriendUID] [bigint] NOT NULL,
-	[FriendNick] [nvarchar]()" + to_wstring(c_NickLengthMax) + LR"() NOT NULL,
+	[FriendNick] [nvarchar](MAX) NOT NULL,
 	[FriendState] [tinyint] NOT NULL,
 	CONSTRAINT [PK_)" + FriendTableName + LR"(] PRIMARY KEY CLUSTERED 
 (
@@ -1400,8 +1400,8 @@ END)";
 		auto ClearSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + ClearSPName + LR"(]
 	@UID_ BIGINT
-,	@ID_ NVARCHAR()" + to_wstring(c_IDLengthMax) + LR"()
-,	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@ID_ NVARCHAR(MAX)
+,	@Nick_ NVARCHAR(MAX)
 ,	@State_ TINYINT
 AS
 BEGIN
@@ -1421,8 +1421,8 @@ END)";
 		auto CreateSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + CreateSPName + LR"(]
 	@UID_ BIGINT
-,	@ID_ NVARCHAR()" + to_wstring(c_IDLengthMax) + LR"()
-,	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@ID_ NVARCHAR(MAX)
+,	@Nick_ NVARCHAR(MAX)
 ,	@State_ TINYINT
 AS
 BEGIN
@@ -1433,8 +1433,8 @@ BEGIN
 
 	BEGIN TRY
 
-		DECLARE @ID VARBINARY()" + to_wstring(c_BinaryIDLengthMax) + LR"()
-		DECLARE @Nick NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+		DECLARE @ID VARBINARY(MAX)
+		DECLARE @Nick NVARCHAR(MAX)
 
 		SELECT	@ID = ID, @Nick = Nick
 		FROM	dbo.)" + UserTableName + LR"(
@@ -1473,7 +1473,7 @@ END)";
 		auto LoginSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + LoginSPName + LR"(]
 	@UID_ BIGINT
-,	@ID_ NVARCHAR()" + to_wstring(c_IDLengthMax) + LR"()
+,	@ID_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
@@ -1506,7 +1506,7 @@ END)";
 		auto ChangeNickSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + ChangeNickSPName + LR"(]
 	@UID_ BIGINT
-,	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@Nick_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
@@ -1526,7 +1526,7 @@ END)";
 ALTER PROCEDURE [dbo].[)" + AddFriendBeginSPName + LR"(]
 	@UID_ BIGINT
 ,	@FriendUID_ BIGINT
-,	@FriendNick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@FriendNick_ NVARCHAR(MAX)
 ,	@FriendState_ TINYINT
 AS
 BEGIN
@@ -1559,7 +1559,7 @@ END)";
 ALTER PROCEDURE [dbo].[)" + AddFriendRequestSPName + LR"(]
 	@UID_ BIGINT
 ,	@FriendUID_ BIGINT
-,	@FriendNick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@FriendNick_ NVARCHAR(MAX)
 ,	@FriendState_ TINYINT
 AS
 BEGIN

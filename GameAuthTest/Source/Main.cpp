@@ -42,6 +42,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		CAuth Auth(
 			EAddressFamily::INET,
+			[](const SCaCreate& CaCreate_) { return EGameRet::Ok; },
 			LinkM, UnLinkM, RecvM, LinkC, UnLinkC, DBCallback,
 			*DBOption,
 			CNamePort(Option->MasterBindPort),

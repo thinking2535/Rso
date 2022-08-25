@@ -38,7 +38,7 @@ END)";
 IF TYPE_ID(N')" + TypeName + LR"(') IS NULL
 BEGIN
 CREATE TYPE )" + TypeName + LR"( AS TABLE(
-	[Nick] [nvarchar]()" + to_wstring(c_NickLengthMax) + LR"() NULL,
+	[Nick] [nvarchar](MAX) NULL,
 	[CharCode] [int] NULL,
 	[CountryCode] [nvarchar](2) NULL,
 	[UID] [bigint] NULL,
@@ -93,7 +93,7 @@ BEGIN
 CREATE TABLE )" + TableName + LR"((
 	[UID] [bigint] NOT NULL,
 	[Point] [int] NOT NULL,
-	[Nick] [nvarchar]()" + to_wstring(c_NickLengthMax) + LR"() NOT NULL,
+	[Nick] [nvarchar](MAX) NOT NULL,
 	[CharCode] [int] NOT NULL,
 	[CountryCode] [nvarchar](2) NOT NULL,
 	[InsertedTime] [datetime] NOT NULL

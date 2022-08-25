@@ -60,8 +60,10 @@ namespace rso::game
 		using TOutObject = typename _TSP::SOutObject;
 		using TDBCallback = function<void(TOutObject& OutObject_)>;
 		using TDBCallbacks = CList<TDBCallback>;
+		using TCheckCreateUser = function<EGameRet(const SCaCreate& CaCreate_)>;
 
 	private:
+		TCheckCreateUser _CheckCreateUser;
 		TLinkFunc _LinkFuncM;
 		TUnLinkFunc _UnLinkFuncM;
 		TRecvFunc _RecvFuncM;
@@ -90,8 +92,6 @@ namespace rso::game
 		{
 			_DB.Push(static_cast<size_t>(SDBBinder<TProto>::SpNum), Key_, Proto_, Protos_...);
 		}
-		EGameRet _IsValidID(const TID& ID_) const;
-		EGameRet _IsValidNick(const TNick& Nick_) const;
 		void _DBCallback(TOutObject& OutObject_);
 		void _DBCreate(TOutObject& OutObject_);
 		void _DBLogin(TOutObject& OutObject_);
@@ -128,6 +128,7 @@ namespace rso::game
 	public:
 		CAuth(
 			EAddressFamily AddressFamily_,
+			TCheckCreateUser CheckCreateUser_,
 			TLinkFunc LinkFuncM_, TUnLinkFunc UnLinkFuncM_, TRecvFunc RecvFuncM_,
 			TLinkFunc LinkFuncC_, TUnLinkFunc UnLinkFuncC_, TDBCallback DBCallbackFunc_,
 			const SDBOption& DBOption_, const CNamePort& MasterBindNamePort_, size_t NetCThreadCnt_, const CNamePort& ClientBindNamePort_);

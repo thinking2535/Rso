@@ -15,11 +15,6 @@ namespace rso
 		typedef u16string TMessage
 		typedef uint8 TState
 
-		const int32 c_IDLengthMax 255
-		const int32 c_BinaryIDLengthMax 32
-		const int32 c_NickLengthMin 2
-		const int32 c_NickLengthMax 32
-
 		const TState c_Default_State 0
 
 		enum class EProto

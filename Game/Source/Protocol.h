@@ -23,10 +23,6 @@ namespace rso
 		using TNick = u16string;
 		using TMessage = u16string;
 		using TState = uint8;
-		const int32 c_IDLengthMax = 255;
-		const int32 c_BinaryIDLengthMax = 32;
-		const int32 c_NickLengthMin = 2;
-		const int32 c_NickLengthMax = 32;
 		const TState c_Default_State = 0;
 		enum class EProto
 		{

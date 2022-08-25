@@ -4,24 +4,6 @@ namespace rso
 {
 	namespace game
 	{
-		EGameRet CAuth::_IsValidID(const TID& ID_) const
-		{
-			if (ID_.empty() || static_cast<int32>(ID_.size()) > c_IDLengthMax)
-				return EGameRet::InvalidIDLength;
-
-			// ID의 문자는 검사하지 않음.
-			//if (Account_.ID.find_first_of(L"~!@#$%^&*()_+`-={}[]\\|;\':\",.<>/?\t ") != wstring::npos)
-			//	return EGameRet::InvalidID;
-
-			return EGameRet::Ok;
-		}
-		EGameRet CAuth::_IsValidNick(const TNick& Nick_) const
-		{
-			if (static_cast<int32>(Nick_.size()) < c_NickLengthMin || static_cast<int32>(Nick_.size()) > c_NickLengthMax)
-				return EGameRet::InvalidNickLength;
-
-			return EGameRet::Ok;
-		}
 		void CAuth::_DBCallback(TOutObject& OutObject_)
 		{
 			if (OutObject_.SPNum < _DBCallbacks.size())
@@ -450,11 +432,13 @@ namespace rso
 
 			try
 			{
-				auto GameRet = _IsValidID(Proto.ID);
-				if (GameRet != EGameRet::Ok)
-					throw GameRet;
+				if (Proto.ID.empty())
+					throw EGameRet::InvalidIDLength;
 
-				GameRet = _IsValidNick(Proto.Nick);
+				if (Proto.Nick.empty())
+					throw EGameRet::InvalidNickLength;
+
+				auto GameRet = _CheckCreateUser(Proto);
 				if (GameRet != EGameRet::Ok)
 					throw GameRet;
 
@@ -507,9 +491,11 @@ namespace rso
 
 		CAuth::CAuth(
 			EAddressFamily AddressFamily_,
+			TCheckCreateUser CheckCreateUser_,
 			TLinkFunc LinkFuncM_, TUnLinkFunc UnLinkFuncM_, TRecvFunc RecvFuncM_,
 			TLinkFunc LinkFuncC_, TUnLinkFunc UnLinkFuncC_, TDBCallback DBCallbackFunc_,
 			const SDBOption& DBOption_, const CNamePort& MasterBindNamePort_, size_t NetCThreadCnt_, const CNamePort& ClientBindNamePort_) :
+			_CheckCreateUser(CheckCreateUser_),
 			_LinkFuncM(LinkFuncM_), _UnLinkFuncM(UnLinkFuncM_), _RecvFuncM(RecvFuncM_),
 			_LinkFuncC(LinkFuncC_),
 			_UnLinkFuncC(UnLinkFuncC_),
@@ -549,8 +535,8 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[)"
 BEGIN
 CREATE TABLE [dbo].[)" + TableName + LR"(](
 	[UID] [bigint] IDENTITY(1,1) NOT NULL,
-	[ID] [varbinary]()" + to_wstring(c_BinaryIDLengthMax) + LR"() NOT NULL,
-	[Nick] [nvarchar]()" + to_wstring(c_NickLengthMax) + LR"() NOT NULL,
+	[ID] [varbinary](MAX) NOT NULL,
+	[Nick] [nvarchar](MAX) NOT NULL,
 	[InsertedTime] [datetime] NOT NULL,
 	CONSTRAINT [PK_)" + TableName + LR"(] PRIMARY KEY CLUSTERED
 (
@@ -595,8 +581,8 @@ END)";
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			auto CreateSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + CreateSPName + LR"(]
-	@ID_ NVARCHAR()" + to_wstring(c_IDLengthMax) + LR"()
-,	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+	@ID_ NVARCHAR(MAX)
+,	@Nick_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
@@ -605,7 +591,7 @@ BEGIN
 	BEGIN TRY
 
 		DECLARE @UID BIGINT
-		DECLARE @Nick NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"() = @Nick_
+		DECLARE @Nick NVARCHAR(MAX) = @Nick_
 
 		-- MERGE는 행 추가 실패해도 Index가 증가하므로 아래와 같이 구현
 		SELECT	@UID = [UID], @Nick = Nick
@@ -638,7 +624,7 @@ END)";
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			auto LoginSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + LoginSPName + LR"(]
-	@ID_ NVARCHAR()" + to_wstring(c_IDLengthMax) + LR"()
+	@ID_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
@@ -654,7 +640,7 @@ END)";
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			auto AddFriendGetUIDSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + AddFriendGetUIDSPName + LR"(]
-	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+	@Nick_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
@@ -671,7 +657,7 @@ END)";
 			auto ChangeNickSPQuery = LR"(
 ALTER PROCEDURE [dbo].[)" + ChangeNickSPName + LR"(]
 	@UID_ BIGINT
-,	@Nick_ NVARCHAR()" + to_wstring(c_NickLengthMax) + LR"()
+,	@Nick_ NVARCHAR(MAX)
 AS
 BEGIN
 	SET XACT_ABORT ON
