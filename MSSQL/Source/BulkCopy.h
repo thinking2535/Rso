@@ -162,7 +162,13 @@ namespace rso::mssql::bulkcopy
 					pType = new STypeInt32(Default);
 				}
 				else if (Token == L"int64" ||
-					Token == L"uint64")
+					Token == L"uint64" ||
+					Token == L"time_point" ||
+					Token == L"microseconds" ||
+					Token == L"milliseconds" ||
+					Token == L"seconds" ||
+					Token == L"minutes" ||
+					Token == L"hours")
 				{
 					pType = new STypeInt64(Default);
 				}
@@ -173,10 +179,6 @@ namespace rso::mssql::bulkcopy
 				else if (Token == L"double")
 				{
 					pType = new STypeDouble(Default);
-				}
-				else if (Token == L"time_point")
-				{
-					pType = new STypeTimePoint(Default);
 				}
 				else if (Token == L"datetime")
 				{

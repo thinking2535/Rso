@@ -163,22 +163,27 @@ namespace rso
 		{
 			_NameSpaceStack.emplace(_SNameSpace());
 
-			_NameSpace.NewType(L"bool", make_shared<_CBool>());
-			_NameSpace.NewType(L"int8", make_shared<_CInt8>());
-			_NameSpace.NewType(L"uint8", make_shared<_CUInt8>());
-			_NameSpace.NewType(L"int16", make_shared<_CInt16>());
-			_NameSpace.NewType(L"uint16", make_shared<_CUInt16>());
-			_NameSpace.NewType(L"int32", make_shared<_CInt32>());
-			_NameSpace.NewType(L"uint32", make_shared<_CUInt32>());
-			_NameSpace.NewType(L"int64", make_shared<_CInt64>());
-			_NameSpace.NewType(L"uint64", make_shared<_CUInt64>());
-			_NameSpace.NewType(L"float", make_shared<_CFloat>());
-			_NameSpace.NewType(L"double", make_shared<_CDouble>());
+			_NameSpace.NewType(L"bool", make_shared<_SType>(L"Boolean"));
+			_NameSpace.NewType(L"int8", make_shared<_SType>(L"SByte"));
+			_NameSpace.NewType(L"uint8", make_shared<_SType>(L"Byte"));
+			_NameSpace.NewType(L"int16", make_shared<_SType>(L"Int16"));
+			_NameSpace.NewType(L"uint16", make_shared<_SType>(L"UInt16"));
+			_NameSpace.NewType(L"int32", make_shared<_SType>(L"Int32"));
+			_NameSpace.NewType(L"uint32", make_shared<_SType>(L"UInt32"));
+			_NameSpace.NewType(L"int64", make_shared<_SType>(L"Int64"));
+			_NameSpace.NewType(L"uint64", make_shared<_SType>(L"UInt64"));
+			_NameSpace.NewType(L"float", make_shared<_SType>(L"Single"));
+			_NameSpace.NewType(L"double", make_shared<_SType>(L"Double"));
 			_NameSpace.NewType(L"string", make_shared<_CString>());
 			_NameSpace.NewType(L"wstring", make_shared<_CWString>());
 			_NameSpace.NewType(L"u16string", make_shared<_CWString>());
 			_NameSpace.NewType(L"time_point", make_shared<_CTimePoint>());
-			_NameSpace.NewType(L"datetime", make_shared<_CDateTime>());
+			_NameSpace.NewType(L"microseconds", make_shared<_CDuration>(L"Microseconds"));
+			_NameSpace.NewType(L"milliseconds", make_shared<_CDuration>(L"Milliseconds"));
+			_NameSpace.NewType(L"seconds", make_shared<_CDuration>(L"Seconds"));
+			_NameSpace.NewType(L"minutes", make_shared<_CDuration>(L"Minutes"));
+			_NameSpace.NewType(L"hours", make_shared<_CDuration>(L"Hours"));
+			_NameSpace.NewType(L"datetime", make_shared<_SType>(L"DateTime"));
 			_NameSpace.NewType(L"stream", make_shared<_CStream>());
 
 			_NameSpace.NewContainer(L"array", [](TTypePtr FirstType_, TTypePtr SecondType_) { return make_shared<_CArray>(FirstType_, SecondType_); });

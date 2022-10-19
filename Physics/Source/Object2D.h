@@ -10,15 +10,20 @@ namespace rso::physics
 	// 객체간 상속관계에서는 자식에서 부모쪽으로 순서대로 처리할것.
 	class CObject2D : public STransform
 	{
-		shared_ptr<CObject2D> _pParent;
+		const CObject2D* _pParent = nullptr;
+	private:
+		bool _Enabled = true;
 	public:
+		bool GetEnabled() const;
+		void SetEnabled(bool Enabled_);
+		SPoint  GetPosition(void) const;
 		CObject2D(const STransform& Transform_);
+		CObject2D(const STransform& Transform_, const CObject2D* pParent_);
 		virtual ~CObject2D() {}
 
-		inline void SetParent(const shared_ptr<CObject2D>& pParent_)
+		inline void SetParent(const CObject2D* pParent_)
 		{
 			_pParent = pParent_;
 		}
-		SPoint  GetPosition(void) const;
 	};
 }

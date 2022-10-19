@@ -197,6 +197,11 @@ namespace rso::core
 			return *this;
 		}
 		CStream& operator>>(system_clock::time_point& Value_);
+		CStream& operator>>(microseconds& Value_);
+		CStream& operator>>(milliseconds& Value_);
+		CStream& operator>>(seconds& Value_);
+		CStream& operator>>(minutes& Value_);
+		CStream& operator>>(hours& Value_);
 		CStream& operator>>(SDateTime& Value_);
 		CStream& operator>>(CStream& Stream_);
 		CStream& operator>>(SProto& Proto_o)
@@ -361,6 +366,31 @@ namespace rso::core
 		CStream& operator<<(const system_clock::time_point& Value_)
 		{
 			operator<<(Value_.time_since_epoch().count());
+			return *this;
+		}
+		CStream& operator<<(const microseconds& Value_)
+		{
+			operator<<(Value_.count() * 10);
+			return *this;
+		}
+		CStream& operator<<(const milliseconds& Value_)
+		{
+			operator<<(Value_.count() * 10000);
+			return *this;
+		}
+		CStream& operator<<(const seconds& Value_)
+		{
+			operator<<(Value_.count() * 10000000);
+			return *this;
+		}
+		CStream& operator<<(const minutes& Value_)
+		{
+			operator<<(Value_.count() * 600000000);
+			return *this;
+		}
+		CStream& operator<<(const hours& Value_)
+		{
+			operator<<(Value_.count() * 36000000000);
 			return *this;
 		}
 		CStream& operator<<(const SDateTime& Value_);
@@ -561,6 +591,11 @@ namespace rso::core
 	template<> inline wstring GetStdName(const u16string&) { return L"u16string"; }
 	template<> inline wstring GetStdName(const u32string&) { return L"u32string"; }
 	template<> inline wstring GetStdName(const system_clock::time_point&) { return L"time_point"; }
+	template<> inline wstring GetStdName(const microseconds&) { return L"microseconds"; }
+	template<> inline wstring GetStdName(const milliseconds&) { return L"milliseconds"; }
+	template<> inline wstring GetStdName(const seconds&) { return L"seconds"; }
+	template<> inline wstring GetStdName(const minutes&) { return L"minutes"; }
+	template<> inline wstring GetStdName(const hours&) { return L"hours"; }
 	template<> inline wstring GetStdName(const SDateTime&) { return L"datetime"; }
 	template<> inline wstring GetStdName(const CStream&) { return L"stream"; }
 	template<typename TValue, size_t Size> inline wstring GetStdName(const array<TValue, Size>&)
@@ -600,6 +635,11 @@ namespace rso::core
 	template<> inline wstring GetMemberName(const u16string&, const wstring& MemberName_) { return MemberName_; }
 	template<> inline wstring GetMemberName(const u32string&, const wstring& MemberName_) { return MemberName_; }
 	template<> inline wstring GetMemberName(const system_clock::time_point&, const wstring& MemberName_) { return MemberName_; }
+	template<> inline wstring GetMemberName(const microseconds&, const wstring& MemberName_) { return MemberName_; }
+	template<> inline wstring GetMemberName(const milliseconds&, const wstring& MemberName_) { return MemberName_; }
+	template<> inline wstring GetMemberName(const seconds&, const wstring& MemberName_) { return MemberName_; }
+	template<> inline wstring GetMemberName(const minutes&, const wstring& MemberName_) { return MemberName_; }
+	template<> inline wstring GetMemberName(const hours&, const wstring& MemberName_) { return MemberName_; }
 	template<> inline wstring GetMemberName(const SDateTime&, const wstring& MemberName_) { return MemberName_; }
 	template<> inline wstring GetMemberName(const CStream&, const wstring& MemberName_) { return MemberName_; }
 	template<typename TValue, size_t Size> inline wstring GetMemberName(const array<TValue, Size>&, const wstring& MemberName_) { return MemberName_; }

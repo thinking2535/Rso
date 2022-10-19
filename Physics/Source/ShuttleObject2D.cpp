@@ -6,8 +6,8 @@ namespace rso::physics
 {
     using namespace placeholders;
 
-    CShuttleObject2D::CShuttleObject2D(const STransform& Transform_, const SPoint& BeginPos_, const SPoint& EndPos_, float ScalarVelocity_, float Delay_, const SStructMove& StructMove_) :
-        CMovingObject2D(Transform_, SPoint()),
+    CShuttleObject2D::CShuttleObject2D(const STransform& Transform_, const list<shared_ptr<CCollider2D>>& Colliders_, const SPoint& BeginPos_, const SPoint& EndPos_, float ScalarVelocity_, float Delay_, const SStructMove& StructMove_) :
+        CMovingObject2D(Transform_, Colliders_, SPoint()),
         _BeginPos(BeginPos_),
         _EndPos(EndPos_),
         _ScalarVelocity(ScalarVelocity_),
@@ -24,7 +24,7 @@ namespace rso::physics
         auto Vector = (_EndPos - _BeginPos) * static_cast<float>(_StructMove.Direction);
         Velocity = Vector * (_ScalarVelocity / GetScalar(Vector));
     }
-    void CShuttleObject2D::_FixedUpdate(int64 /*Tick_*/)
+    void CShuttleObject2D::_FixedUpdate(int64 /*tick*/)
     {
         // Position을 바꾸는 것은 Engine이고 여기서는 Velocity만 변경
         if (_StructMove.IsMoving)

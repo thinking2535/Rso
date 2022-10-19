@@ -36,10 +36,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Base.h" />
-    <ClInclude Include="Source\CollectionCollider2D.h" />
     <ClInclude Include="Source\Collider2D.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\MovingObject2D.h" />
+    <ClInclude Include="Source\NetworkEngine.h" />
     <ClInclude Include="Source\Object2D.h" />
     <ClInclude Include="Source\ObjectStraight.h" />
     <ClInclude Include="Source\Physics.h" />
@@ -53,10 +53,10 @@
     <ClInclude Include="Source\TickScale.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\CollectionCollider2D.cpp" />
     <ClCompile Include="Source\Collider2D.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\MovingObject2D.cpp" />
+    <ClCompile Include="Source\NetworkEngine.cpp" />
     <ClCompile Include="Source\Object2D.cpp" />
     <ClCompile Include="Source\ObjectStraight.cpp" />
     <ClCompile Include="Source\Physics.cpp" />

@@ -87,6 +87,12 @@
     <ClInclude Include="Source\ClosedRank.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EloController.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Limiter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Quest.cpp">
@@ -108,6 +114,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\FixedRandom32.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EloController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Limiter.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

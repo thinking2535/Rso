@@ -9,15 +9,13 @@ namespace rso::physics
 	class CMovingObject2D : public CObject2D
 	{
 	public:
-		using FFixedUpdate = function<void(int64 Tick_)>;
-		shared_ptr<CCollider2D> pCollider;
+		list<shared_ptr<CCollider2D>> Colliders;
 		SPoint Velocity;
+		float Mass = 1.0f;
 
-		CMovingObject2D(const STransform& Transform_, const SPoint& Velocity_);
+		CMovingObject2D(const STransform& Transform_, const list<shared_ptr<CCollider2D>>& Colliders_, const SPoint& Velocity_);
 		virtual CPlayerObject2D* GetPlayerObject2D(void);
 	public:
-		FFixedUpdate fFixedUpdate;
+		function<void(int64 tick)> fFixedUpdate;
 	};
-
-	void SetColliderToMovingObject2D(const shared_ptr<CCollider2D>& pCollider_, const shared_ptr<CMovingObject2D>& MovingObject_);
 }

@@ -287,6 +287,14 @@ using namespace chrono;
 using namespace rso;
 using namespace base;
 
+
+CList<shared_ptr<int>> l;
+void test(CList<shared_ptr<int>>::iterator it, shared_ptr<int> p)
+{
+	l.erase(it);
+}
+
+
 void main(void)
 {
 	CMultiIndexMap<int, non_unique_index<int>, unique_index<string>> m;

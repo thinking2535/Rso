@@ -13,6 +13,6 @@ namespace rso::gameutil
 	public:
 		EloController() noexcept;
 		EloController(double k, double diffRatio, double diffPoint) noexcept;
-		void play(double& point, double& opponentPoint, double realWinRatio) noexcept;
+		double getAddedPoint(double point, double opponentPoint, double realWinRatio) noexcept;
 	};
 }

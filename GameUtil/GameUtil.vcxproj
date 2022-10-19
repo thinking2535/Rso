@@ -346,12 +346,14 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
     <ClInclude Include="Source\ClosedRank.h" />
     <ClInclude Include="Source\Command.h" />
     <ClInclude Include="Source\Devider.h" />
+    <ClInclude Include="Source\EloController.h" />
     <ClInclude Include="Source\Equip.h" />
     <ClInclude Include="Source\FixedRandom32.h" />
     <ClInclude Include="Source\FixedRandom64.h" />
     <ClInclude Include="Source\Inventory.h" />
     <ClInclude Include="Source\KeyCnt.h" />
     <ClInclude Include="Source\Latency.h" />
+    <ClInclude Include="Source\Limiter.h" />
     <ClInclude Include="Source\Match.h" />
     <ClInclude Include="Source\OptionJson.h" />
     <ClInclude Include="Source\Package.h" />
@@ -368,8 +370,10 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Boost.cpp" />
+    <ClCompile Include="Source\EloController.cpp" />
     <ClCompile Include="Source\FixedRandom32.cpp" />
     <ClCompile Include="Source\Latency.cpp" />
+    <ClCompile Include="Source\Limiter.cpp" />
     <ClCompile Include="Source\Package.cpp" />
     <ClCompile Include="Source\PeriodCounter.cpp" />
     <ClCompile Include="Source\Quest.cpp" />

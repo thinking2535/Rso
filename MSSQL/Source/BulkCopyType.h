@@ -149,11 +149,6 @@ namespace rso::mssql::bulkcopy
 		}
 	};
 
-	struct STypeTimePoint : public STypeInt64
-	{
-		STypeTimePoint(bool Default_) : STypeInt64(Default_) {}
-	};
-
 	struct STypeDateTime : public SType
 	{
 		STypeDateTime(bool Default_) : SType(new BYTE[SDateTime::c_StreamSize], Default_) {}

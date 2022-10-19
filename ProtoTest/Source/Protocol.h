@@ -11,30 +11,42 @@
 
 using namespace rso;
 using namespace core;
-using TUID = int32;
-template<typename T>
 struct STest : public SProto
 {
-	void operator << (CStream&) override
+	milliseconds a{};
+	STest()
 	{
 	}
-	void operator << (const Value&) override
+	STest(const milliseconds& a_) : a(a_)
 	{
 	}
-	void operator >> (CStream&) const override
+	STest(milliseconds&& a_) : a(std::move(a_))
 	{
 	}
-	void operator >> (Value&) const override
+	void operator << (CStream& Stream_) override
 	{
+		Stream_ >> a;
+	}
+	void operator << (const Value& Value_) override
+	{
+		Value_["a"] >> a;
+	}
+	void operator >> (CStream& Stream_) const override
+	{
+		Stream_ << a;
+	}
+	void operator >> (Value& Value_) const override
+	{
+		Value_["a"] = a;
 	}
 	static wstring StdName(void)
 	{
-		return L"";
+		return 
+			GetStdName(milliseconds());
 	}
 	static wstring MemberName(void)
 	{
-		return L"";
+		return 
+			GetMemberName(milliseconds(), L"a");
 	}
 };
-using TTT2 = list<TUID>;
-using TTT3 = STest<TUID>;

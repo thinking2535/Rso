@@ -20,6 +20,46 @@ namespace rso::core
 
 		return *this;
 	}
+	CStream& CStream::operator>>(microseconds& Value_)
+	{
+		int64 Ticks = 0;
+		_Pop(Ticks);
+		Value_ = microseconds(Ticks / 10);
+
+		return *this;
+	}
+	CStream& CStream::operator>>(milliseconds& Value_)
+	{
+		int64 Ticks = 0;
+		_Pop(Ticks);
+		Value_ = milliseconds(Ticks / 10000);
+
+		return *this;
+	}
+	CStream& CStream::operator>>(seconds& Value_)
+	{
+		int64 Ticks = 0;
+		_Pop(Ticks);
+		Value_ = seconds(Ticks / 10000000);
+
+		return *this;
+	}
+	CStream& CStream::operator>>(minutes& Value_)
+	{
+		int64 Ticks = 0;
+		_Pop(Ticks);
+		Value_ = minutes(Ticks / 600000000);
+
+		return *this;
+	}
+	CStream& CStream::operator>>(hours& Value_)
+	{
+		int64 Ticks = 0;
+		_Pop(Ticks);
+		Value_ = hours(Ticks / 36000000000);
+
+		return *this;
+	}
 	CStream& CStream::operator>>(SDateTime& Value_)
 	{
 		if (size() < SDateTime::c_StreamSize)

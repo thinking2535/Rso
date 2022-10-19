@@ -16,7 +16,12 @@ namespace rso::mssql
 			return new CTypeNum<int32>();
 		else if (TypeName_ == L"int64" ||
 			TypeName_ == L"uint64" ||
-			TypeName_ == L"time_point")
+			TypeName_ == L"time_point" ||
+			TypeName_ == L"microseconds" ||
+			TypeName_ == L"milliseconds" ||
+			TypeName_ == L"seconds" ||
+			TypeName_ == L"minutes" ||
+			TypeName_ == L"hours")
 			return new CTypeNum<int64>();
 		else if (TypeName_ == L"float")
 			return new CTypeNum<float>();

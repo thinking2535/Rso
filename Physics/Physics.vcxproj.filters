@@ -33,9 +33,6 @@
     <ClInclude Include="Source\TickScale.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CollectionCollider2D.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Collider2D.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -60,6 +57,9 @@
     <ClInclude Include="Source\ServerEngine.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\NetworkEngine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Physics.cpp">
@@ -69,9 +69,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collider2D.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CollectionCollider2D.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ShuttleObject2D.cpp">
@@ -93,6 +90,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ServerEngine.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NetworkEngine.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

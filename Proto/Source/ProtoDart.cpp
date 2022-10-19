@@ -89,12 +89,17 @@ namespace rso
 		}
 		CProtoDart::CProtoDart(const wstring& IncludePath_, const wstring& SourceFile_, const wstring& LibraryName_) : CProtoBase(IncludePath_, SourceFile_, SourceFile_ + L".dart", LibraryName_)
 		{
-			_NameSpace.NewType(L"bool", make_shared<_STypeBool>(L"bool"));
-			_NameSpace.NewType(L"int32", make_shared<_STypeInt>(L"int"));
-			_NameSpace.NewType(L"int", make_shared<_STypeInt>(L"int"));
-			_NameSpace.NewType(L"double", make_shared<_STypeDouble>(L"double"));
-			_NameSpace.NewType(L"string", make_shared<_STypeString>(L"String"));
-			_NameSpace.NewType(L"time_point", make_shared<_STypeDateTime>(L"DateTime"));
+			_NameSpace.NewType(L"bool", make_shared<_STypeBool>());
+			_NameSpace.NewType(L"int32", make_shared<_STypeInt>());
+			_NameSpace.NewType(L"int", make_shared<_STypeInt>());
+			_NameSpace.NewType(L"double", make_shared<_STypeDouble>());
+			_NameSpace.NewType(L"string", make_shared<_STypeString>());
+			_NameSpace.NewType(L"time_point", make_shared<_STypeDateTime>());
+			_NameSpace.NewType(L"microseconds", make_shared<_STypeDuration>());
+			_NameSpace.NewType(L"milliseconds", make_shared<_STypeDuration>());
+			_NameSpace.NewType(L"seconds", make_shared<_STypeDuration>());
+			_NameSpace.NewType(L"minutes", make_shared<_STypeDuration>());
+			_NameSpace.NewType(L"hours", make_shared<_STypeDuration>());
 
 			_NameSpace.NewContainer(L"list", [](TTypePtr FirstType_, TTypePtr) { return make_shared<_CList>(FirstType_); });
 			_NameSpace.NewContainer(L"set", [](TTypePtr FirstType_, TTypePtr) { return make_shared<_CSet>(FirstType_); });

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MovingObject2D.h"
-#include "CollectionCollider2D.h"
 
 namespace rso::physics
 {
@@ -14,9 +13,9 @@ namespace rso::physics
         SStructMove _StructMove;
 
     public:
-        CShuttleObject2D(const STransform& Transform_, const SPoint& BeginPos_, const SPoint& EndPos_, float ScalarVelocity_, float Delay_, const SStructMove& StructMove_);
+        CShuttleObject2D(const STransform& Transform_, const list<shared_ptr<CCollider2D>>& Colliders_, const SPoint& BeginPos_, const SPoint& EndPos_, float ScalarVelocity_, float Delay_, const SStructMove& StructMove_);
         SStructMovePosition GetStructMovePosition(void) const { return SStructMovePosition(_StructMove, LocalPosition); }
         void _SetMovingVelocity(void);
-        void _FixedUpdate(int64 Tick_);
+        void _FixedUpdate(int64 tick);
     };
 }

@@ -1,4 +1,4 @@
-#include "elo_controller.h"
+#include "EloController.h"
 
 namespace rso::gameutil
 {
@@ -14,12 +14,9 @@ namespace rso::gameutil
 		_diffPoint(diffPoint)
 	{
 	}
-	void EloController::play(double& point, double& opponentPoint, double realWinRatio) noexcept
+	double EloController::getAddedPoint(double point, double opponentPoint, double realWinRatio) noexcept
 	{
 		const auto winRatio = 1.0 / (pow(_diffRatio, (opponentPoint - point) / _diffPoint) + 1);
-		const auto addedPoint = _k * (realWinRatio - winRatio);
-
-		point += addedPoint;
-		opponentPoint -= addedPoint;
+		return _k * (realWinRatio - winRatio);
 	}
 }

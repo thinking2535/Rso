@@ -1,9 +1,8 @@
 using namespace rso
 using namespace core
 
-struct STest<T,GG>
+struct STest
 {
-	int32 a
+	milliseconds a
 }
-
 

@@ -47,94 +47,6 @@ namespace rso
 					return L"using " + NewName_ + L" = " + FullName() + L";\n";
 				}
 			};
-			class _CBool : public _SType
-			{
-			public:
-				_CBool() :
-					_SType(L"Boolean")
-				{
-				}
-			};
-			class _CInt8 : public _SType
-			{
-			public:
-				_CInt8() :
-					_SType(L"SByte")
-				{
-				}
-			};
-			class _CUInt8 : public _SType
-			{
-			public:
-				_CUInt8() :
-					_SType(L"Byte")
-				{
-				}
-			};
-			class _CInt16 : public _SType
-			{
-			public:
-				_CInt16() :
-					_SType(L"Int16")
-				{
-				}
-			};
-			class _CUInt16 : public _SType
-			{
-			public:
-				_CUInt16() :
-					_SType(L"UInt16")
-				{
-				}
-			};
-			class _CInt32 : public _SType
-			{
-			public:
-				_CInt32() :
-					_SType(L"Int32")
-				{
-				}
-			};
-			class _CUInt32 : public _SType
-			{
-			public:
-				_CUInt32() :
-					_SType(L"UInt32")
-				{
-				}
-			};
-			class _CInt64 : public _SType
-			{
-			public:
-				_CInt64() :
-					_SType(L"Int64")
-				{
-				}
-			};
-			class _CUInt64 : public _SType
-			{
-			public:
-				_CUInt64() :
-					_SType(L"UInt64")
-				{
-				}
-			};
-			class _CFloat : public _SType
-			{
-			public:
-				_CFloat() :
-					_SType(L"Single")
-				{
-				}
-			};
-			class _CDouble : public _SType
-			{
-			public:
-				_CDouble() :
-					_SType(L"Double")
-				{
-				}
-			};
 			class _CString : public _SType
 			{
 			public:
@@ -160,15 +72,16 @@ namespace rso
 					_SType(L"TimePoint")
 				{
 				}
-				wstring FullName(void) const { return L"rso.core." + Name(); }
+				wstring FullName(void) const override { return L"rso.core." + Name(); }
 			};
-			class _CDateTime : public _SType
+			class _CDuration : public _SType
 			{
 			public:
-				_CDateTime() :
-					_SType(L"DateTime")
+				_CDuration(const wstring& name) :
+					_SType(name)
 				{
 				}
+				wstring FullName(void) const override { return L"rso.core." + Name(); }
 			};
 			class _CStream : public _SType
 			{

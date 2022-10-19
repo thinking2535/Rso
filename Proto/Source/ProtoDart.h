@@ -39,8 +39,8 @@ namespace rso
 			};
 			struct _STypeBool : public _SType
 			{
-				_STypeBool(const wstring& Name_) :
-					_SType(Name_)
+				_STypeBool() :
+					_SType(L"bool")
 				{
 				}
 				wstring DeclareNewStr(const wstring&) const override
@@ -69,8 +69,8 @@ namespace rso
 			};
 			struct _STypeInt : public _SType
 			{
-				_STypeInt(const wstring& Name_) :
-					_SType(Name_)
+				_STypeInt() :
+					_SType(L"int")
 				{
 				}
 				wstring DeclareNewStr(const wstring&) const override
@@ -91,8 +91,8 @@ namespace rso
 			};
 			struct _STypeDouble : public _SType
 			{
-				_STypeDouble(const wstring& Name_) :
-					_SType(Name_)
+				_STypeDouble() :
+					_SType(L"double")
 				{
 				}
 				wstring DeclareNewStr(const wstring&) const override
@@ -113,8 +113,8 @@ namespace rso
 			};
 			struct _STypeString : public _SType
 			{
-				_STypeString(const wstring& Name_) :
-					_SType(Name_)
+				_STypeString() :
+					_SType(L"String")
 				{
 				}
 				wstring DeclareNewStr(const wstring&) const override
@@ -135,8 +135,8 @@ namespace rso
 			};
 			struct _STypeDateTime : public _SType
 			{
-				_STypeDateTime(const wstring& Name_) :
-					_SType(Name_)
+				_STypeDateTime() :
+					_SType(L"DateTime")
 				{
 				}
 				wstring DeclareNewStr(const wstring&) const override
@@ -148,12 +148,34 @@ namespace rso
 				{
 					return Indentation_ + VarName_ + L" = " + GetStreamPopStr(StreamName_) + L";\n";
 				}
-				wstring GetStreamPushStr(const wstring& StreamName_, const wstring& VarName_) const override { return StreamName_ + L".pushString(" + VarName_ + L")"; }
+				wstring GetStreamPushStr(const wstring& StreamName_, const wstring& VarName_) const override { return StreamName_ + L".pushDateTime(" + VarName_ + L")"; }
 				wstring GetPushToStreamStr(const wstring& VarName_, wstring& Indentation_, const wstring& StreamName_) const override
 				{
 					return Indentation_ + GetStreamPushStr(StreamName_, VarName_) + L";\n";
 				}
-				wstring SqliteName(void) const override { return L"TEXT"; }
+				wstring SqliteName(void) const override { return L"INTEGER"; }
+			};
+			struct _STypeDuration : public _SType
+			{
+				_STypeDuration() :
+					_SType(L"Duration")
+				{
+				}
+				wstring DeclareNewStr(const wstring&) const override
+				{
+					return L" = Duration.zero";
+				}
+				wstring GetStreamPopStr(const wstring& StreamName_) const override { return StreamName_ + L".popDuration()"; }
+				wstring GetPopFromStreamStr(const wstring& VarName_, wstring& Indentation_, const wstring& StreamName_) const override
+				{
+					return Indentation_ + VarName_ + L" = " + GetStreamPopStr(StreamName_) + L";\n";
+				}
+				wstring GetStreamPushStr(const wstring& StreamName_, const wstring& VarName_) const override { return StreamName_ + L".pushDuration(" + VarName_ + L")"; }
+				wstring GetPushToStreamStr(const wstring& VarName_, wstring& Indentation_, const wstring& StreamName_) const override
+				{
+					return Indentation_ + GetStreamPushStr(StreamName_, VarName_) + L";\n";
+				}
+				wstring SqliteName(void) const override { return L"INTEGER"; }
 			};
 			class _CEnum : public _SType
 			{

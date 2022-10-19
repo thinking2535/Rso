@@ -1,21 +1,21 @@
 #pragma once
 
-#include "Engine.h"
+#include "NetworkEngine.h"
 
 namespace rso::physics
 {
-    class CServerEngine : public CEngine
+    class CServerEngine : public CNetworkEngine
     {
     public:
-        using FSyncMessage = function<void(int64 Tick_)>;
+        using FSyncMessage = function<void()>;
         FSyncMessage fSyncMessage;
     private:
         int64 _LastSentTick = 0;
 
     public:
-        CServerEngine(int64 NetworkTickSync_, int64 CurTick_, float ContactOffset_, int32 FPS_, FSyncMessage fSyncMessage_);
+        CServerEngine(int64 CurTick_, float ContactOffset_, int32 FPS_, FSyncMessage fSyncMessage_, int64 NetworkTickSync_);
         void UpdateAndSyncMessage(void);
-        void Update(void);
+        void Update(void) override;
         void Send(void);
     };
 }

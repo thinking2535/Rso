@@ -2,8 +2,8 @@
 
 namespace rso::physics
 {
-    CServerEngine::CServerEngine(int64 NetworkTickSync_, int64 CurTick_, float ContactOffset_, int32 FPS_, FSyncMessage fSyncMessage_) :
-        CEngine(NetworkTickSync_, CurTick_, ContactOffset_, FPS_),
+    CServerEngine::CServerEngine(int64 CurTick_, float ContactOffset_, int32 FPS_, FSyncMessage fSyncMessage_, int64 NetworkTickSync_) :
+        CNetworkEngine(CurTick_, ContactOffset_, FPS_, NetworkTickSync_),
         fSyncMessage(fSyncMessage_)
     {
     }
@@ -14,7 +14,7 @@ namespace rso::physics
         if (_Tick - _LastSentTick > _NetworkTickSync)
         {
             Send();
-            fSyncMessage(_Tick);
+            fSyncMessage();
         }
     }
     void CServerEngine::Update(void)

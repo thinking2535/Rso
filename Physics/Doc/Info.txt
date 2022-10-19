@@ -1,3 +1,65 @@
+!! 아래 내용은 보류
+	매 충돌시 콜백처리
+		장점
+			효율적이므로 (Contact Poitns 객체가 필요 없음)
+
+	Collision2D에 ContactPoints 를 한번에 처리
+		장점
+			콜백 외부에서 객체 삭제할 경우 ContactPoints 에 Null값 존재 하지 않음.
+			지상에서의 마찰 처리나, 가속 처리시 한번의 Engine.Update 1회시에 한번만 계산할 필요가 있을 경우 편리
+		
+
+//////////// 아래 /////////////////////////////
+* physics 라이브러리 에서 CheckOverlapped의 반환값으로 충돌객체의 삭제 여부를 결정하고 있는데, 플레이어는 삭제되지 않고
+	다른 Object에 대해서만 삭제하는 것으로 간주하고 있음
+	또한 Collision콜백에서 삭제할 경우 익셉션이 발생하도록 처리하고 있음.
+	<개선방향>
+		CollisionEnter에서 중첩되지 않도록 위치 보정
+		CollisionStay에서 속도보정
+		-> Bounce 처리는 CollisionEnter 외부에서 할 것이고 이후에 Stay 에서 Bounce처리된 상태라면 속도 보정할 일이 없을 것이므로 속도에 대한 이중계산 없음.
+		
+
+		충돌 체크 전 Collision{RelativeVelocity, OtherMovingObject} 객체를 생성하고 CheckOverlapped 함수에 전달하여 오브젝트의 모든 Collider를 돌며
+		PlayerObject의 ContactPoints 에 추가하며 동시에 전달받은Collision객체에 추가하여
+
+		ContactPoint{Normal, Collider, OtherCollider, }
+		CollisionEnter 하고 PlayerObject의 ContactPoints에 없으면 ContactPoints 및 Collision 에 추가하고
+		이후 CollisionStay 는 무조건 처리하되 PlayerObject의 ContactPoints 를 그대로 넘길것
+//////////////////////////////////////////////
+
+
+
+// 탄성 충돌 공식 /////////////////////
+완전 탄성 충돌에서 나의 충돌 후의 속도는
+	v0 : 충돌 전의 속도
+	r : 상대방의 나에대한 상대 속도 (v1 - v0)
+	m0 : 나의 질량
+	m1 : 상대의 질량
+
+	v0 += r * 2*m1/(m0 + m1)
+
+비탄성 충돌
+	v0_ = v0 * (m0 / (m0 + m1)) + v1 * (m1 / (m0 + m1))
+
+
+충돌하는 두 물체의 탄성 합 (0 : 완전하게 탄성을 가짐, 1 : 탄성이 없음)
+	e = e0 * e1
+
+	e0	e1	e
+	----------
+	0	0	0
+	0	1	0
+	0	0.5	0
+	0.5	0.5	0.25
+	1	1	1
+
+
+// 자유낙하
+// 변위 = 0.5 * g * t*t + 현재v * t
+//      = t * (0.5 * g * t + 현재v)
+
+
+
 // 아래 GetShootInfo는 역탄도 계산 공식으로, 시작스칼라벡터(발사속도)와 목표지점과 중력가속도를 알 때 시작벡터를 구하는 공식
 	public class CShootInfo
 	{

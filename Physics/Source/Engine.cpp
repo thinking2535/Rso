@@ -7,11 +7,10 @@ namespace rso::physics
     int64 CEngine::_UnitTick;
     float CEngine::_DeltaTime;
 
-    CEngine::CEngine(int64 NetworkTickSync_, int64 CurTick_, float ContactOffset_, int32 FPS_) :
-        _NetworkTickSync(NetworkTickSync_),
-        _CurTick(CurTick_),
-        _Tick(CurTick_)
+    CEngine::CEngine(int64 CurTick_, float ContactOffset_, int32 FPS_) :
+        _CurTick(CurTick_)
     {
+        _Tick = CurTick_;
         _ContactOffset = ContactOffset_;
         _FPS = FPS_;
         _UnitTick = 10000000 / _FPS;
@@ -36,20 +35,42 @@ namespace rso::physics
             for (size_t pi = 0; pi < _Players.size() - 1; ++pi)
             {
                 for (size_t ti = pi + 1; ti < _Players.size(); ++ti)
-                    _Players[pi]->OverlappedCheck(_Tick, _Players[pi], _Players[ti]);
+                    _Players[pi]->CheckOverlapped(_Tick, _Players[ti].get());
             }
 
             for (auto& p : _Players)
             {
-                for (auto& m : _MovingObjects)
-                    p->OverlappedCheck(_Tick, p, m);
+                for (auto it = _MovingObjects.begin(); it != _MovingObjects.end(); )
+                {
+                    if (p->CheckOverlapped(_Tick, it->get()))
+                    {
+                        auto itCheck = it;
+                        ++it;
+                        RemoveMovingObject(itCheck);
+                    }
+                    else
+                    {
+                        ++it;
+                    }
+                }
 
-                for (auto& s : _Objects)
-                    p->OverlappedCheck(_Tick, p, s);
+                for (auto it = _Objects.begin(); it != _Objects.end(); )
+                {
+                    if (p->CheckOverlapped(_Tick, it->get()))
+                    {
+                        auto itCheck = it;
+                        ++it;
+                        RemoveObject(itCheck);
+                    }
+                    else
+                    {
+                        ++it;
+                    }
+                }
             }
 
             if (fFixedUpdate)
-                fFixedUpdate(_Tick);
+                fFixedUpdate();
         }
     }
     CEngine::TObjectsIt CEngine::AddObject(const shared_ptr<CCollider2D>& Object_)
@@ -58,7 +79,9 @@ namespace rso::physics
     }
     void CEngine::RemoveObject(TObjectsIt Iterator_)
     {
-        (*Iterator_)->LocalEnabled = false;
+        for (auto& i : _Players)
+            i->NotOverlapped(_Tick, Iterator_->get());
+
         _Objects.erase(Iterator_);
     }
     CEngine::TMovingObjectsIt CEngine::AddMovingObject(const shared_ptr<CMovingObject2D>& Object_)
@@ -67,7 +90,10 @@ namespace rso::physics
     }
     void CEngine::RemoveMovingObject(TMovingObjectsIt Iterator_)
     {
-        (*Iterator_)->pCollider->LocalEnabled = false;
+        for (auto& i : _Players)
+            for (auto& c : Iterator_->get()->Colliders)
+                i->NotOverlapped(_Tick, c.get());
+
         _MovingObjects.erase(Iterator_);
     }
     void CEngine::AddPlayer(const shared_ptr<CPlayerObject2D>& Player_)

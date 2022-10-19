@@ -139,6 +139,11 @@ namespace rso
 			_NameSpace.NewType(L"u16string", make_shared<_SType>(L"u16string"));
 			_NameSpace.NewType(L"u32string", make_shared<_SType>(L"u32string"));
 			_NameSpace.NewType(L"time_point", make_shared<_SType>(L"system_clock::time_point"));
+			_NameSpace.NewType(L"microseconds", make_shared<_SType>(L"microseconds"));
+			_NameSpace.NewType(L"milliseconds", make_shared<_SType>(L"milliseconds"));
+			_NameSpace.NewType(L"seconds", make_shared<_SType>(L"seconds"));
+			_NameSpace.NewType(L"minutes", make_shared<_SType>(L"minutes"));
+			_NameSpace.NewType(L"hours", make_shared<_SType>(L"hours"));
 			_NameSpace.NewType(L"datetime", make_shared<_SType>(L"SDateTime"));
 			_NameSpace.NewType(L"stream", make_shared<_SType>(L"CStream"));
 

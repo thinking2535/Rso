@@ -1,3 +1,8 @@
+* shared_ptr, unique_ptr 형변환은 dynamic_pointer_cast
+    ex)
+    shared_ptr<CArrow> pOtherCollider_;
+    dynamic_pointer_cast<CArrowDodgeItem>(pOtherCollider_)
+
 * if constexpr   // 컴파일 타임 비교
 * auto [a, b] 로 받기 // tuple, 가변인자, array 가능
 * if (;), switch (;) 구문  // ; 오른쪽의 값이 기존 사용되는 값이고, ; 왼쪽이 if, switch 범위에 속하는 변수 선언 및 기타 명령 가능

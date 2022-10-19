@@ -18,9 +18,8 @@ namespace rso::physics
 		using TMovingObjectsIt = TMovingObjects::iterator;
 
 	protected:
-		int64 _NetworkTickSync;
 		CTick _CurTick;
-		int64 _Tick = 0; // 물리 처리가 끝난 시점의 Tick
+		int64 _Tick; // 물리 처리가 끝난 시점의 Tick
 	private:
 		static float _ContactOffset;
 		static int32 _FPS;
@@ -31,16 +30,17 @@ namespace rso::physics
 		static inline int32 GetFPS(void) { return _FPS; }
 		static inline int64 GetUnitTick(void) { return _UnitTick; }
 		static inline float GetDeltaTime(void) { return _DeltaTime; }
-		inline int64 GetTick(void) const { return _Tick; }
+		inline int64 GetTick(void) { return _Tick; }
 	protected:
 		CList<shared_ptr<CCollider2D>> _Objects;
 		CList<shared_ptr<CMovingObject2D>> _MovingObjects;
 		vector<shared_ptr<CPlayerObject2D>> _Players;
 	public:
-		CEngine(int64 NetworkTickSync_, int64 CurTick_, float ContactOffset_, int32 FPS_);
+		CEngine(int64 CurTick_, float ContactOffset_, int32 FPS_);
 	protected:
 		void _Update(int64 ToTick_);
 	public:
+		virtual void Update() = 0;
 		TObjectsIt AddObject(const shared_ptr<CCollider2D>& Object_);
 		void RemoveObject(TObjectsIt Iterator_);
 		TMovingObjectsIt AddMovingObject(const shared_ptr<CMovingObject2D>& Object_);
@@ -51,6 +51,6 @@ namespace rso::physics
 		void Start(void);
 		void Stop(void);
 		bool IsStarted(void) const;
-		function<void(int64 Tick_)> fFixedUpdate;
+		function<void()> fFixedUpdate;
 	};
 }
