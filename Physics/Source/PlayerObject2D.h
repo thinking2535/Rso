@@ -33,7 +33,7 @@ namespace rso::physics
 	public:
 		using TContactPoint2Ds = unordered_map<SContactPoint2D, CMovingObject2D* const, SContactPoint2DHasher>;
 		using FCollision = function<bool(int64 tick, const SCollision2D& Collision_)>;
-		using FTrigger = function<bool(CCollider2D* pCollider_)>;
+		using FTrigger = function<bool(int64 tick, CCollider2D* pCollider_)>;
 
 		FCollision fCollisionEnter;
 		FCollision fCollisionStay;
@@ -49,13 +49,13 @@ namespace rso::physics
 		TContactPoint2Ds _ContactPoint2Ds;
 
 		CPlayerObject2D(const STransform& Transform_, const list<shared_ptr<CCollider2D>>& Colliders_, const SPoint& Velocity_);
-		CPlayerObject2D* GetPlayerObject2D(void) override;
+		bool isPlayerObject2D() override;
 
 		bool CheckOverlapped(int64 tick, CCollider2D* pOtherCollider_);
 		bool CheckOverlapped(int64 tick, CMovingObject2D* pOtherMovingObject_);
-		bool Collided(int64 tick, const SCollision2D& Collision_);
-		bool Triggered(CCollider2D* pCollider_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_);
-		void NotOverlapped(int64 tick, CCollider2D* pCollider_, CCollider2D* pOtherCollider_);
-		void NotOverlapped(int64 tick, CCollider2D* pOtherCollider_);
+		bool Collided(int64 tick, const SCollision2D& Collision_) override;
+		bool Triggered(int64 tick, CCollider2D* pCollider_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_) override;
+		void NotOverlapped(int64 tick, CCollider2D* pCollider_, CCollider2D* pOtherCollider_) override;
+		void NotOverlapped(int64 tick, CCollider2D* pOtherCollider_) override;
 	};
 }

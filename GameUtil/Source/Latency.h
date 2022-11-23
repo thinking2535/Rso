@@ -10,16 +10,16 @@ namespace rso::gameutil
 
 	class CLatency
 	{
-		const t_duration _MaxLatency;
-		const t_duration _SubDuration = t_duration(100000);
-		t_duration _Offset{ MinValue<int64>() };
-		t_duration _Latency{};
+		const t_duration _maxLatency;
+		const t_duration _subDuration = t_duration(100000);
+		t_duration _offset{ MinValue<int64>() };
+		t_duration _latency{};
 
 	public:
-		CLatency(const milliseconds& MaxLateancy_);
-		void Recv(const TTime& Time_, const TTime& RemoteTime_);
-		inline bool Proc(const TTime& Time_, const TTime& RemoteTime_) const { return Time_ + _Offset - _Latency >= RemoteTime_; }
-		inline t_duration GetOffset(void) const { return _Offset; }
-		inline t_duration GetLatency(void) const { return _Latency; }
+		CLatency(const milliseconds& maxLateancy);
+		void recv(const TTime& time, const TTime& remoteTime);
+		inline bool proc(const TTime& time, const TTime& remoteTime) const { return time + _offset - _latency >= remoteTime; }
+		inline t_duration getOffset(void) const { return _offset; }
+		inline t_duration getLatency(void) const { return _latency; }
 	};
 }

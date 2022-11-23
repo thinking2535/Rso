@@ -67,6 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{814992F3-B93
 		Doc\Note.txt = Doc\Note.txt
 		Doc\PortRule.txt = Doc\PortRule.txt
 		Doc\Regex.txt = Doc\Regex.txt
+		Doc\Unity.txt = Doc\Unity.txt
 		Doc\작업중.txt = Doc\작업중.txt
 	EndProjectSection
 EndProject

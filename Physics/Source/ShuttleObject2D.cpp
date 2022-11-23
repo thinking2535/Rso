@@ -14,6 +14,7 @@ namespace rso::physics
         _Delay(Delay_),
         _StructMove(StructMove_)
     {
+        isKinematic = true;
         fFixedUpdate = std::bind(&CShuttleObject2D::_FixedUpdate, this, _1);
 
         if (_StructMove.IsMoving)

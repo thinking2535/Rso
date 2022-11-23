@@ -39,7 +39,10 @@ namespace rso::physics
 		// 결국 CRectCollider2D 과 CRectCollider2D 에 대한 계산만 가능하고, 파라미터가 CEngineObject일 때는 주체가 되어야 CRectCollider2D인지 CRigidbody2D인지 파악이 가능하므로
 		// 먼저 주체가 CRectCollider2D일때까지 들어간 후 이후 파라미터를 다시 주체로 바꾸어 CRectCollider2D 일때 까지 CollisionCheck 를 호출하여
 		// 주체와 파라미터를 모두 CRectCollider2D 로 만든 후 처리
-		virtual bool CheckOverlapped(int64 tick, CMovingObject2D* pMovingObject_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_) = 0;
-		virtual bool CheckOverlapped(int64 tick, CMovingObject2D* pMovingObject_, CRectCollider2D* pOtherRectCollider_, CMovingObject2D* pOtherMovingObject_) = 0;
+		virtual bool checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CCollider2D* pOtherCollider) = 0;
+		virtual bool checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CCollider2D* pOtherCollider, CMovingObject2D* pOtherMovingObject) = 0;
+		virtual bool checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CRectCollider2D* pOtherRectCollider) = 0;
+		virtual bool checkOverlapped(int64 tick, CRectCollider2D* pOtherRectCollider, CMovingObject2D* pOtherMovingObject) = 0;
+		virtual bool checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CRectCollider2D* pOtherRectCollider, CMovingObject2D* pOtherMovingObject) = 0;
 	};
 }

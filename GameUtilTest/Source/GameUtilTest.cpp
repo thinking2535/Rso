@@ -1,20 +1,39 @@
 #include "stdafx.h"
 #include <iostream>
+#include <thread>
+#include <string>
+#include <Rso/GameUtil/Match.h>
+#include <Rso/GameUtil/PeriodicUpdater.h>
 
 using namespace std;
+using namespace rso;
+using namespace gameutil;
 
-#define	Test_Rank
+using Period = milliseconds;
+using FatigueUpdater = PeriodicUpdater<Period>;
+
+int32 main()
+{
+	if (true)
+	{
+		FatigueUpdater periodicUpdater(Period(500), system_clock::now());
+
+		for (int32 i = 0; i < 10000; ++i)
+		{
+			if (periodicUpdater.update(system_clock::now()))
+				cout << "updated" << endl;
+
+			this_thread::sleep_for(milliseconds(1));
+		}
+	}
+
+	return 0;
+}
+
+
 
 
 #if defined( Test_Match )
-
-#include <thread>
-#include <Rso/GameUtil/Match.h>
-
-using namespace std;
-using namespace chrono;
-using namespace rso;
-using namespace gameutil;
 
 using TMatch = CMatch<int>;
 
@@ -503,8 +522,6 @@ void main(void)
 
 #elif defined( Test_Boost )
 
-#include <string>
-#include <Rso/GameUtil/Base.h>
 
 using namespace rso;
 using namespace gameutil;

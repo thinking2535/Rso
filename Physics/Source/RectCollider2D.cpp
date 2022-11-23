@@ -4,6 +4,15 @@
 
 namespace rso::physics
 {
+	SPoint CRectCollider2D::_getRelativeVelocity(CMovingObject2D* pMovingObject)
+	{
+		return -pMovingObject->Velocity;
+	}
+	SPoint CRectCollider2D::_getRelativeVelocity(CMovingObject2D* pMovingObject, CMovingObject2D* pOtherMovingObject)
+	{
+		return pOtherMovingObject->Velocity - pMovingObject->Velocity;
+	}
+
 	SRect CRectCollider2D::GetRect(void) const
 	{
 		auto Rect = RectCollider2DToRect(_Collider);
@@ -22,101 +31,144 @@ namespace rso::physics
 		_Collider(Collider_)
 	{
 	}
-	bool CRectCollider2D::CheckOverlapped(int64 tick, CMovingObject2D* pMovingObject_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_)
+	bool CRectCollider2D::checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CCollider2D* pOtherCollider)
 	{
-		return pOtherCollider_->CheckOverlapped(tick, pOtherMovingObject_, this, pMovingObject_);
+		return pOtherCollider->checkOverlapped(tick, this, pMovingObject);
 	}
-	bool CRectCollider2D::CheckOverlapped(int64 tick, CMovingObject2D* pMovingObject_, CRectCollider2D* pOtherRectCollider_, CMovingObject2D* pOtherMovingObject_)
+	bool CRectCollider2D::checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CCollider2D* pOtherCollider, CMovingObject2D* pOtherMovingObject)
 	{
-		CPlayerObject2D* pPlayerObject = pMovingObject_ ? pMovingObject_->GetPlayerObject2D() : nullptr;
-		CPlayerObject2D* pOtherPlayerObject = pOtherMovingObject_ ? pOtherMovingObject_->GetPlayerObject2D() : nullptr;
+		return pOtherCollider->checkOverlapped(tick, pOtherMovingObject, this, pMovingObject);
+	}
+	bool CRectCollider2D::checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CRectCollider2D* pOtherRectCollider)
+	{
+		auto rect = GetRect();
+		auto otherRect = pOtherRectCollider->GetRect();
 
-		if (!GetEnabled() || !pOtherRectCollider_->GetEnabled() || !IsOverlappedRectRect(GetRect(), pOtherRectCollider_->GetRect()))
+		if (!_isOverlapped(rect, pOtherRectCollider, otherRect))
 		{
-			if (pPlayerObject)
-				pPlayerObject->NotOverlapped(tick, this, pOtherRectCollider_);
-
-			if (pOtherPlayerObject)
-				pOtherPlayerObject->NotOverlapped(tick, pOtherRectCollider_, this);
-
+			pMovingObject->NotOverlapped(tick, this, pOtherRectCollider);
 			return false;
 		}
 
-		if (IsTrigger || pOtherRectCollider_->IsTrigger)
+		if (IsTrigger || pOtherRectCollider->IsTrigger)
 		{
-			if (pPlayerObject)
-			{
-				auto DoRemove = pPlayerObject->Triggered(this, pOtherRectCollider_, pOtherMovingObject_);
-
-				if (!pOtherPlayerObject)
-					return DoRemove;
-
-				pOtherPlayerObject->Triggered(pOtherRectCollider_, this, pMovingObject_);
-				return false;
-			}
-			else if (pOtherPlayerObject)
-			{
-				return pOtherPlayerObject->Triggered(pOtherRectCollider_, this, pMovingObject_);
-			}
-			else
-			{
-				return false;
-			}
+			return pMovingObject->Triggered(tick, this, pOtherRectCollider, nullptr);
 		}
 		else
 		{
-			if (pPlayerObject != nullptr)
+			if (!pMovingObject->isKinematic)
 			{
-				auto Normal = _FixPositionAndGetNormal(pMovingObject_, GetRect(), pOtherRectCollider_->GetRect());
+				auto relativeVelocity = _getRelativeVelocity(pMovingObject);
+				auto normal = _fixPositionAndGetNormal(relativeVelocity, rect, pMovingObject, otherRect);
 
-				auto DoRemove = pPlayerObject->Collided(
+				return pMovingObject->Collided(
 					tick,
 					SCollision2D(
-						pOtherMovingObject_ != nullptr ? pOtherMovingObject_->Velocity - pMovingObject_->Velocity : -pMovingObject_->Velocity,
-						Normal,
+						relativeVelocity,
+						normal,
 						this,
-						pOtherRectCollider_,
-						pOtherMovingObject_));
-
-				if (!pOtherPlayerObject)
-					return DoRemove;
-
-				pOtherPlayerObject->Collided(
-					tick,
-					SCollision2D(
-						pMovingObject_->Velocity - pOtherMovingObject_->Velocity,
-						-Normal,
-						pOtherRectCollider_,
-						this,
-						pMovingObject_));
-				return false;
+						pOtherRectCollider,
+						nullptr));
 			}
-			else if (pOtherPlayerObject != nullptr)
+		}
+
+		return false;
+	}
+	bool CRectCollider2D::checkOverlapped(int64 tick, CRectCollider2D* pOtherRectCollider, CMovingObject2D* pOtherMovingObject)
+	{
+		return pOtherRectCollider->checkOverlapped(tick, pOtherMovingObject, this);
+	}
+	bool CRectCollider2D::checkOverlapped(int64 tick, CMovingObject2D* pMovingObject, CRectCollider2D* pOtherRectCollider, CMovingObject2D* pOtherMovingObject)
+	{
+		auto rect = GetRect();
+		auto otherRect = pOtherRectCollider->GetRect();
+
+		if (!_isOverlapped(rect, pOtherRectCollider, otherRect))
+		{
+			pMovingObject->NotOverlapped(tick, this, pOtherRectCollider);
+			pOtherMovingObject->NotOverlapped(tick, pOtherRectCollider, this);
+			return false;
+		}
+
+		if (IsTrigger || pOtherRectCollider->IsTrigger)
+		{
+			pOtherMovingObject->Triggered(tick, pOtherRectCollider, this, pMovingObject);
+			return pMovingObject->Triggered(tick, this, pOtherRectCollider, pOtherMovingObject);
+		}
+		else
+		{
+			if (!pMovingObject->isKinematic && !pOtherMovingObject->isKinematic)
 			{
-				auto Normal = _FixPositionAndGetNormal(pOtherMovingObject_, pOtherRectCollider_->GetRect(), GetRect());
-				return pOtherPlayerObject->Collided(
+				auto relativeVelocity = _getRelativeVelocity(pMovingObject, pOtherMovingObject);
+				auto normal = _fixPositionAndGetNormal(relativeVelocity, rect, pMovingObject, otherRect, pOtherMovingObject);
+
+				pOtherMovingObject->Collided(
 					tick,
 					SCollision2D(
-						-pOtherMovingObject_->Velocity,
-						Normal,
-						pOtherRectCollider_,
+						-relativeVelocity,
+						-normal,
+						pOtherRectCollider,
 						this,
-						pMovingObject_));
+						pMovingObject));
+
+				return pMovingObject->Collided(
+					tick,
+					SCollision2D(
+						relativeVelocity,
+						normal,
+						this,
+						pOtherRectCollider,
+						pOtherMovingObject));
 			}
 			else
 			{
-				return false;
+				if (!pMovingObject->isKinematic)
+				{
+					auto relativeVelocity = _getRelativeVelocity(pMovingObject, pOtherMovingObject);
+					auto normal = _fixPositionAndGetNormal(relativeVelocity, rect, pMovingObject, otherRect, pOtherMovingObject);
+
+					return pMovingObject->Collided(
+						tick,
+						SCollision2D(
+							relativeVelocity,
+							normal,
+							this,
+							pOtherRectCollider,
+							pOtherMovingObject));
+				}
+				else if (!pOtherMovingObject->isKinematic)
+				{
+					auto relativeVelocity = _getRelativeVelocity(pOtherMovingObject, pMovingObject);
+					auto normal = _fixPositionAndGetNormal(relativeVelocity, otherRect, pOtherMovingObject, rect, pMovingObject);
+
+					return pOtherMovingObject->Collided(
+						tick,
+						SCollision2D(
+							relativeVelocity,
+							normal,
+							pOtherRectCollider,
+							this,
+							pMovingObject));
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 	}
-	SPoint CRectCollider2D::_FixPositionAndGetNormal(CMovingObject2D* pMovingObject_, const SRect& Rect_, const SRect& OtherRect_)
+	bool CRectCollider2D::_isOverlapped(const SRect& rect, CRectCollider2D* pOtherRectCollider, const SRect& otherRect)
 	{
-		auto rl = OtherRect_.Right - Rect_.Left;
-		auto lr = Rect_.Right - OtherRect_.Left;
-		auto tb = OtherRect_.Top - Rect_.Bottom;
-		auto bt = Rect_.Top - OtherRect_.Bottom;
-
-		SPoint Normal;
+		return GetEnabled() && pOtherRectCollider->GetEnabled() && IsOverlappedRectRect(rect, otherRect);
+	}
+	// 상대속도의 X, Y와 중첩된 X, Y 의 거리를 감안하여 Normal을 구하는 것이 이상적이나 상대속도가 0이거나 0에 가까우면 대소 비교가 안되어 오동작함
+	// 따라서 상대속도는 고려하지 않고 중첩된 X, Y의 거리만으로 Normal을 구함
+	SPoint CRectCollider2D::_fixPositionAndGetNormal(const SPoint& relativeVelocity, const SRect& rect, CMovingObject2D* pMovingObject, const SRect& otherRect)
+	{
+		auto rl = otherRect.Right - rect.Left;
+		auto lr = rect.Right - otherRect.Left;
+		auto tb = otherRect.Top - rect.Bottom;
+		auto bt = rect.Top - otherRect.Bottom;
 
 		if (rl < lr) // Normal.X : +
 		{
@@ -125,16 +177,16 @@ namespace rso::physics
 				if (rl < tb) // select Normal.X
 				{
 					if (rl > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.X += (rl - CEngine::GetContactOffset());
+						_moveAwayX(rl - CEngine::GetContactOffset(), pMovingObject);
 
-					Normal.X = 1.0f;
+					return _inelasticCollisionX(SPoint(1.0f, 0.0f), relativeVelocity, pMovingObject);
 				}
 				else // select Normal.Y
 				{
 					if (tb > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.Y += (tb - CEngine::GetContactOffset());
+						_moveAwayY(tb - CEngine::GetContactOffset(), pMovingObject);
 
-					Normal.Y = 1.0f;
+					return _inelasticCollisionY(SPoint(0.0f, 1.0f), relativeVelocity, pMovingObject);
 				}
 			}
 			else // Normal.Y : -
@@ -142,16 +194,16 @@ namespace rso::physics
 				if (rl < bt) // select Normal.X
 				{
 					if (rl > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.X += (rl - CEngine::GetContactOffset());
+						_moveAwayX(rl - CEngine::GetContactOffset(), pMovingObject);
 
-					Normal.X = 1.0f;
+					return _inelasticCollisionX(SPoint(1.0f, 0.0f), relativeVelocity, pMovingObject);
 				}
 				else // select Normal.Y
 				{
 					if (bt > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.Y += (CEngine::GetContactOffset() - bt);
+						_moveAwayY(CEngine::GetContactOffset() - bt, pMovingObject);
 
-					Normal.Y = -1.0f;
+					return _inelasticCollisionY(SPoint(0.0f, -1.0f), relativeVelocity, pMovingObject);
 				}
 			}
 		}
@@ -162,16 +214,16 @@ namespace rso::physics
 				if (lr < tb) // select Normal.X
 				{
 					if (lr > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.X += (CEngine::GetContactOffset() - lr);
+						_moveAwayX(CEngine::GetContactOffset() - lr, pMovingObject);
 
-					Normal.X = -1.0f;
+					return _inelasticCollisionX(SPoint(-1.0f, 0.0f), relativeVelocity, pMovingObject);
 				}
 				else // select Normal.Y
 				{
 					if (tb > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.Y += (tb - CEngine::GetContactOffset());
+						_moveAwayY(tb - CEngine::GetContactOffset(), pMovingObject);
 
-					Normal.Y = 1.0f;
+					return _inelasticCollisionY(SPoint(0.0f, 1.0f), relativeVelocity, pMovingObject);
 				}
 			}
 			else // Normal.Y : -
@@ -179,20 +231,162 @@ namespace rso::physics
 				if (lr < bt) // select Normal.X
 				{
 					if (lr > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.X += (CEngine::GetContactOffset() - lr);
+						_moveAwayX(CEngine::GetContactOffset() - lr, pMovingObject);
 
-					Normal.X = -1.0f;
+					return _inelasticCollisionX(SPoint(-1.0f, 0.0f), relativeVelocity, pMovingObject);
 				}
 				else // select Normal.Y
 				{
 					if (bt > CEngine::GetContactOffset())
-						pMovingObject_->LocalPosition.Y += (CEngine::GetContactOffset() - bt);
+						_moveAwayY(CEngine::GetContactOffset() - bt, pMovingObject);
 
-					Normal.Y = -1.0f;
+					return _inelasticCollisionY(SPoint(0.0f, -1.0f), relativeVelocity, pMovingObject);
 				}
 			}
 		}
+	}
+	SPoint CRectCollider2D::_fixPositionAndGetNormal(const SPoint& relativeVelocity, const SRect& rect, CMovingObject2D* pMovingObject, const SRect& otherRect, CMovingObject2D* pOtherMovingObject)
+	{
+		auto rl = otherRect.Right - rect.Left;
+		auto lr = rect.Right - otherRect.Left;
+		auto tb = otherRect.Top - rect.Bottom;
+		auto bt = rect.Top - otherRect.Bottom;
 
-		return Normal;
+		if (rl < lr) // Normal.X : +
+		{
+			if (tb < bt) // Normal.Y : +
+			{
+				if (rl < tb) // select Normal.X
+				{
+					if (rl > CEngine::GetContactOffset())
+						_moveAwayX(rl - CEngine::GetContactOffset(), pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionX(SPoint(1.0f, 0.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+				else // select Normal.Y
+				{
+					if (tb > CEngine::GetContactOffset())
+						_moveAwayY(tb - CEngine::GetContactOffset(), pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionY(SPoint(0.0f, 1.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+			}
+			else // Normal.Y : -
+			{
+				if (rl < bt) // select Normal.X
+				{
+					if (rl > CEngine::GetContactOffset())
+						_moveAwayX(rl - CEngine::GetContactOffset(), pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionX(SPoint(1.0f, 0.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+				else // select Normal.Y
+				{
+					if (bt > CEngine::GetContactOffset())
+						_moveAwayY(CEngine::GetContactOffset() - bt, pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionY(SPoint(0.0f, -1.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+			}
+		}
+		else // Normal.X : -
+		{
+			if (tb < bt) // Normal.Y : +
+			{
+				if (lr < tb) // select Normal.X
+				{
+					if (lr > CEngine::GetContactOffset())
+						_moveAwayX(CEngine::GetContactOffset() - lr, pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionX(SPoint(-1.0f, 0.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+				else // select Normal.Y
+				{
+					if (tb > CEngine::GetContactOffset())
+						_moveAwayY(tb - CEngine::GetContactOffset(), pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionY(SPoint(0.0f, 1.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+			}
+			else // Normal.Y : -
+			{
+				if (lr < bt) // select Normal.X
+				{
+					if (lr > CEngine::GetContactOffset())
+						_moveAwayX(CEngine::GetContactOffset() - lr, pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionX(SPoint(-1.0f, 0.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+				else // select Normal.Y
+				{
+					if (bt > CEngine::GetContactOffset())
+						_moveAwayY(CEngine::GetContactOffset() - bt, pMovingObject, pOtherMovingObject);
+
+					return _inelasticCollisionY(SPoint(0.0f, -1.0f), relativeVelocity, pMovingObject, pOtherMovingObject);
+				}
+			}
+		}
+	}
+	void CRectCollider2D::_moveAwayX(float overlapped, CMovingObject2D* pMovingObject)
+	{
+		pMovingObject->LocalPosition.X += overlapped;
+	}
+	void CRectCollider2D::_moveAwayY(float overlapped, CMovingObject2D* pMovingObject)
+	{
+		pMovingObject->LocalPosition.Y += overlapped;
+	}
+	void CRectCollider2D::_moveAwayX(float overlapped, CMovingObject2D* pMovingObject, CMovingObject2D* pOtherMovingObject)
+	{
+		if (pOtherMovingObject->isKinematic)
+			return _moveAwayX(overlapped, pMovingObject);
+
+		pMovingObject->LocalPosition.X += (overlapped * pOtherMovingObject->Mass / (pMovingObject->Mass + pOtherMovingObject->Mass));
+		pOtherMovingObject->LocalPosition.X -= (overlapped * pMovingObject->Mass / (pMovingObject->Mass + pOtherMovingObject->Mass));
+	}
+	void CRectCollider2D::_moveAwayY(float overlapped, CMovingObject2D* pMovingObject, CMovingObject2D* pOtherMovingObject)
+	{
+		if (pOtherMovingObject->isKinematic)
+			return _moveAwayY(overlapped, pMovingObject);
+
+		pMovingObject->LocalPosition.Y += (overlapped * pOtherMovingObject->Mass / (pMovingObject->Mass + pOtherMovingObject->Mass));
+		pOtherMovingObject->LocalPosition.Y -= (overlapped * pMovingObject->Mass / (pMovingObject->Mass + pOtherMovingObject->Mass));
+	}
+	const SPoint& CRectCollider2D::_inelasticCollisionX(const SPoint& normal, const SPoint& relativeVelocity, CMovingObject2D* pMovingObject)
+	{
+		if (normal.X * relativeVelocity.X > 0.0f)
+			pMovingObject->Velocity.X = 0.0f;
+
+		return normal;
+	}
+	const SPoint& CRectCollider2D::_inelasticCollisionY(const SPoint& normal, const SPoint& relativeVelocity, CMovingObject2D* pMovingObject)
+	{
+		if (normal.Y * relativeVelocity.Y > 0.0f)
+			pMovingObject->Velocity.Y = 0.0f;
+
+		return normal;
+	}
+	const SPoint& CRectCollider2D::_inelasticCollisionX(const SPoint& normal, const SPoint& relativeVelocity, CMovingObject2D* pMovingObject, CMovingObject2D* pOtherMovingObject)
+	{
+		if (normal.X * relativeVelocity.X > 0.0f)
+		{
+			if (pOtherMovingObject->isKinematic)
+				pMovingObject->Velocity.X = pOtherMovingObject->Velocity.X;
+			else
+				pMovingObject->Velocity.X = pOtherMovingObject->Velocity.X = (pMovingObject->Velocity.X * pMovingObject->Mass + pOtherMovingObject->Velocity.X * pOtherMovingObject->Mass) / (pMovingObject->Mass + pOtherMovingObject->Mass);
+		}
+
+		return normal;
+	}
+	const SPoint& CRectCollider2D::_inelasticCollisionY(const SPoint& normal, const SPoint& relativeVelocity, CMovingObject2D* pMovingObject, CMovingObject2D* pOtherMovingObject)
+	{
+		if (normal.Y * relativeVelocity.Y > 0.0f)
+		{
+			if (pOtherMovingObject->isKinematic)
+				pMovingObject->Velocity.Y = pOtherMovingObject->Velocity.Y;
+			else
+				pMovingObject->Velocity.Y = pOtherMovingObject->Velocity.Y = (pMovingObject->Velocity.Y * pMovingObject->Mass + pOtherMovingObject->Velocity.Y * pOtherMovingObject->Mass) / (pMovingObject->Mass + pOtherMovingObject->Mass);
+		}
+
+		return normal;
 	}
 }

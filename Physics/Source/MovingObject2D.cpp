@@ -10,8 +10,8 @@ namespace rso::physics
 		for (auto& c : Colliders)
 			c->SetParent(this);
 	}
-	CPlayerObject2D* CMovingObject2D::GetPlayerObject2D(void)
+	bool CMovingObject2D::isPlayerObject2D()
 	{
-		return nullptr;
+		return false;
 	}
 }

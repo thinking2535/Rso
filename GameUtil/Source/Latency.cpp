@@ -2,22 +2,22 @@
 
 namespace rso::gameutil
 {
-	CLatency::CLatency(const milliseconds& MaxLatency_) :
-		_MaxLatency(MaxLatency_)
+	CLatency::CLatency(const milliseconds& maxLatency) :
+		_maxLatency(maxLatency)
 	{
 	}
-	void CLatency::Recv(const TTime& Time_, const TTime& RemoteTime_)
+	void CLatency::recv(const TTime& time, const TTime& remoteTime)
 	{
-		auto Duration = RemoteTime_ - Time_;
-		if (_Offset < Duration)
-			_Offset = Duration;
+		auto Duration = remoteTime - time;
+		if (_offset < Duration)
+			_offset = Duration;
 
-		Duration = (Time_ + _Offset) - RemoteTime_;
-		if (Duration > _MaxLatency)
-			_Latency = _MaxLatency;
-		else if (_Latency - Duration > _SubDuration)
-			_Latency -= _SubDuration;
+		Duration = (time + _offset) - remoteTime;
+		if (Duration > _maxLatency)
+			_latency = _maxLatency;
+		else if (_latency - Duration > _subDuration)
+			_latency -= _subDuration;
 		else
-			_Latency = Duration;
+			_latency = Duration;
 	}
 }

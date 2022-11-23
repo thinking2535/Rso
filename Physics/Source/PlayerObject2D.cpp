@@ -6,15 +6,15 @@ namespace rso::physics
 		CMovingObject2D(Transform_, Colliders_, Velocity_)
 	{
 	}
-	CPlayerObject2D* CPlayerObject2D::GetPlayerObject2D(void)
+	bool CPlayerObject2D::isPlayerObject2D()
 	{
-		return this;
+		return true;
 	}
 	bool CPlayerObject2D::CheckOverlapped(int64 tick, CCollider2D* pOtherCollider_)
 	{
 		for (auto& c : Colliders)
 		{
-			if (c->CheckOverlapped(tick, this, pOtherCollider_, nullptr))
+			if (c->checkOverlapped(tick, this, pOtherCollider_))
 				return true;
 		}
 
@@ -26,7 +26,7 @@ namespace rso::physics
 		{
 			for (auto& o : pOtherMovingObject_->Colliders)
 			{
-				if (c->CheckOverlapped(tick, this, o.get(), pOtherMovingObject_))
+				if (c->checkOverlapped(tick, this, o.get(), pOtherMovingObject_))
 					return true;
 			}
 		}
@@ -43,46 +43,23 @@ namespace rso::physics
 				return false;
 		}
 
-		// 밀 착된 두 물체가 서로 붙는 방향으로의 속도를 가지지 못하도록
-		auto OtherVelocity = Collision_.pOtherMovingObject == nullptr ? SPoint() : Collision_.pOtherMovingObject->Velocity;
-		if (Collision_.Normal.X > 0.0f)
-		{
-			if (Velocity.X < OtherVelocity.X)
-				Velocity.X = OtherVelocity.X;
-		}
-		else if (Collision_.Normal.X < 0.0f)
-		{
-			if (Velocity.X > OtherVelocity.X)
-				Velocity.X = OtherVelocity.X;
-		}
-		else if (Collision_.Normal.Y > 0.0f)
-		{
-			if (Velocity.Y < OtherVelocity.Y)
-				Velocity.Y = OtherVelocity.Y;
-		}
-		else if (Collision_.Normal.Y < 0.0f)
-		{
-			if (Velocity.Y > OtherVelocity.Y)
-				Velocity.Y = OtherVelocity.Y;
-		}
-
 		if (fCollisionStay)
 			return fCollisionStay(tick, Collision_);
 		else
 			return false;
 	}
-	bool CPlayerObject2D::Triggered(CCollider2D* pCollider_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_)
+	bool CPlayerObject2D::Triggered(int64 tick, CCollider2D* pCollider_, CCollider2D* pOtherCollider_, CMovingObject2D* pOtherMovingObject_)
 	{
 		if (_ContactPoint2Ds.emplace(SContactPoint2D(pCollider_, pOtherCollider_), pOtherMovingObject_).second)
 		{
 			if (fTriggerEnter)
-				return fTriggerEnter(pOtherCollider_);
+				return fTriggerEnter(tick, pOtherCollider_);
 			else
 				return false;
 		}
 
 		if (fTriggerStay)
-			return fTriggerStay(pOtherCollider_);
+			return fTriggerStay(tick, pOtherCollider_);
 		else
 			return false;
 	}
@@ -98,7 +75,7 @@ namespace rso::physics
 			if (pCollider_->IsTrigger || pOtherCollider_->IsTrigger)
 			{
 				if (fTriggerExit)
-					fTriggerExit(pOtherCollider_);
+					fTriggerExit(tick, pOtherCollider_);
 			}
 			else
 			{
@@ -125,7 +102,7 @@ namespace rso::physics
 			if (contactPoint.pCollider->IsTrigger || pOtherCollider_->IsTrigger)
 			{
 				if (fTriggerExit)
-					fTriggerExit(pOtherCollider_);
+					fTriggerExit(tick, pOtherCollider_);
 			}
 			else
 			{

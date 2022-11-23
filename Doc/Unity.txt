@@ -1,0 +1,2 @@
+* Batches Count 줄이기
+ - Project Settings - Other Settings - Dynamic Batching 체크

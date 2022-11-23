@@ -358,6 +358,7 @@ if exist Source\Protocol.prt (..\..\Bin\Rso\ProtoGen\$(Platform)\ProtoGen_$(Conf
     <ClInclude Include="Source\OptionJson.h" />
     <ClInclude Include="Source\Package.h" />
     <ClInclude Include="Source\PeriodCounter.h" />
+    <ClInclude Include="Source\PeriodicUpdater.h" />
     <ClInclude Include="Source\Protocol.h" />
     <ClInclude Include="Source\PunishLimiter.h" />
     <ClInclude Include="Source\Quest.h" />

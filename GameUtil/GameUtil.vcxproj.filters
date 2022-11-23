@@ -93,6 +93,9 @@
     <ClInclude Include="Source\Limiter.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PeriodicUpdater.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Quest.cpp">
